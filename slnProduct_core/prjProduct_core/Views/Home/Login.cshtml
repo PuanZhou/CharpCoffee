@@ -1,0 +1,91 @@
+﻿@{ ViewData["Title"] = "Login"; }
+@section Style{
+  
+    <style>
+        .forget:hover {
+            text-decoration: none;
+        }
+
+        #btneye {
+            border: none;
+            background-color: transparent;
+        }
+    </style>
+}
+
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+        <h2>登入</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Login</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Login Area Start ##### -->
+<div class="checkout_area mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-2"></div>
+            <div class="col-12 col-lg-8">
+                <div class="checkout_details_area clearfix">
+                    <h5>登入會員</h5>
+                    <form action="" method="post">
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <input type="text" class="form-control" id="txtAccount" name="txtAccount" min="0" placeholder="請輸入手機號碼" />
+                            </div>
+                            <div class="input-group col-12 mb-4">
+                                    <input type="password" class="form-control" id="txtPW" name="txtPW" placeholder="請輸入密碼">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-light" type="button" id="btneye"><i class="fa-solid fa-eye-slash"></i></button>
+                                    </div>
+                                </div>
+                            <div class="checkout-btn mt-30">
+                                <button type="submit" class="btn alazea-btn mt-15">登入</button>
+                                <br />
+                                <a href="ForgetPW.cshtml" class="forget">忘記密碼？</a>
+                                <br />
+                                <a href="/Home/Create" class="forget">前往註冊</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Checkout Area End ##### -->
+
+@section Scripts{
+    <script>
+        let eyeclick = false;
+
+        $("#btneye").click(function () {
+            console.log("aa")
+            eyeclick = !eyeclick;
+            if (eyeclick) {
+                $("#btneye").html('<i class="fa-solid fa-eye"></i>');
+                $("#txtPW").attr("type", "text");
+            } else {
+                $("#btneye").html('<i class="fa-solid fa-eye-slash"></i>');
+                $("#txtPW").attr("type", "password");
+            }
+
+        })
+    </script>
+}
+
+

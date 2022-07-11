@@ -1,0 +1,32 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CProductViewModel>
+
+@{
+    foreach (var pd in Model)
+    {
+        <!-- Single Product Area -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="single-product-area mb-50">
+                <!-- Product Image -->
+                <div class="product-img">
+                    <a href="shop-details.html"><img src="../img/Home-img/02.jpg" alt=""></a>
+                    <!-- Product Tag -->
+                    <div class="product-tag">
+                        <a href="#">Hot</a>
+                    </div>
+                    <div class="product-meta d-flex">
+                        <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                        <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
+                        <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
+                    </div>
+                </div>
+                <!-- Product Info -->
+                <div class="product-info mt-15 text-center">
+                    <a>
+                        @Html.ActionLink(@pd.ProductName, "detail", new { id = pd.ProductId }, new { })
+                    </a>
+                    <h6>$@(Convert.ToInt32( pd.Price).ToString("0.0"))</h6>
+                </div>
+            </div>
+        </div>
+    }
+}

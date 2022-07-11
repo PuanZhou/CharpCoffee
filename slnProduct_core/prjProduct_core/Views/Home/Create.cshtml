@@ -1,0 +1,252 @@
+﻿@model prjCSCoffee.ViewModel.CMemberViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+@section Style{
+    <style>
+        .warn {
+            font-size: 80%;
+            color: darkgray;
+        }
+    </style>
+
+}
+
+
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+        <h2>註冊會員</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#"><i class="fa fa-home"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">註冊</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Checkout Area Start ##### -->
+<form id="creatform" method="post">
+    <div class="checkout_area mb-100">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-12 col-lg-7">
+                    <div class="checkout_details_area clearfix">
+                        <h5>Billing Details</h5>
+
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <label for="name">姓名*</label>
+                                <input type="text" class="form-control" maxlength="50" id="name" name="MemberName">
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="email_address">電子信箱*</label>
+                                <input type="email" class="form-control" maxlength="50" id="email" name="MemberEmail">
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="phone">手機號碼*</label>
+                                <input type="text" class="form-control" maxlength="10" id="phone" name="MemberPhone">
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="PW">密碼*</label>
+                                <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八">
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="checkPW">確認密碼*</label>
+                                <input type="password" class="form-control" maxlength="50" id="checkPW" name="checkPW">
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="address">地址*</label>
+                                <input type="text" class="form-control" maxlength="50" id="address" name="MemberAddress">
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="birth">生日*</label>
+                                <input type="date" class="form-control" id="birth" name="MemberBirthDay">
+                                <input hidden type="text" name="ShoppingCarId" value="@ViewBag.CARTID">
+                                <input hidden type="text" name="BlackList" value="0">
+                                <input hidden type="text" name="MemberPhoto" value="@ViewBag.DEFAULTIMG">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    <div class="checkout-content ">
+                        <h5 class="title--">
+                            <i>注意事項</i>
+                        </h5>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            <h5 class="warn" id="warnName">姓名</h5>
+                        </div>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            <h5 class="warn" id="warnEmail">電子信箱</h5>
+                        </div>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            <h5 class="warn" id="warnPhone">手機號碼</h5>
+                        </div>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            <h5 class="warn" id="warnPW">密碼</h5>
+                        </div>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            <h5 class="warn" id="warnCheckPW">再次確認密碼</h5>
+                        </div>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            <h5 class="warn" id="warnAddress">地址</h5>
+                        </div>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            <h5 class="warn" id="warnBirth">生日格式</h5>
+                        </div>
+                        <div class="checkout-btn mt-30">
+                            <button type="submit" class="btn alazea-btn w-100">註冊</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- ##### Checkout Area End ##### -->
+
+
+@section Scripts {
+    <script>
+        let inputEmail = $("#email");
+        let warnEmail = $("#warnEmail");
+
+        let inputPhone = $("#phone");
+        let warnPhone = $("#warnPhone");
+
+        let inputName = $("#name");
+        let warnName = $("#warnName");
+
+        let inputPW = $("#PW");
+        let warnPW = $("#warnPW");
+        let re = /^.*[0-9a-zA-Z].{8,50}$/;
+
+        let inputCheckPW = $("#checkPW");
+        let warnCheckPW = $("#warnCheckPW");
+
+
+        let inputAddress = $("#address");
+        let warnAddress = $("#warnAddress");
+
+        let inputbirth = $("#birth");
+        let warnBirth = $("#warnBirth");
+
+
+        function Emptywarn(ele,strinput) {
+            ele.html(`<i class="fa-solid fa-circle-xmark">${strinput}不得為空</i>`).css("color", "red");
+        }
+        function Existwarn(ele, strinput) {
+            ele.html(`<i class="fa-solid fa-circle-xmark">${strinput}已存在</i>`).css("color", "red");
+        }
+        function OKwarn(ele, strinput) {
+            ele.html(`<i class="fa-solid fa-circle-check">${strinput}</i>`).css("color", "#73BF00");
+        }
+
+        inputName.blur(() => {
+            if (inputName.val().trim() == "") {
+                Emptywarn(warnName, "姓名");
+            }
+            else {
+                OKwarn(warnName, "姓名");
+            }
+        });
+
+        inputAddress.blur(() => {
+            if (inputAddress.val().trim() == "") {
+                Emptywarn(warnAddress, "地址");
+            }
+            else {
+                OKwarn(warnAddress, "地址");
+            }
+        });
+
+        inputbirth.blur(() => {
+            if (inputbirth.val().trim() == "") {
+                Emptywarn(warnBirth, "生日");
+            }
+            else {
+                OKwarn(warnBirth, "生日");
+            }
+        });
+
+        inputPW.blur(() => {
+            console.log("dded");
+            if (re.test(inputPW.val())) {
+                OKwarn(warnPW, "密碼");
+            }
+            else {
+                warnPW.html(`<i class="fa-solid fa-circle-xmark">密碼格式有誤</i>`).css("color", "red");
+            }
+
+        })
+
+        inputCheckPW.blur(() => {
+            console.log("dded");
+            if (inputCheckPW.val() == inputPW.val()) {
+                OKwarn(warnCheckPW, "再次確認密碼");
+            }
+            else {
+                warnCheckPW.html(`<i class="fa-solid fa-circle-xmark">密碼不一致</i>`).css("color", "red");
+            }
+
+        })
+
+
+
+        inputEmail.blur(async () => {
+            if (inputEmail.val().trim() == "") {
+                Emptywarn(warnEmail, "信箱");
+            }
+            else {
+                const namerespon = await fetch('@Url.Content("~/MemberFactory/QueryMemEmail")' + `?MemberEmail=${inputEmail.val()}`)
+                const namedata = namerespon.text();
+                namedata.then(datas => {    //datas 會是傳過來的bool
+
+                    if (datas == "True") {
+                        Existwarn(warnEmail, "信箱");
+                    }
+                    else {
+                        OKwarn(warnEmail, "信箱");
+                    }
+                });
+            }
+
+        });
+
+        inputPhone.blur(async () => {
+            if (inputPhone.val().trim() == "") {
+                Emptywarn(warnPhone, "手機");
+            }
+            else {
+                const phonerespon = await fetch('@Url.Content("~/MemberFactory/QueryMemPhone")' + `?MemberEmail=${inputPhone.val()}`)
+                const phonedata = phonerespon.text();
+                phonedata.then(datas => {    //datas 會是傳過來的bool
+
+                    if (datas == "True") {
+                        Existwarn(warnPhone, "手機");
+                    }
+                    else {
+                        OKwarn(warnPhone, "手機");
+                    }
+                });
+            }
+
+        });
+
+    </script>
+}
