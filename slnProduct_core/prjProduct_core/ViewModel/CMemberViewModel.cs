@@ -86,7 +86,7 @@ namespace prjCSCoffee.ViewModel
             set { _mem.MemberBirthDay = value; }
         }
         public byte[] MemberPhoto { get; set; }
-        public bool? BlackList {
+        public bool BlackList {
             get { return _mem.BlackList; }
             set { _mem.BlackList = value; }
         }

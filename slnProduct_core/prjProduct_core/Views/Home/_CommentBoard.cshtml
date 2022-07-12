@@ -1,0 +1,122 @@
+﻿@using prjProduct_core.ViewModels
+@model IEnumerable<CCommentsViewModel>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
+<hr />
+    <h4 class="display-4">評論與回覆</h4>
+<div>
+    @{  //=====================印出所有評論(parent)=====================
+        List<CCommentsViewModel> list1 = Model.Where(x => x.CommentParentId == 0).ToList();
+        foreach (var item1 in list1)
+        {
+            LoadComments(item1, CountChildren(item1));
+            <hr />
+        }
+        //=====================找出子回覆及數量(done by CountChildren())============
+        void findChildComments(CCommentsViewModel item1)
+        { <div id="d_@item1.CommentId">
+                @{List<CCommentsViewModel> list2 = Model.Where(y => y.CommentParentId == item1.CommentId).ToList(); ;
+                    foreach (var item2 in list2)
+                    {
+                        LoadComments(item2, CountChildren(item2));
+                    }
+                }
+            </div>
+        }
+        //=====================計算子回覆數量=====================
+        int CountChildren(CCommentsViewModel item)
+        {
+            return Model.Count(x => x.CommentParentId == item.CommentId);
+        }
+        //=====================印出評價或回覆=====================
+        void LoadComments(CCommentsViewModel item, int count)
+        {
+<div class="m-3 ml-4">
+    @{ if (item.CommentId == @Model.FirstOrDefault().CommentId)
+        {
+            <small class="text-danger">New</small>
+            <span class="font-bold">@item.MemberName &nbsp;：</span>
+        }
+        else
+        {
+            <span class="font-bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@item.MemberName &nbsp;：</span>
+        }}
+    @*<span>留言ID：@item.CommentId / </span>
+        <span>父留言ID：@item.CommentParentId / </span>*@
+    <span>@item.CommentDescription &nbsp;/&nbsp; </span>
+    @{
+        if (item.Star != null || item.Star > 0)
+        {
+            <span>購入後評價：</span>
+            for (int i = 0; i < item.Star; i++)
+            {
+                <i style="color: #CCCCFF" class="bi bi-star-fill"></i>
+            }
+            <span>&nbsp;/&nbsp;&nbsp;&nbsp;</span>
+        }
+    }
+    @{
+        if (count != 0)
+        {<small style="cursor:pointer" class="text-warning" onclick="showDiv(@item.CommentId)">隱藏@(count)則回覆</small>}
+        else
+        {
+            {<small class="text-black-50 text-sm">(尚無回覆)</small>}
+        };
+        <i style="font-size:x-large;cursor:pointer" id="r_@item.CommentId" class="bi bi-reply-fill text-success"></i>
+        <div>
+            <span id="s_@item.CommentId" hidden="hidden">回覆：</span>
+            <input id="t_@item.CommentId" type="text" name="txtReply" style="width:70%" hidden="hidden" />
+            <button id="b_@item.CommentId" class="btn btn-success btn-sm btnReply" hidden="hidden">送出回覆</button>
+        </div>
+        findChildComments(item);
+    }
+</div>
+        }
+    }
+</div>
+
+<script>
+    //=====================送出回覆，刷新該欄(callback)=====================
+    $(".btnReply").click(function () {
+        let cpId = $(event.target).attr("id").substr(2);
+        let prId = @(Model.Take(1).Select(x => x.ProductId).FirstOrDefault());
+        let txtReply = $(`#t_${cpId}`).val();
+        $.post('@Url.Content("~/api/AddComment")', {
+            "OrderId": 1, "ProductId": prId, "MemberId": 1, "CommentParentId": cpId,
+            "CommentDescription": txtReply, "Star": 0
+            }, function () {
+            $("#divComment").load('@Url.Content("~/home/_CommentBoard")', { "productId": prId });
+            })
+        })
+    //=====================顯示/隱藏回覆的輸入欄等=====================
+    $(".bi-reply-fill").click(function () {
+        let cId = $(event.target).attr("id").substr(2);
+        if ($(`#s_${cId}`).attr("hidden") == "hidden") {
+            $(`#s_${cId}`).removeAttr("hidden");
+            $(`#t_${cId}`).removeAttr("hidden");
+            $(`#b_${cId}`).removeAttr("hidden");
+        }
+        else {
+            $(`#s_${cId}`).attr("hidden", "hidden");
+            $(`#t_${cId}`).attr("hidden", "hidden");
+            $(`#b_${cId}`).attr("hidden", "hidden");
+        }
+    })
+    //=====================顯示/隱藏回覆的內文=====================
+    function showDiv(divId){
+        let d = document.querySelector(`#d_${divId}`);
+        let e = event.target;
+        let c = e.innerText.substr(2,1)
+        if (d.hasAttribute('hidden')) {
+            d.removeAttribute('hidden');
+            e.setAttribute("class","text-warning")
+            e.innerText=`隱藏${c}則回覆`;
+            return;
+        } else
+            d.setAttribute('hidden', "");
+            e.setAttribute("class", "text-primary")
+            e.innerText = `查看${c}則回覆`;
+            return;
+    }
+</script>

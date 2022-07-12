@@ -1,0 +1,130 @@
+﻿@*@model IEnumerable<prjProduct_core.Models.Article>*@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+
+@model PagedList<prjProduct_core.Models.Article>
+Styles{
+
+    <link href="~/css/PagedList.css" rel="stylesheet" />
+}
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
+        <h2>咖啡好文</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">相關文章</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">咖啡好文</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Blog Area Start ##### -->
+<section class="alazea-blog-area mb-100">
+    <div class="container">
+        <div class="row">
+
+            <!-- ##### 左區 ##### -->
+            <div class="col-12 col-md-8">
+                <div class="row">
+
+                    <!-- 文章集 -->
+                    <!-- 文章 -->
+                    @{
+                        foreach (var item in Model)
+                        {
+                            <div class="col-12 col-lg-6">
+                                <div class="single-blog-post mb-50">
+                                    <div class="post-thumbnail mb-30">
+                                        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = item.ArticleId })"><img src="~/images/Frog001.jpg" alt=""></a>
+                                    </div>
+                                    <div class="post-content">
+                                        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = item.ArticleId })" class="post-title">
+                                            <h5>
+                                                <input type="hidden" value="@item.ArticleId" name="ArticleId" />
+                                                @item.ArticleName
+                                            </h5>
+                                        </a>
+                                        <div class="post-meta">
+                                            @item.ArticleDate.ToString().Substring(0, 9)
+                                        </div>
+                                        <p class="post-excerpt">@Html.Raw(item.ArticleDescription.Replace("<p>", "").Replace("&nbsp; ", "").Substring(0, 29))......</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @Html.PagedListPager(Model, page => Url.Action("faceToArticle", new { page }))
+                    <!-- 文章結束 -->
+
+
+                </div>
+            </div>
+
+            <!-- ##### 右區 ##### -->
+            <div class="col-12 col-md-4">
+                <div class="post-sidebar-area">
+
+                    <!-- ##### 右區-搜尋 ##### -->
+                    <!--<div class="single-widget-area">
+                        <form action="#" method="get" class="search-form">
+                            <input type="search" name="search" id="widgetsearch" placeholder="Search...">
+                            <button type="submit"><i class="icon_search"></i></button>
+                        </form>
+                    </div>-->
+                    <!-- ##### 右區-近期文章 ##### -->
+                    <div class="single-widget-area">
+                        <!-- Title -->
+                        <div class="widget-title">
+                            <h4>近期文章</h4>
+                        </div>
+
+
+                        @{
+                            foreach (var it in Model.OrderByDescending(t => t.ArticleDate).Take(5))
+                            {
+                                <!-- 近期文章 -->
+                                <div class="single-latest-post d-flex align-items-center">
+                                    <div class="post-thumb">
+                                        <a href="@Url.Action($"faceToArticle", "CArticle", new { id = it.ArticleId })"><img style="object-fit:cover" src="~/images/AboutMe001.png" /></a>@*圖片&超連結*@
+                                    </div>
+                                    <div class="post-content">
+                                        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = it.ArticleId })" class="post-title">
+                                            <h6>@it.ArticleName</h6>@*超連結*@
+                                        </a>
+                                        <a href="#" class="post-date">@it.ArticleDate.ToString().Substring(0, 9)</a>
+                                    </div>
+                                </div>
+                                <!-- 近期文章結束 -->
+                            }
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- ##### Blog Area End ##### -->
+<!-- ##### All Javascript Files ##### -->
+<!-- jQuery-2.2.4 js -->
+<script src="js/jquery/jquery-2.2.4.min.js"></script>
+<!-- Popper js -->
+<script src="js/bootstrap/popper.min.js"></script>
+<!-- Bootstrap js -->
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!-- All Plugins js -->
+<script src="js/plugins/plugins.js"></script>
+<!-- Active js -->
+<script src="js/active.js"></script>

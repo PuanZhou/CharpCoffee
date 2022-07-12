@@ -25,7 +25,7 @@ namespace prjProduct_core.Controllers
             {
                 string jsonCompare = HttpContext.Request.Cookies[CDictionary.AddCompare];
                 List<int> compareIdList = JsonSerializer.Deserialize<List<int>>(jsonCompare);
-               foreach(int Id in compareIdList)
+                foreach (int Id in compareIdList)
                 {
                     var prod = db.Products.Where(p => p.ProductId == Id).Select(p => new CCompareCoffeeViewModel()
                     {
@@ -41,8 +41,12 @@ namespace prjProduct_core.Controllers
                     }).FirstOrDefault();
                     list.Add(prod);
                 }
+                return View(list);
             }
-            return View(list);
+            else
+            {
+                return Content("尚未加入任何比較", "text/plain", System.Text.Encoding.UTF8);
+            }
         }
         public IActionResult AddCompare(int? Id)
         {
@@ -70,6 +74,35 @@ namespace prjProduct_core.Controllers
             jsonCompare = JsonSerializer.Serialize(compareIdList);
             HttpContext.Response.Cookies.Append(CDictionary.AddCompare, jsonCompare);
             return Content("商品加入比較列表", "text/plain", System.Text.Encoding.UTF8);
+        }
+
+        public IActionResult DeleteCompare(int? Id)
+        {
+            string jsonCompare;
+            List<int> compareIdList;
+            if (!HttpContext.Request.Cookies.Keys.Contains(CDictionary.AddCompare))
+            {
+                return Content("null", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                jsonCompare = HttpContext.Request.Cookies[CDictionary.AddCompare];
+                compareIdList = JsonSerializer.Deserialize<List<int>>(jsonCompare);
+            }
+
+            compareIdList.Remove(Convert.ToInt32(Id));
+
+            if (compareIdList.Count != 0)
+            {
+                jsonCompare = JsonSerializer.Serialize(compareIdList);
+                HttpContext.Response.Cookies.Append(CDictionary.AddCompare, jsonCompare);
+                return Content("true", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                HttpContext.Response.Cookies.Delete(CDictionary.AddCompare);
+                return Content("null", "text/plain", System.Text.Encoding.UTF8);
+            }
         }
     }
 }

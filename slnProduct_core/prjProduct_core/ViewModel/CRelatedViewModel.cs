@@ -11,5 +11,7 @@ namespace prjProduct_core.ViewModel
         public int ProductId { get; set; }
         public string CoffeeName { get; set; }
         public int Price { get; set; }
+        public Country Country { get; set; }
+        public Continent Continent { get; set; }
     }
 }

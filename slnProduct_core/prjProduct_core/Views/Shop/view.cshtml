@@ -1,7 +1,5 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.CProductViewModel>
 
-
-
 @*標題*@
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
@@ -14,7 +12,7 @@
             <div class="col-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="home"><i class="fa fa-home"></i> Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Shop</li>
                     </ol>
                 </nav>
@@ -33,21 +31,6 @@
                 <div class="shop-sidebar-area">
 
                     <!-- Shop Widget -->
-                    <div class="shop-widget price mb-50">
-                        <h4 class="widget-title">Prices</h4>
-                        <div class="widget-desc">
-                            <div class="slider-range">
-                                <div data-min="8" data-max="30" data-unit="$" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="8" data-value-max="30" data-label-result="Price:">
-                                    <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                                    <span class="ui-slider-handle ui-state-default ui-corner-all first-handle" tabindex="0"></span>
-                                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                                </div>
-                                <div class="range-price">Price: $8 - $30</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Shop Widget -->
                     <div class="shop-widget catagory mb-50">
                         <h4 class="widget-title">產品類別</h4>
                         <div class="widget-desc">
@@ -55,21 +38,11 @@
                             <ul>
                                 <li>
                                     <ul class="dropdown">
-                                        <li id="selectall" style="color: #808080 ; cursor:pointer" >所有產品</li>
-                                        <li id="selectcoffee" style="color: #808080  ; cursor:pointer">
-                                            咖啡豆
+                                        <li id="selectall" style="color: #808080 ; cursor:pointer">所有產品</li>
 
-                                            <ul class="dropdown" id="coffeelist">
-                                                <li><a href="index.html">產地洲別</a></li>
-                                                <li><a href="about.html">產地國別</a></li>
-                                                <li><a href="about.html">烘培度</a></li>
-                                                <li><a href="portfolio.html">處理法</a></li>
-                                                <li> <a href="blog.html">包裝方式</a></li>
-                                            </ul>
-                                        </li>
-
-                                        <li id="selecttool" style="color: #808080;cursor:pointer">咖啡器具</li>
-                                        <li id="selectconsume" style="color: #808080;cursor:pointer">消耗品</li>
+                                        <li id="s_1" style="color: #808080  ; cursor:pointer" class="coff">咖啡豆</li>
+                                        <li id="s_2" style="color: #808080;cursor:pointer" class="coff">咖啡器具</li>
+                                        <li id="s_3" style="color: #808080;cursor:pointer" class="coff">消耗品</li>
                                     </ul>
                                 </li>
                             </ul>
@@ -77,17 +50,60 @@
                     </div>
 
                     <!-- Shop Widget -->
-                    <div class="shop-widget sort-by mb-50">
+                    <div class="shop-widget sort-by mb-50 coffcate">
                         <h4 class="widget-title">咖啡豆分類</h4>
                         <div class="widget-desc">
                             <ul>
                                 <li>
-                                    <ul class="dropdown">
-                                        <li><a href="index.html" style="color: #808080">產地洲別</a></li>
-                                        <li><a href="about.html" style="color: #808080">產地國家</a></li>
-                                        <li><a href="about.html" style="color: #808080">烘培程度</a></li>
-                                        <li><a href="about.html" style="color: #808080">處理方式</a></li>
-                                        <li><a href="about.html" style="color: #808080">包裝方法</a></li>
+                                    <ul class="dropdown test1 " >
+                                        <li style="color: #808080" class="list">
+                                            產地國家
+                                            <ul class="coffeelist animate__animated animate__fadeIn" id="coffcontry">
+                                                <li id="c_1" style="color: #808080  ; cursor:pointer" class="coffc coffcn">衣索比亞	</li>
+                                                <li id="c_2" style="color: #808080  ; cursor:pointer" class="coffc coffcn">肯亞	</li>
+                                                <li id="c_3" style="color: #808080  ; cursor:pointer" class="coffc coffcn">盧安達</li>
+                                                <li id="c_4" style="color: #808080  ; cursor:pointer" class="coffc coffcn">巴西</li>
+                                                <li id="c_5" style="color: #808080  ; cursor:pointer" class="coffc coffcn">祕魯</li>
+                                                <li id="c_6" style="color: #808080  ; cursor:pointer" class="coffc coffcn">巴拿馬	</li>
+                                                <li id="c_7" style="color: #808080  ; cursor:pointer" class="coffc coffcn">瓜地馬拉	</li>
+                                                <li id="c_8" style="color: #808080  ; cursor:pointer" class="coffc coffcn">薩爾瓦多</li>
+                                                <li id="c_9" style="color: #808080  ; cursor:pointer" class="coffc coffcn">宏都拉斯	</li>
+                                                <li id="c_10" style="color: #808080  ; cursor:pointer" class="coffc coffcn">哥倫比亞	</li>
+                                                <li id="c_11" style="color: #808080  ; cursor:pointer" class="coffc coffcn">哥斯大黎加</li>
+                                                <li id="c_12" style="color: #808080  ; cursor:pointer" class="coffc coffcn">印尼</li>
+                                                <li id="c_13" style="color: #808080  ; cursor:pointer" class="coffc coffcn">巴布亞新幾內亞</li>
+                                                <li id="c_14" style="color: #808080  ; cursor:pointer" class="coffc coffcn">台灣</li>
+                                                <li id="c_15" style="color: #808080  ; cursor:pointer" class="coffc coffcn">尼加拉瓜</li>
+                                            </ul>
+                                        </li>
+                                        <li style="color: #808080" class="list">
+                                            烘培程度
+                                            <ul class="coffeelist animate__animated animate__fadeIn" id="coffroast">
+                                                <li id="r_1" style="color: #808080  ; cursor:pointer" class="coffc coffcr">淺焙</li>
+                                                <li id="r_2" style="color: #808080  ; cursor:pointer" class="coffc coffcr">中淺焙</li>
+                                                <li id="r_3" style="color: #808080  ; cursor:pointer" class="coffc coffcr">中焙</li>
+                                                <li id="r_4" style="color: #808080  ; cursor:pointer" class="coffc coffcr">中深焙</li>
+                                                <li id="r_5" style="color: #808080  ; cursor:pointer" class="coffc coffcr">深焙</li>
+                                            </ul>
+                                        </li>
+                                        <li style="color: #808080" class="list">
+                                            處理方式
+                                            <ul class="coffeelist animate__animated animate__fadeIn dropdown">
+                                                <li id="w_1" style="color: #808080  ; cursor:pointer" class="coffc coffcw"> 日曬</li>
+                                                <li id="w_2" style="color: #808080  ; cursor:pointer" class="coffc coffcw">水洗</li>
+                                                <li id="w_3" style="color: #808080  ; cursor:pointer" class="coffc coffcw">蜜處理</li>
+                                                <li id="w_4" style="color: #808080  ; cursor:pointer" class="coffc coffcw">特殊處理</li>
+                                            </ul>
+                                        </li>
+                                        <li style="color: #808080" class="list">
+                                            包裝方法
+                                            <ul class="coffeelist animate__animated animate__fadeIn">
+                                                <li id="p_1" style="color: #808080  ; cursor:pointer" class="coffc coffcp">豆(半磅)</li>
+                                                <li id="p_2" style="color: #808080  ; cursor:pointer" class="coffc coffcp">豆(一磅)</li>
+                                                <li id="p_3" style="color: #808080  ; cursor:pointer" class="coffc coffcp">濾掛</li>
+                                                <li id="p_4" style="color: #808080  ; cursor:pointer" class="coffc coffcp">濾袋</li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -160,46 +176,72 @@
 
             <!-- All Products Area -->
             <div class="col-12 col-md-8 col-lg-9">
-                <div class="shop-products-area"  >
-                    <div class="row" id="showcard" style="transition: 0.5s">
+                <div class="shop-products-area">
+                    <div class="row" id="showcard">
                     </div>
-
                     <!-- Pagination -->
                     <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
-                        </ul>
+                       
                     </nav>
                 </div>
             </div>
         </div>
     </div>
 </section>
-@section Style{ 
-<style>
-    #coffeelist {
-        display: none
-    }
-</style>
+@section Style{
+    <style>
+        .coffc {
+            margin-left: 5px;
+            font-size: 5px;
+        }
+
+
+        .list {
+            cursor: default;
+            user-select: none;
+            color:#1e1e1e
+        }
+        .coffcate{
+            height:800px;
+        }
+
+    </style>
 }
 
 @section Scripts{
     <script>
-        $("#showcard").load('@Url.Content("~/Shop/partialView")');
-        $('#selectall').click(function () {
-            $('#showcard').load('@Url.Content("~/Shop/partialView")');
+        $("#showcard").load('@Url.Content("~/Shop/partialView")' + "?id=1");
+
+         $('#selectall').click(function () {
+            $('#showcard').load('@Url.Content("~/Shop/partialView")' +"?id=1");
         });
-        $('#selectcoffee').click(function () {
-            $('#showcard').load('@Url.Content("~/Shop/partialViewForCatgory")'+"?id=1");
+
+        /*下拉式選單*/
+        $(".coff").click(function () {
+            let id = $(event.target).attr("id").substr(2);
+
+            $('#showcard').load('@Url.Content("~/Shop/partialViewForCatgory")' + "?id=" + id+"&page=1");
+
         });
-        $('#selecttool').click(function () {
-            $('#showcard').load('@Url.Content("~/Shop/partialViewForCatgory")'+"?id=2");
-        });
-        $('#selectconsume').click(function () {
-            $('#showcard').load('@Url.Content("~/Shop/partialViewForCatgory")'+"?id=3");
-        });
-        $('#selectcoffee').click(function () { $('#coffeelist').removeProp(" display") })
+
+        $(".coffcn").click(function(){
+            let id = $(event.target).attr("id").substr(2);
+            $('#showcard').load('@Url.Content("~/Shop/partialViewContry")' + "?id=" + id + "&page=1");
+        })
+         $(".coffcr").click(function(){
+            let id = $(event.target).attr("id").substr(2);
+             $('#showcard').load('@Url.Content("~/Shop/partialViewRoast")' + "?id=" + id + "&page=1");
+         })
+         $(".coffcw").click(function(){
+            let id = $(event.target).attr("id").substr(2);
+             $('#showcard').load('@Url.Content("~/Shop/partialViewProcess")' + "?id=" + id + "&page=1");
+         })
+        $(".coffcp").click(function(){
+            let id = $(event.target).attr("id").substr(2);
+            $('#showcard').load('@Url.Content("~/Shop/partialViewPacking")' + "?id=" + id + "&page=1");
+        })
+        /*下拉式選單*/
+
+
     </script>
 }

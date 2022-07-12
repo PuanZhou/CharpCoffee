@@ -1,0 +1,53 @@
+﻿@model IEnumerable<prjProduct_core.Models.Article>
+
+@{
+    ViewData["Title"] = "List";
+}
+<br /><br /><br /><br /><br /><br />
+
+
+
+    <a asp-action="Create"><h2>新增</h2></a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th  class="col-12 col-md-2">
+                文章名稱
+            </th>
+            <th  class="col-12 col-md-9">
+                文章內容
+            </th>
+            <th class="col-12 col-md-1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ 
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        <p>
+                        @Html.DisplayFor(modelItem => item.ArticleName)
+                        </p>
+                        <p>
+                        @Html.DisplayFor(modelItem => item.ArticleImage)
+                        <img src="" width="80" height="40" />
+                        </p>
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.ArticleDescription)
+                    </td>
+                    <td>
+                        @Html.ActionLink("修改", "Edit", new { id =item.ArticleId }, new { Class = "btn btn-success" }) 
+                        <br/>
+                        <br/>
+                        @Html.ActionLink("刪除", "Delete", new { id = item.ArticleId }, new { Class= "btn btn-danger", onclick = "return confirm('無法恢復，請確認是否刪除?')" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

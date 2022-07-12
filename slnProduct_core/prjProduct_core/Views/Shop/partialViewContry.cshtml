@@ -1,0 +1,56 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CCoffeeViewModel>
+
+@{
+    foreach (var pd in Model)
+    {
+        <!-- Single Product Area -->
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
+                <!-- Product Image -->
+                <div class="product-img">
+                    <a asp-action="detail" asp-route-id="@pd.ProductId"><img src="../img/Home-img/02.jpg" alt=""></a>
+                    <!-- Product Tag -->
+                    <div class="product-tag">
+                        <a href="#">Hot</a>
+                    </div>
+                    <div class="product-meta d-flex">
+                        <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                        <a asp-action="addToCart" asp-route-id="@pd.ProductId" class="add-to-cart-btn">Add to cart</a>
+                        <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
+                    </div>
+                </div>
+                <!-- Product Info -->
+                <div class="product-info mt-15 text-center">
+                    <a>
+                        @Html.ActionLink(@pd.CoffeeName, "detail", new { id = pd.ProductId }, new { })
+                    </a>
+                    <h6>$@(Convert.ToInt32( pd.Product.Price).ToString("0.0"))</h6>
+                </div>
+            </div>
+        </div>
+    }
+}
+<div  class="col-12">
+    <ul class="pagination left pull-left" id="btnul">
+    </ul>
+</div>
+
+
+<script>
+
+    $("#btnul").append(function () {
+        $.get('@Url.Content("~/API/loadCountry")' + "?id=" +@Model.Select(p=>p.CountryId).FirstOrDefault(), function (data) {
+            let cont = parseInt(data) + 1;
+
+                for (let i = 1; i < cont+1; i++) {
+                    $("#btnul").append(`<li class=" page-item"><a href="#" class=" page-link " id="Page${i}" onclick="loadpage()">${i}</a></li>`)
+                }
+        })
+    });
+
+        function loadpage() {
+            let id = $(event.target).attr("id").substr(4);
+            /*console.log(id)*/
+             $("#showcard").load('@Url.Content("~/Shop/partialViewContry")' + "?id=" +@Model.Select(p=>p.CountryId).FirstOrDefault()+"&page="+id);
+        }
+</script>

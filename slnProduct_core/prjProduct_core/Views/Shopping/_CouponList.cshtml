@@ -1,0 +1,19 @@
+﻿@model prjCSCoffee.Models.CShoppingCartItem
+
+
+@for (int i = 0; i < Model.couponall.Count; i++)
+    {
+        int money = (int)@Model.couponall[i].Money;
+
+        <div class="card" style="width: 15rem; border-radius:10px; margin:5px;">
+            <div class="card-body">
+                <h5 class="card-title"> @Model.couponall[i].CouponId - @Model.couponall[i].CouponName</h5>
+                <p class="card-text">折抵NT$ @money 元</p>
+                <a href="#" class="btn btn-primary" id="pay">使用</a>
+                <input type="hidden" id="moeny" value="@money" />
+                <input type="hidden" id="moenyid" value="@Model.couponall[i].CouponId" />
+            </div>
+        </div>
+    }
+
+

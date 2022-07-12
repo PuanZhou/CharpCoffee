@@ -21,5 +21,6 @@ namespace prjProduct_core.ViewModel
         public double? Star { get; set; }
         public Category Category { get; set; }
         public  Country Country { get; set; }
+        public  Coffee Coffee { get; set; }
     }
 }

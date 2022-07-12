@@ -1,0 +1,128 @@
+﻿@using static prjProduct_core.Models.CoffeeContext;
+@model IEnumerable<prjProduct_core.ViewModel.CArticleViewModel>
+    <!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
+        <h2>好文慢讀</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">相關文章</a></li>
+                        <li class="breadcrumb-item"><a href="#">咖啡好文</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">好文慢讀</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Blog Content Area Start ##### -->
+<section class="blog-content-area section-padding-0-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Blog Posts Area -->
+            <div class="col-12 col-md-8">
+                <div class="blog-posts-area">
+
+                    <!-- Post Details Area -->
+                    <div class="single-post-details-area">
+                        <div class="post-content">
+                            <h4 class="post-title">@Model.FirstOrDefault().ArticleName</h4>
+                            <div >
+                                <a href="#">@Model.FirstOrDefault().ArticleDate.ToString().Substring(0, 9)</a>
+                            </div>
+                            <div class="post-thumbnail mb-30">
+                                <img src="~/images/Frog001.jpg" alt="">
+                            </div>
+                            <p id="P1">
+                                @Html.Raw(@Model.FirstOrDefault().ArticleDescription)
+                            </p>
+                            <div class="row mb-30"></div>
+                        </div>
+                    </div>
+
+                    <!-- Post Tags & Share -->
+                    <!--<div class="post-tags-share d-flex justify-content-between align-items-center ">-->
+                        <!-- Tags -->
+                        <!--<ol class="popular-tags d-flex align-items-center flex-wrap">
+                            <li><span>Tag:</span></li>
+                            <li><a href="#">PLANTS</a></li>
+                            <li><a href="#">CACTUS</a></li>
+                        </ol>-->
+                        <!-- Share -->
+                        <!--<div class="post-share">
+                            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                            <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        </div>
+                    </div>-->
+
+                </div>
+            </div>
+
+            <!-- Blog Sidebar Area -->
+            <div class="col-12 col-sm-9 col-md-4">
+                <div class="post-sidebar-area">
+
+
+                    <!-- ##### Single Widget Area ##### -->
+                    <div class="single-widget-area">
+                        <!-- Title -->
+                        <div class="widget-title">
+                            <h4>十大熱銷商品</h4>
+                        </div>
+                        @{
+                            CoffeeContext _context = new CoffeeContext();
+
+
+                            foreach (var item in _context.Products.OrderByDescending(t =>t.Stock).Take(10))
+                            {
+                                <!-- 熱銷商品 -->
+                    <div class="single-best-seller-product d-flex align-items-center">
+                        <div class="product-thumbnail">
+                            <a href="@Url.Action($"detail", "Shop", new { id = item.ProductId })"><img src="~/img/Home-img/02.jpg" alt=""></a>@*超連結與圖片路徑*@
+                        </div>
+                        <div class="product-info">
+                            <a href="@Url.Action($"detail", "Shop", new { id = item.ProductId })">@item.ProductName</a>
+                            <p>@Convert.ToInt32(item.Price).ToString("0")</p>
+                            <div class="ratings">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                            }
+                        }
+
+
+
+
+                    </div>
+                </div>
+        </div>
+    </div>
+  </div>
+</section>
+<!-- ##### Blog Content Area End ##### -->
+<!-- ##### All Javascript Files ##### -->
+<!-- jQuery-2.2.4 js -->
+<script src="js/jquery/jquery-2.2.4.min.js"></script>
+<!-- Popper js -->
+<script src="js/bootstrap/popper.min.js"></script>
+<!-- Bootstrap js -->
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!-- All Plugins js -->
+<script src="js/plugins/plugins.js"></script>
+<!-- Active js -->
+<script src="js/active.js"></script>

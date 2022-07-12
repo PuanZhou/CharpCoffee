@@ -10,7 +10,6 @@ namespace prjProduct_core.Models
         public Coupon()
         {
             CouponDetails = new HashSet<CouponDetail>();
-            Qquestionnaires = new HashSet<Qquestionnaire>();
         }
 
         public int CouponId { get; set; }
@@ -21,6 +20,5 @@ namespace prjProduct_core.Models
         public DateTime CouponDeadline { get; set; }
 
         public virtual ICollection<CouponDetail> CouponDetails { get; set; }
-        public virtual ICollection<Qquestionnaire> Qquestionnaires { get; set; }
     }
 }

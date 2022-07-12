@@ -1,0 +1,47 @@
+﻿@model prjProduct_core.Models.Article
+
+@{
+    ViewData["Title"] = "CreatArticle";
+}
+<br/><br /><br /><br /><br /><br />
+<h1>文章編寫</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreatArticle">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ArticleName" class="control-label">文章名稱</label>
+                <input asp-for="ArticleName" class="form-control" />
+                <span asp-validation-for="ArticleName" class="text-danger"></span>
+            </div>
+            <div class="form-group text-center">
+                <label asp-for="ArticleDescription" class="control-label">文章內容</label>
+                <textarea asp-for="ArticleDescription" />
+                <span asp-validation-for="ArticleDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArticleImage" class="control-label"></label>
+                <input asp-for="ArticleImage" class="form-control" />
+                <span asp-validation-for="ArticleImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArticleDate" class="control-label"></label>
+                <input asp-for="ArticleDate" class="form-control" />
+                <span asp-validation-for="ArticleDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">取消新增</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using prjProduct_core.Models;
+using SignalRChat.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +32,8 @@ namespace prjProduct_core
             });
 
             services.AddControllersWithViews();
-
             services.AddSession();
+            services.AddSignalR();
 
         }
 
@@ -53,9 +54,10 @@ namespace prjProduct_core
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCookiePolicy();
+
             app.UseAuthorization();
 
+            app.UseCookiePolicy();
             app.UseSession();
 
             app.UseEndpoints(endpoints =>
@@ -63,6 +65,7 @@ namespace prjProduct_core
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }

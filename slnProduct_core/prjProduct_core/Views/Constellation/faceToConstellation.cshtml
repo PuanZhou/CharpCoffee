@@ -1,0 +1,109 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CConstellationViewModel>
+
+<style>
+
+
+</style>
+
+<a href="faceToConstellation#ConId+1"><img src="~/Constellation/Constellation01.jpg" class="img1 img2 img4"></a>
+<a href="faceToConstellation#ConId+2"><img src="~/Constellation/Constellation02.jpg" class="img1 img2 img5"></a>
+<a href="faceToConstellation#ConId+3"><img src="~/Constellation/Constellation03.jpg" class="img1 img2 img6"></a>
+<a href="faceToConstellation#ConId+4"><img src="~/Constellation/Constellation04.jpg" class="img1 img2 img7"></a>
+<a href="faceToConstellation#ConId+5"><img src="~/Constellation/Constellation05.jpg" class="img1 img2 img8"></a>
+<a href="faceToConstellation#ConId+6"><img src="~/Constellation/Constellation06.jpg" class="img1 img2 img9"></a>
+<a href="faceToConstellation#ConId+7"><img src="~/Constellation/Constellation07.jpg" class="img1 img3 img4"></a>
+<a href="faceToConstellation#ConId+8"><img src="~/Constellation/Constellation08.jpg" class="img1 img3 img5"></a>
+<a href="faceToConstellation#ConId+9"><img src="~/Constellation/Constellation09.jpg" class="img1 img3 img6"></a>
+<a href="faceToConstellation#ConId+10"><img src="~/Constellation/Constellation10.jpg" class="img1 img3 img7"></a>
+<a href="faceToConstellation#ConId+11"><img src="~/Constellation/Constellation11.jpg" class="img1 img3 img8"></a>
+<a href="faceToConstellation#ConId+12"><img src="~/Constellation/Constellation12.jpg" class="img1 img3 img9"></a>
+
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+
+
+    <div class="container">
+        <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../Constellation/Constellation_background04.jpg )">
+            <h2>星座咖啡</h2>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a style="color:forestgreen" href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li style="color:white" class="breadcrumb-item active" aria-current="page">星座咖啡</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Blog Area Start ##### -->
+<section class="alazea-blog-area mb-100">
+    <div class="container">
+        <div class="row">
+
+            @{
+                foreach (var item in Model)
+                {
+                    <div class="col-12 col-lg-1"></div>
+                    <div class="col-12 col-lg-10">
+                        <div class="single-blog-post mb-50">
+                            <div class="post-content">
+                                <div id="ConId+@item.ConstellationId">
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
+                                <h4 style="color:white">
+                                    <input type="hidden" name="ArticleId" />
+                                    @item.ConstellationName
+                                </h4>
+                                <h5 style="color:white">
+                                    @item.ConstellationDate
+                                </h5>
+                                <p style="color:white" class="post-excerpt">@Html.Raw(item.ConstellationDescription.Replace(" ", "</p><p style='color: white'>&emsp;&emsp;").Replace("@@@@",item.productName))</p>@*資料庫修正*@
+                                <div style="text-align:right">
+                                <a href="@Url.Action($"detail", "Shop",new { id = item.ConstellationProductId})"><label style="color:white">GoTo咖啡豆</label></a>@*修正action連結咖啡細節*@
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-1"></div>
+                }
+            }
+
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ##### All Javascript Files ##### -->
+<!-- jQuery-2.2.4 js -->
+<script src="js/jquery/jquery-2.2.4.min.js"></script>
+<!-- Popper js -->
+<script src="js/bootstrap/popper.min.js"></script>
+<!-- Bootstrap js -->
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!-- All Plugins js -->
+<script src="js/plugins/plugins.js"></script>
+<!-- Active js -->
+<script src="js/active.js"></script>
+<link href="~/css/ForConstellation.css" rel="stylesheet" />
+@section Scripts{ 
+<script>
+    $(".img1").mouseenter(enter);
+    $(".img1").mouseleave(leave);
+    function enter() {
+        $(event.target).addClass("img10");
+    }
+    function leave() {
+        $(event.target).removeClass("img10");
+    }
+    $("body").addClass("body1")
+</script>
+}

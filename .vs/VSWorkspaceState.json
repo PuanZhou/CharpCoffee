@@ -1,8 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\slnProduct_core"
+    "\\slnProduct_core",
+    "\\slnProduct_core\\prjProduct_core",
+    "\\slnProduct_core\\prjProduct_core\\Controllers",
+    "\\slnProduct_core\\prjProduct_core\\Views",
+    "\\slnProduct_core\\prjProduct_core\\Views\\Shop"
   ],
-  "SelectedNode": "\\slnProduct_core\\slnProduct_core.sln",
+  "SelectedNode": "\\slnProduct_core\\prjProduct_core\\Views\\Shop\\view.cshtml",
   "PreviewInSolutionExplorer": false
 }

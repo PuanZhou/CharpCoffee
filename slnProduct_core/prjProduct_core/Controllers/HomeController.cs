@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using prjCSCoffee.Models;
 using prjCSCoffee.ViewModel;
 using prjProduct_core.Models;
+using prjProduct_core.ViewModel;
+using prjProduct_core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -78,8 +80,6 @@ namespace prjProduct_core.Controllers
         {
             var cartID = db.Members.Select(m => m.MemberId).Max() + 1;
             ViewBag.CARTID = cartID;
-            byte[] defaultimg = db.Members.First().MemberPhoto;
-            ViewBag.DEFAULTIMG = defaultimg;
             return View();
         }
         [HttpPost]
@@ -95,6 +95,35 @@ namespace prjProduct_core.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        //===============留言板PV===============
+        public IActionResult _CommentBoard(int productId)
+        {
+            var data = db.Comments.Where(x => x.ProductId == productId)
+                .OrderByDescending(x => x.CommentId)
+                .Select(x => new CCommentsViewModel()
+                {
+                    CommentId = x.CommentId,
+                    CommentParentId = x.CommentParentId,
+                    CommentDescription = x.CommentDescription,
+                    ProductId = x.ProductId,
+                    MemberId = x.MemberId,
+                    Star = x.Star,
+                    OrderId = x.OrderId,
+                    MemberName = x.Member.MemberName
+                }).ToList();
+            return PartialView(data);
+        }
+
+        //===============即時客服===============
+        public IActionResult OnlineServices()
+        {
+            if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) == null)
+            {
+                Member m = db.Members.FirstOrDefault();
+                return View(m);
+            }
+            return View(JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)));
         }
     }
 }

@@ -1,0 +1,51 @@
+﻿
+.img2 {
+    left: 2em;
+}
+
+.img3 {
+    right: 2em;
+}
+
+.img4 {
+    top: 9em;
+}
+
+.img5 {
+    top: 17em;
+}
+
+.img6 {
+    top: 25em;
+}
+
+.img7 {
+    top: 33em;
+}
+
+.img8 {
+    top: 41em;
+}
+
+.img9 {
+    top: 49em;
+}
+
+.img1 {
+    position: fixed;
+    width: 7em;
+    height: 7em;
+    filter: grayscale(0.4)
+}@media(max-width:1350px){
+     .img1{display:none}
+ }
+
+.img10 {
+    filter: grayscale(0)
+}
+.body1 {
+    background-image: url(../Constellation/Constellation_background01.jpg);
+    background-attachment:fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
