@@ -1,4 +1,15 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.CCompareCoffeeViewModel>
+@section Style{
+    <style>
+        .card-link {
+            transition: 0.5s;
+        }
+
+            .card-link:hover {
+                transform: scale(1.2);
+            }
+    </style>
+}
 
 @{
     ViewData["Title"] = "CompareView";
@@ -43,7 +54,7 @@
                 </ul>
                 <div class="card-body">
                     <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId" class="card-link btn btn-info">前往商品頁面</a>
-                    <a href="#" class="card-link remove btn btn-danger" id="remove"><input hidden value="@item.ProductId" />移除比較</a>
+                    <a href="javascript:void(0)" class="card-link remove btn btn-danger" id="remove"><input hidden value="@item.ProductId" />移除比較</a>
                 </div>
             </div>
         }
