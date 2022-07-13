@@ -3,17 +3,6 @@
 @{
     ViewData["Title"] = "Create";
 }
-@section Style{
-    <style>
-        .warn {
-            font-size: 80%;
-            color: darkgray;
-        }
-    </style>
-
-}
-
-
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
@@ -57,11 +46,11 @@
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="phone">手機號碼*</label>
-                                <input type="text" class="form-control" maxlength="10" id="phone" name="MemberPhone">
+                                <input type="text" class="form-control" maxlength="10" id="phone" name="MemberPhone" placeholder="手機號碼為10字元" pattern="[0-9]{10}">
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="PW">密碼*</label>
-                                <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八">
+                                <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八" pattern="[0-9a-zA-Z]{8,50}">
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="checkPW">確認密碼*</label>
@@ -76,7 +65,6 @@
                                 <input type="date" class="form-control" id="birth" name="MemberBirthDay">
                                 <input hidden type="text" name="ShoppingCarId" value="@ViewBag.CARTID">
                                 <input hidden type="text" name="BlackList" value="0">
-                                <input hidden type="text" name="MemberPhoto" value="@ViewBag.DEFAULTIMG">
                             </div>
                         </div>
 
@@ -110,7 +98,8 @@
                             <h5 class="warn" id="warnBirth">生日格式</h5>
                         </div>
                         <div class="checkout-btn mt-30">
-                            <button type="submit" class="btn alazea-btn w-100">註冊</button>
+                            <button type="submit" class="btn alazea-btn w-100">註冊</button><br />
+                            <input type="button" class="btn alazea-btn w-100" id="creatDemo" value="註冊Demo">
                         </div>
                     </div>
                 </div>
@@ -134,7 +123,7 @@
 
         let inputPW = $("#PW");
         let warnPW = $("#warnPW");
-        let re = /^.*[0-9a-zA-Z].{8,50}$/;
+        let re = /^[0-9a-zA-Z].{8,50}$/;
 
         let inputCheckPW = $("#checkPW");
         let warnCheckPW = $("#warnCheckPW");
@@ -228,16 +217,13 @@
 
         });
 
-        inputPhone.blur(async () => {
+        inputPhone.blur( function() {
             if (inputPhone.val().trim() == "") {
                 Emptywarn(warnPhone, "手機");
             }
             else {
-                const phonerespon = await fetch('@Url.Content("~/MemberFactory/QueryMemPhone")' + `?MemberEmail=${inputPhone.val()}`)
-                const phonedata = phonerespon.text();
-                phonedata.then(datas => {    //datas 會是傳過來的bool
-
-                    if (datas == "True") {
+                $.get('@Url.Content("~/MemberFactory/QueryMemPhone")', { "MemberPhone": inputPhone.val() }, function (data) {
+                    if (data == "True") {
                         Existwarn(warnPhone, "手機");
                     }
                     else {
@@ -247,6 +233,17 @@
             }
 
         });
+
+        $("#creatDemo").click(() => {
+            inputName.val("黃阿花");
+            inputAddress.val("106台北市大安區復興南路一段390號2樓");
+            inputbirth.val("2022-02-02");
+            inputPW.val("1qaz2wsxC")
+            inputCheckPW.val("1qaz2wsxC");
+            inputEmail.val("flower@@gmail.com")
+            inputPhone.val("0977222333");
+
+        })
 
     </script>
 }

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CMyLikeViewModel>
+
+<div class="row">
+    <!-- Sidebar Area -->
+    <!-- All Products Area -->
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="shop-products-area">
+            <div class="row test">
+
+                @{
+                    int prodcount = 0;
+
+                    foreach (var pd in Model)
+                    {
+                        prodcount++;
+                        <!-- Single Product Area -->
+                        <div class="col-12 col-sm-6 col-lg-4 dele" id="@pd.ProductId">
+                            <div class="single-product-area mb-50">
+                                <!-- Product Image -->
+                                <div class="product-img">
+                                    <a href="shop-details.html"><img src="../img/Home-img/02.jpg" alt=""></a>
+                                    <!-- Product Tag -->
+                                    <div class="product-tag">
+                                        <a href="#">Hot</a>
+                                    </div>
+                                    <div class="product-meta d-flex">
+                                        <a href="javascript:viod(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
+                                        <a style="cursor:pointer" class="add-to-cart-btn">Add to cart</a>
+                                        <a class="compare-btn" style="cursor:pointer"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                    </div>
+                                </div>
+                                <!-- Product Info -->
+                                <div class="product-info mt-15 text-center">
+                                    <a>
+                                        @Html.ActionLink(pd.productname, "detail", new { id = pd.ProductId }, new { })
+                                    </a>
+                                    <h6>$@(Convert.ToInt32( pd.price).ToString("0.0"))</h6>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        $(".compare-btn").click(function () {
+        let comid = $(this.children).text();
+        $.get('@Url.Content("~/compare/AddCompare")', { "id": comid },
+            function (data) {
+                alert(data);
+            }
+        );
+        })
+
+        $(".wishlist-btn").click(function (event) {
+        let likeid = event.currentTarget.textContent;
+
+            let aa = $(this).closest(".dele");
+            console.log(aa); //所有元素
+
+        $.get('@Url.Content("~/MemberFactory/DeleteMylike")', { "id": likeid },
+            function (data) {
+                if (data == "已取消收藏") {
+                    aa.remove();
+                    alert(data);
+                } else {
+                    window.location.href = '@Url.Content("~/MemberFactory/DeleteMylike")';
+                }
+            });
+
+    });
+</script>

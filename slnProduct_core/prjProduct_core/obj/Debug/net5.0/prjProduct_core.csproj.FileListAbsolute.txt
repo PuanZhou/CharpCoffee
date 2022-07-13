@@ -711,3 +711,12 @@ C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改�
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\ref\prjProduct_core.dll
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\prjProduct_core.pdb
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\prjProduct_core.genruntimeconfig.cache
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\bin\Debug\net5.0\MailKit.dll
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\bin\Debug\net5.0\MimeKit.dll
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\MemCenter\CouponPartialView.cshtml.g.cs
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\MemCenter\EditPartialView.cshtml.g.cs
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\MemCenter\GiveBackPartialView.cshtml.g.cs
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\MemCenter\Index.cshtml.g.cs
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\MemCenter\MyLikePartial.cshtml.g.cs
+C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\MemCenter\QueryOrderPartialView.cshtml.g.cs

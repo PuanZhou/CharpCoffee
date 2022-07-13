@@ -1,0 +1,83 @@
+﻿@model prjCSCoffee.ViewModel.CMemberViewModel
+@section Style{
+    <style>
+        #memphoto {
+            border-radius: 50%;
+        }
+    </style>
+}
+
+<!-- ##### Checkout Area Start ##### -->
+<div class="checkout_area mb-100">
+    <div class="container">
+        <form method="post" action="EditPartialView" enctype="multipart/form-data">
+            <div class="row justify-content-between">
+                <div class="col-12 col-lg-7">
+                    <div class="checkout_details_area clearfix">
+                        <h5>Billing Details</h5>
+                        <div class="row">
+                            <input type="hidden" value="@Model.MemberId" name="MemberId" />
+                            <div class="col-12 mb-4">
+                                <label for="name">姓名*</label>
+                                <input type="text" class="form-control" maxlength="50" id="name" name="MemberName" value="@Model.MemberName" />
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="email_address">電子信箱*</label>
+                                <input type="email" class="form-control" maxlength="50" id="email" name="MemberEmail" value="@Model.MemberEmail" />
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="phone">手機號碼*</label>
+                                <input type="text" disabled class="form-control" id="phone" name="MemberPhone" value="@Model.MemberPhone" />
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="PW">密碼*</label>
+                                <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八" value="@Model.MemberPassword" />
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="address">地址*</label>
+                                <input type="text" class="form-control" maxlength="50" id="address" name="MemberAddress" value="@Model.MemberAddress" />
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label for="birth">生日*</label>
+                                <input type="text" disabled class="form-control" id="birth" name="MemberBirthDay" value="@Model.MemberBirthDay.ToShortDateString()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    <div class="checkout-content ">
+                        <h5>頭像</h5>
+                        <div class="subtotal d-flex justify-content-between align-items-center">
+                            @{
+                                string defaultphoto = "";
+                                if (Model.MemberPhotoPath == null)
+                                {
+                                    defaultphoto = "catMoney.jpg";
+                                }
+                                else
+                                {
+                                    defaultphoto = Model.MemberPhotoPath;
+                                }
+                                <img src="~/img/Mem-img/@defaultphoto" width="250" height="250" id="memphoto" />
+                            }
+                        </div>
+                        <div class="checkout-btn mt-30">
+                            <input type="file" name="photo" />
+                        </div>
+                        <br /><br />
+                        <div class="checkout-btn mt-30">
+                            <button type="submit" class="btn alazea-btn w-100">修改</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- ##### Checkout Area End ##### -->
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

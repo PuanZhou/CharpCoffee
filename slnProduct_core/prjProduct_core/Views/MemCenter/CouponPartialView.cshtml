@@ -1,0 +1,47 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CCouponDetailViewModel>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-hover">
+    <thead style="background-color: #61A340; color: ghostwhite;">
+        <tr>
+            <th scope="col">
+                優惠活動
+            </th>
+            <th scope="col">
+                折抵金額
+            </th>
+            <th scope="col">
+                折抵條件
+            </th>
+            <th scope="col">
+                開始日期
+            </th>
+            <th scope="col">
+                使用期限
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.couponName
+            </td>
+            <td>
+                @item.money.ToString("0")
+            </td>
+            <td>
+                @item.condition.ToString("0")
+            </td>
+            <td>
+                @item.startDate.ToShortDateString()
+            </td>
+            <td>
+                @item.deadline.ToShortDateString()
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -48,22 +48,23 @@ namespace prjProduct_core.Controllers
         [HttpPost]
         public IActionResult Login(CLoginViewModel login) //登入資料送出
         {
+            //後端登入?
+
             var mem = db.Members.FirstOrDefault(m => m.MemberPhone == login.txtAccount);
             if (mem != null)
             {
                 if (mem.MemberPassword.Equals(login.txtPW))
                 {
 
-                    //授權部分 暫時用session代替 之後再用[Authorize]
                     string jsonUser = JsonSerializer.Serialize(mem);  //將物件轉字串
                     HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, jsonUser); //放入到session紀錄登入資訊
                     loginmem = JsonSerializer.Deserialize<Member>(jsonUser);
                     MemName = $"{loginmem.MemberName}您好";
                     return RedirectToAction("Index");
+
                 }
 
             }
-
             return View();
 
         }
@@ -83,11 +84,26 @@ namespace prjProduct_core.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Member newmem)
+        public IActionResult Create(CMemberViewModel newmem)
         {
-            db.Members.Add(newmem);
+            //if (ModelState.IsValid)
+            //{
+            Member mem = new Member()
+            {
+                MemberName = newmem.MemberName,
+                MemberEmail = newmem.MemberEmail,
+                MemberAddress = newmem.MemberAddress,
+                MemberPhone = newmem.MemberPhone,
+                MemberPassword = newmem.MemberPassword,
+                MemberBirthDay = newmem.MemberBirthDay,
+            };
+
+            db.Members.Add(mem);
             db.SaveChanges();
             return RedirectToAction("Index");
+            //}
+            //else
+            //    return View
         }
 
 

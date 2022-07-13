@@ -1,0 +1,96 @@
+﻿
+@{ ViewData["Title"] = "Index"; }
+
+@section Style{
+    <style>
+        .moviehand {
+            cursor: pointer;
+        }
+    </style>
+
+}
+
+
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+        <h2>會員中心</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">會員中心</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Portfolio Area Start ##### -->
+<section class="alazea-portfolio-area portfolio-page section-padding-0-100">
+<div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="alazea-portfolio-filter">
+                    <div class="portfolio-filter">
+                        <button class="btn" id="memedit">會員資料</button>
+                        <button class="btn" id="memorder">訂單查詢</button> 
+                        <button class="btn" id="memcoupon">優惠券</button>
+                        <button class="btn" id="memmylike">我的收藏</button>
+                        <button class="btn" id="membackprod">退貨</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="" id="funcChange">
+
+        </div>
+    </div>
+</section>
+<!-- ##### Portfolio Area End ##### -->
+
+
+
+
+@section Scripts{
+    <script>
+        $("#funcChange").load('@Url.Content("~/MemCenter/EditPartialView")');
+        $("#memedit").click(() => {
+            $("#funcChange").show("slow",2000, function () {
+                $("#funcChange").load('@Url.Content("~/MemCenter/EditPartialView")')  //先hide再show
+            })
+        });
+
+        $("#memorder").click(() => {
+            $("#funcChange").show(1000, function () {
+                $("#funcChange").load('@Url.Content("~/MemCenter/QueryOrderPartialView")');
+            });
+        });
+        $("#memmylike").click(() => {
+
+            $("#funcChange").show(1000, function () {
+                $("#funcChange").load('@Url.Content("~/MemCenter/MyLikePartial")');
+            });
+        });
+
+        $("#memcoupon").click(() => {
+            $("#funcChange").show(1000, function () {
+                $("#funcChange").load('@Url.Content("~/MemCenter/CouponPartialView")');
+            });
+        });
+
+        $("#membackprod").click(() => {
+            $("#funcChange").show(1000, function () {
+                $("#funcChange").load('@Url.Content("~/MemCenter/GiveBackPartialView")');
+            });
+        });
+
+    </script>
+}

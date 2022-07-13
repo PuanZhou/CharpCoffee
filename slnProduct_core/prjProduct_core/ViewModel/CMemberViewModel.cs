@@ -1,4 +1,5 @@
-﻿using prjCSCoffee.Models;
+﻿using Microsoft.AspNetCore.Http;
+using prjCSCoffee.Models;
 using prjProduct_core.Models;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,8 @@ namespace prjCSCoffee.ViewModel
 
 
         [DisplayName("手機號碼")]
-        [Required]
+        [Required(ErrorMessage = "不可為空")]
+        [RegularExpression("^[0]{1}[9]{1}[0-9]{8}$", ErrorMessage = "手機格式有誤")]
         public string MemberPhone
         {
             get { return _mem.MemberPhone; }
@@ -47,7 +49,9 @@ namespace prjCSCoffee.ViewModel
         }
 
         [DisplayName("電子郵件")]
-        [Required]
+        [Required(ErrorMessage = "不可為空")]
+        [StringLength(50, ErrorMessage = "不得超過50字元")]
+        [EmailAddress(ErrorMessage = "Email格式有誤")]
         public string MemberEmail
         {
             get { return _mem.MemberEmail; }
@@ -55,7 +59,8 @@ namespace prjCSCoffee.ViewModel
         }
 
         [DisplayName("密碼")]
-        [Required]
+        [Required(ErrorMessage = "不可為空")]
+        [RegularExpression("/^[a-zA-Z0-9].{8,50}$/")]
         public string MemberPassword
         {
             get { return _mem.MemberPassword; }
@@ -63,7 +68,7 @@ namespace prjCSCoffee.ViewModel
         }
 
         [DisplayName("地址")]
-        [Required]
+        [Required(ErrorMessage = "不可為空")]
         public string MemberAddress
         {
             get { return _mem.MemberAddress; }
@@ -71,7 +76,7 @@ namespace prjCSCoffee.ViewModel
         }
 
         [DisplayName("姓名")]
-        [Required(ErrorMessage ="不得為空")]
+        [Required(ErrorMessage = "不可為空")]
         public string MemberName
         {
             get { return _mem.MemberName; }
@@ -79,16 +84,25 @@ namespace prjCSCoffee.ViewModel
         }
 
         [DisplayName("生日")]
-        [Required]
+        [Required(ErrorMessage = "不可為空")]
         public DateTime MemberBirthDay
         {
             get { return _mem.MemberBirthDay; }
             set { _mem.MemberBirthDay = value; }
         }
-        public byte[] MemberPhoto { get; set; }
-        public bool BlackList {
+
+        public string MemberPhotoPath
+        {
+            get { return _mem.MemberPhotoPath; }
+            set { _mem.MemberPhotoPath = value; }
+        }
+
+        public bool BlackList
+        {
             get { return _mem.BlackList; }
             set { _mem.BlackList = value; }
         }
+
+        public IFormFile photo { get; set; }
     }
 }
