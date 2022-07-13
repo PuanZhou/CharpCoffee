@@ -78,7 +78,7 @@
                                 </div>
                                 <!-- Cart -->
                                 <div class="cart">
-                                    <a asp-controller="Shopping" asp-action="ShoppingCar"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span id="countCart"class="cart-quantity">()</span></span></a>
+                                    <a asp-controller="Shopping" asp-action="ShoppingCar"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
                                 </div>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
             let countCart = document.querySelector("#countCart");
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
-            countCart.innerHTML = `(${result})`;
+            countCart.innerHTML = result;
         }
         CountCart();
 
