@@ -14,11 +14,11 @@ connection.on("ReceiveMessage", function (user, message) {
     if (head == "ihtgs") {
         if ($("#userInput")[0].value == user) {
             $("#messagesList").prepend(`<div class="clearfix mt-1">
-                                            <img src="${body}" class="w-25" style="float:right"/>
+                                            <img src="${body}" class="w-25 imgAnime" style="float:right"/>
                                         </div>`);
         } else {
             $("#messagesList").prepend(`<div class="clearfix mt-1">
-                                            <img src="${body}" class="w-25"/>
+                                            <img src="${body}" class="w-25 imgAnime"/>
                                         </div>`);
         }
     } else {

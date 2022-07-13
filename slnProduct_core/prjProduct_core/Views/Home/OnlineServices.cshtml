@@ -3,6 +3,16 @@
     ViewData["Title"] = "Online Services";
 }
 
+<style>
+    .imgAnime{
+        transition: all 0.4s
+    }
+    .imgAnime:hover{
+        transform:scale(2);
+    }
+
+</style>
+
 
 
 <div class="breadcrumb-area">
@@ -114,7 +124,8 @@ fileUL.addEventListener('change', (evt) => {
 
 document.getElementById("imageButton").addEventListener("click", function (event) {
     var user = document.getElementById("userInput").value;
-    var message = "ihtgs"+imgPath;
+    var message = "ihtgs" + imgPath;
+    document.getElementById("messageInput").value = "";
     connection.invoke("SendMessage", user, message).catch(function (err) {
         return console.error(err.toString());
     });
