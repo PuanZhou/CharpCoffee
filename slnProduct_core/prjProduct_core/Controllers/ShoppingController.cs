@@ -104,17 +104,24 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult UseCoupon(int? id)
         {
-            HttpContext.Session.Clear();
+            var money = db.Coupons.Where(t => t.CouponId == id).Select(t => t.Money);
+
             string jsonCart = "";
-            List<int> list = null;
+            List<CDeliveryViewModel> list = new List<CDeliveryViewModel>();
             if (!HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
-                list = new List<int>();
+                list = new List<CDeliveryViewModel>();
             else
             {
                 jsonCart = HttpContext.Session.GetString(CDictionary.SK_使用的折價卷);
-                list = JsonSerializer.Deserialize<List<int>>(jsonCart);
-            }            
-            list.Add((int)id);
+                list = JsonSerializer.Deserialize<List<CDeliveryViewModel>>(jsonCart);
+                foreach (var item in money)
+                {
+                    CDeliveryViewModel t = new CDeliveryViewModel();
+                    t.discountid = (int)id;
+                    t.discountmoney = (int)item;
+                    list.Add(t);
+                }
+            }
 
             jsonCart = JsonSerializer.Serialize(list);
             HttpContext.Session.SetString(
@@ -195,18 +202,18 @@ namespace prjCSCoffee.Controllers
         }
 
         public IActionResult Car2()
-        {            
+        {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
             {
-                int pay = 0 ;
+                int pay = 0;
                 string jsonCart = HttpContext.Session.GetString(CDictionary.SK_使用的折價卷);
-                var list1 = JsonSerializer.Deserialize<List<int>>(jsonCart);                          
+                var list1 = JsonSerializer.Deserialize<List<CDeliveryViewModel>>(jsonCart);
                 foreach (var item1 in list1)
                 {
-                    pay = item1;
+                    pay = item1.discountid;
                 }
-                ViewData["discount"] = pay;               
-            }           
+                ViewData["discount"] = pay;
+            }
             return View();
         }      
 
@@ -241,6 +248,17 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult Car3()
         {
+            int discountmoney = 0;
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_付款資訊))
+            {
+                string jsonCart3 = HttpContext.Session.GetString(CDictionary.SK_使用的折價卷);
+                var list3 = JsonSerializer.Deserialize<List<CDeliveryViewModel>>(jsonCart3);
+                foreach (var item in list3)
+                {
+                    discountmoney = item.discountmoney;
+                }
+            }
+
             //金流的
             string tradeNo = Guid.NewGuid().ToString();
             tradeNo = tradeNo.Substring(tradeNo.Length - 12, 12);
@@ -255,7 +273,7 @@ namespace prjCSCoffee.Controllers
             var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId)
                    .Select(t => new {
                        Fid = t.ProductsId,
-                       FName=t.Products.ProductName,
+                       FName = t.Products.ProductName,
                        Fcount = t.Quantity,
                        Fprice = t.Price,
                        Fproduct = t.Products
@@ -266,10 +284,12 @@ namespace prjCSCoffee.Controllers
             {
                 int price = (int)item.Fprice;
                 total += ((int)(item.Fcount) * price);
-                ItemName += $"{item.FName} NT${Convert.ToInt32(item.Fprice).ToString("0")}X{item.Fcount}#";
+                ItemName += $"{item.FName} {Convert.ToInt32(item.Fprice).ToString("0")}元X{item.Fcount}#";
             }
- 
-            ItemName = ItemName.Substring(0,ItemName.Length-1);
+            total = total - discountmoney;
+            if (total < 1200) total += 100;
+
+            ItemName = ItemName.Substring(0, ItemName.Length - 1);
             ViewBag.Total = total;
             ViewBag.ItemName = ItemName;
 
@@ -285,8 +305,8 @@ namespace prjCSCoffee.Controllers
             {
                 string jsonCart = HttpContext.Session.GetString(CDictionary.SK_付款資訊);
                 var list1 = JsonSerializer.Deserialize<List<CShoppingCartItem>>(jsonCart);
-                var list2 = db.Payments.Where(t => t.PaymentId == list1[0].payment).Select(p => p.Payment1).ToArray();               
-               
+                var list2 = db.Payments.Where(t => t.PaymentId == list1[0].payment).Select(p => p.Payment1).ToArray();
+
                 foreach (var item in datas)
                 {
                     CShoppingCartItem t = new CShoppingCartItem();
@@ -298,16 +318,16 @@ namespace prjCSCoffee.Controllers
                     {
                         t.Receiver = item1.Receiver;
                         t.phone = item1.phone;
-                        t.payment = item1.payment;                        
+                        t.payment = item1.payment;
                         t.Address = item1.Address;
                         t.discount = item1.discount;
                         foreach (var item2 in list2)
                         {
-                            t.paymentname = item2;                            
-                        }                        
+                            t.paymentname = item2;
+                        }
                     }
                     list.Add(t);
-                }        
+                }
                 return View(list);
             }
             else

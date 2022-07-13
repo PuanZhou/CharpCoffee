@@ -287,7 +287,7 @@
 
 
             //TODO 111折價眷抓步道
-
+            CDiscount(id);
             @*$.ajax({
                 url: '@Url.Content("~/shopping/UseCoupon")',
                 type: 'GET',
@@ -296,6 +296,10 @@
             })*@
 
         })
+
+         async function CDiscount(id) {
+             const response = await fetch("@Url.Content("~/shopping/UseCoupon")" + `?id=${id}`);
+        }
 
     </script>
 
