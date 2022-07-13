@@ -681,7 +681,6 @@ C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改�
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\Home\OnlineServices.cshtml.g.cs
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\Home\Privacy.cshtml.g.cs
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\Home\_CommentBoard.cshtml.g.cs
-C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\Opay\Index.cshtml.g.cs
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\Student\Desktop\product(改版後)7.12\product(改版後)\product(改版後)\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs

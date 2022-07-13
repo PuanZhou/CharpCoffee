@@ -271,7 +271,12 @@
         })
 
         //=====================推薦商品區域=====================
-         $(".related-products-area").load('@Url.Content("~/Shop/partialViewRelated")' + "?Id=@Model.ProductId")
+         $.get('@Url.Content("~/Shop/partialViewRelated")', { "ID":@Model.ProductId},
+                function (data) {
+                    if (data != "null") {
+                         $(".related-products-area").load('@Url.Content("~/Shop/partialViewRelated")' + "?Id=@Model.ProductId")
+                    }
+                })
         </script>
 
     }

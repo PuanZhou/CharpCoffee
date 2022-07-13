@@ -252,6 +252,13 @@ namespace prjProduct_core.Controllers
 
         public IActionResult partialViewRelated(int? Id)
         {
+            int CategoryID = db.Products.Where(p => p.ProductId == Id).Select(p => p.CategoryId).FirstOrDefault();
+
+            if (CategoryID != 1)
+            {
+                return Content("null", "text/plain", System.Text.Encoding.UTF8);
+            }
+
             Random rng = new Random(Guid.NewGuid().GetHashCode());
             List<CRelatedViewModel> list = new List<CRelatedViewModel>();
 

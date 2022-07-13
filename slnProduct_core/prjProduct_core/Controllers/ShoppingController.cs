@@ -266,7 +266,7 @@ namespace prjCSCoffee.Controllers
             {
                 int price = (int)item.Fprice;
                 total += ((int)(item.Fcount) * price);
-                ItemName += $"{item.FName} {Convert.ToInt32(item.Fprice).ToString("0")}元X{item.Fcount}#";
+                ItemName += $"{item.FName} NT${Convert.ToInt32(item.Fprice).ToString("0")}X{item.Fcount}#";
             }
  
             ItemName = ItemName.Substring(0,ItemName.Length-1);
