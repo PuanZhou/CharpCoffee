@@ -11,14 +11,14 @@
 }
 
 @*@section Style
-{
-    <style>
-        #table1 th {
-            text-align: center;
-            vertical-align: central;            
-        }
-    </style>
-}*@
+    {
+        <style>
+            #table1 th {
+                text-align: center;
+                vertical-align: central;
+            }
+        </style>
+    }*@
 
 
 <!-- ##### Breadcrumb Area Start ##### -->
@@ -92,10 +92,12 @@
                                             @item.product.ProductName
                                         </td>
                                         <td>
-                                            <i class="bi bi-dash-square-fill" id="reduce" name="reduce" style="font-size:20px"></i>
-                                            <input type="text" min="1" value="@item.count" id="txtQty" class="txtQty" size="6" readonly />
-                                            <i class="bi bi-plus-square-fill" id="plus" name="plus" style="font-size:20px"></i>
-                                            <input type="hidden" id="stock" name="stock" value="@item.stock" />
+                                            <div class="quantity">
+                                                <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                                <input type="text" class="qty-text" id="txtQty" step="1" min="1" name="txtQty" value="@item.count" readonly>
+                                                <span class="qty-plus" id="plus" name="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                                <input type="hidden" id="stock" name="stock" value="@item.stock" />
+                                            </div>
                                         </td>
                                         <td>
                                             @*<p id="txtprice">NT$@item.price</p>*@
@@ -106,12 +108,7 @@
                                             <p id="txtcount">NT$@小計</p>
                                         </td>
                                         <td>
-                                            @*<button type="button" class="close" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>*@
-
-                                            @Html.ActionLink("刪除", "Delete", "Shopping", new { id = item.productId },
-                                                 new { onclick = "return confirm('確定要刪除嗎?')", @class = "btn btn-danger" })
+                                            <a href="@Url.Action("Delete", "Shopping", new { id = item.productId })" onclick="return confirm('確定要刪除嗎?')"><i class="icon_close"></i></a>
                                         </td>
                                     </tr>
                                 }
@@ -172,54 +169,65 @@
 <!-- ##### Cart Area End ##### -->
 
 
+
 @section Scripts
 {
     <script>
+        //購物車數量計算(layout上的圖示)=======================================================
+        async function CountCart() {
+            let countCart = document.querySelector("#countCart");
+            const response = await fetch('@Url.Content("~/api/CountCart")');
+            const result = await response.text();
+            countCart.innerHTML = `(${result})`;
+        }
+
+        async function CAdd(id) {
+            const response = await fetch("@Url.Content("~/shopping/plus")" + `?id=${id}`);
+            CountCart();
+        }
+        async function CReduce(id) {
+             const response = await fetch("@Url.Content("~/shopping/Reduce")" + `?id=${id}`);
+             /*const data = await response.Int32Array();*/
+             CountCart();
+        }
+
+        //從這原本ㄉ============================================================
 
         $("tbody").on("click", "#plus", PLUS);
         function PLUS() {
-            let id = $(this).parent().prev().find("#productId").val();
-            let qty = parseInt($(this).parent().find(".txtQty").val()) + 1;
+            let id = $(this).parent().parent().prev().find("#productId").val();
+            let qty = parseInt($(this).parent().find(".qty-text").val()) + 1;
             let stock = $(this).parent().find("#stock").val();
             if (qty > stock) {
                 qty -= 1;
                 window.alert("已達可訂購最高數量");
             }
             else {
-                let price = $(this).parent().next().find("#txtprice").text().trim().substring(3);
+                let price = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
                 let 小計 = ("NT$") + (qty * price);
-                $(this).parent().find(".txtQty").val(qty);
-                $(this).parent().next().next().find("#txtcount").text(小計);
+                $(this).parent().find(".qty-text").val(qty);
+                $(this).parent().parent().next().next().find("#txtcount").text(小計);
 
                 計算購物明細();
+                CAdd(id);
 
-                $.ajax({
-                    url: '@Url.Content("~/shopping/plus")',
-                    type: 'GET',
-                    data: { "id": id },
-                    dataType: Int32Array
-                })
             }
         }
+
         $("tbody").on("click", "#reduce", REDUCE);
         function REDUCE() {
-            let id = $(this).parent().prev().find("#productId").val();
-            let qty = parseInt($(this).parent().find(".txtQty").val()) - 1;
+            let id = $(this).parent().parent().prev().find("#productId").val();
+            let qty = parseInt($(this).parent().find(".qty-text").val()) - 1;
             if (qty < 1) qty = 1;
             else {
-                let price = $(this).parent().next().find("#txtprice").text().trim().substring(3);
+                let price = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
                 let 小計 = ("NT$") + (qty * price);
-                $(this).parent().find(".txtQty").val(qty);
-                $(this).parent().next().next().find("#txtcount").text(小計);
+                $(this).parent().find(".qty-text").val(qty);
+                $(this).parent().parent().next().next().find("#txtcount").text(小計);
 
                 計算購物明細();
+                CReduce(id);
 
-                $.ajax({
-                url: '@Url.Content("~/shopping/Reduce")',
-                type: 'GET',
-                data: { "id": id },
-                dataType: Int32Array
-                })
             }
         }
 
@@ -280,12 +288,12 @@
 
             //TODO 111折價眷抓步道
 
-            $.ajax({
+            @*$.ajax({
                 url: '@Url.Content("~/shopping/UseCoupon")',
                 type: 'GET',
                 data: { "id": id },
                 dataType: Int32Array
-            })
+            })*@
 
         })
 
