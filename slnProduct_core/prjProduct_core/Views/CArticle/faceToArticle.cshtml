@@ -1,6 +1,7 @@
 ﻿@*@model IEnumerable<prjProduct_core.Models.Article>*@
 @using X.PagedList
 @using X.PagedList.Mvc.Core
+@using static prjProduct_core.Models.CoffeeContext
 
 @model PagedList<prjProduct_core.Models.Article>
 
@@ -87,7 +88,8 @@
 
 
                         @{
-                            foreach (var it in Model.OrderByDescending(t => t.ArticleDate).Take(5))
+                            CoffeeContext db = new CoffeeContext();
+                            foreach (var it in db.Articles.OrderByDescending(t => t.ArticleDate).Take(5))
                             {
                                 <!-- 近期文章 -->
                                 <div class="single-latest-post d-flex align-items-center">
