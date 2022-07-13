@@ -63,7 +63,7 @@
                 <div class="col-12 col-md-6">
                     <div class="single_product_desc">
                         <h4 class="title">@Model.ProductName</h4>
-                        <h4 class="price">NT$@(Convert.ToInt32( Model.Price).ToString("0.0"))</h4>
+                        <h4 class="price">NT$@(Convert.ToInt32( Model.Price).ToString("0"))</h4>
                         <div class="short_overview">
                             <p>@Model.Description</p>
                         </div>
@@ -89,9 +89,9 @@
                             {
 
                                 <div class="products--meta">
-                                    <p><span>產地:</span> <span>@*@Model.Country.CountryName*@</span></p>
-                                    <p><span>烘培程度:</span>@*@Html.DisplayFor(p=>p.Coffee.Roasting.RoastingName)*@</p>
-                                    <p><span>處理方法:</span> <span>@*@Model[0].Coffee.Process.ProcessName*@</span></p>
+                                    <p><span>產地:</span> <span>台灣</span></p>
+                                    <p><span>烘培程度:</span>非常重</p>
+                                    <p><span>處理方法:</span> <span>日曬法</span></p>
                                     <p>
                                         <span>Share on:</span>
                                         <span>
@@ -106,7 +106,7 @@
                             else
                             {
                                 <div class="products--meta">
-                                    <p><span>產地:</span> <span>@*@Model.Country.CountryName*@</span></p>
+                                    <p><span>產地:</span> <span>台灣</span></p>
                                     <p><span>產品種類:</span> <span>@Model.CategoryName</span></p>
                                     <p>
                                         <span>Share on:</span>
