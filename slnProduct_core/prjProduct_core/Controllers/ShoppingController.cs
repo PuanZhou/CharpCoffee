@@ -114,15 +114,14 @@ namespace prjCSCoffee.Controllers
             {
                 jsonCart = HttpContext.Session.GetString(CDictionary.SK_使用的折價卷);
                 list = JsonSerializer.Deserialize<List<CDeliveryViewModel>>(jsonCart);
-                foreach (var item in money)
-                {
-                    CDeliveryViewModel t = new CDeliveryViewModel();
-                    t.discountid = (int)id;
-                    t.discountmoney = (int)item;
-                    list.Add(t);
-                }
             }
-
+            foreach (var item in money)
+            {
+                CDeliveryViewModel t = new CDeliveryViewModel();
+                t.discountid = (int)id;
+                t.discountmoney = (int)item;
+                list.Add(t);
+            }
             jsonCart = JsonSerializer.Serialize(list);
             HttpContext.Session.SetString(
                 CDictionary.SK_使用的折價卷, jsonCart);
