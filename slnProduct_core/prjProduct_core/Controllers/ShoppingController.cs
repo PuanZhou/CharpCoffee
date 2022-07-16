@@ -6,11 +6,13 @@ using prjProduct_core.Controllers;
 using prjProduct_core.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace prjCSCoffee.Controllers
 {
@@ -283,17 +285,35 @@ namespace prjCSCoffee.Controllers
             {
                 int price = (int)item.Fprice;
                 total += ((int)(item.Fcount) * price);
-                ItemName += $"{item.FName} {Convert.ToInt32(item.Fprice).ToString("0")}元X{item.Fcount}#";
+                ItemName += $"{item.FName} NT${Convert.ToInt32(item.Fprice).ToString("0")}X{item.Fcount}#";
             }
             total = total - discountmoney;
             if (total < 1200) total += 100;
 
             ItemName = ItemName.Substring(0, ItemName.Length - 1);
+
             ViewBag.Total = total;
             ViewBag.ItemName = ItemName;
 
-            string checkMacValue = $"HashKey=5294y06JbISpM5x9&ChoosePayment=Credit&ClientBackURL=https://developers.opay.tw/AioMock/MerchantClientBackUrl&CreditInstallment=&EncryptType=1&InstallmentAmount=&ItemName={ItemName}&MerchantID=2000132&MerchantTradeDate={timenow}&MerchantTradeNo={tradeNo}&PaymentType=aio&Redeem=&ReturnURL=https://developers.opay.tw/AioMock/MerchantReturnUrl&StoreID=&TotalAmount={total}&TradeDesc=建立信用卡測試訂單&HashIV=v77hoKGq4kWxNNIS";
-            checkMacValue = System.Web.HttpUtility.UrlEncode(checkMacValue, System.Text.Encoding.UTF8).ToLower();
+            string checkMacValue = "HashKey=5294y06JbISpM5x9&";
+            checkMacValue += "ChoosePayment=Credit&";
+            checkMacValue += "ClientBackURL=https://developers.opay.tw/AioMock/MerchantClientBackUrl&";
+            checkMacValue += "CreditInstallment=&";
+            checkMacValue += "EncryptType=1&";
+            checkMacValue += "InstallmentAmount=&";
+            checkMacValue += $"ItemName={ItemName}&";
+            checkMacValue += "MerchantID=2000132&";
+            checkMacValue += $"MerchantTradeDate={timenow}&";
+            checkMacValue += $"MerchantTradeNo={tradeNo}&";
+            checkMacValue += "PaymentType=aio&";
+            checkMacValue += "Redeem=&";
+            checkMacValue += "ReturnURL=https://developers.opay.tw/AioMock/MerchantReturnUrl&";
+            checkMacValue += "StoreID=&";
+            checkMacValue += $"TotalAmount={total}&";
+            checkMacValue += "TradeDesc=建立信用卡測試訂單&";
+            checkMacValue += "HashIV=v77hoKGq4kWxNNIS";
+
+            checkMacValue = HttpUtility.UrlEncode(checkMacValue, Encoding.UTF8).ToLower();
             using var hash = SHA256.Create();
             var byteArray = hash.ComputeHash(Encoding.UTF8.GetBytes(checkMacValue));
             checkMacValue = Convert.ToHexString(byteArray).ToUpper();

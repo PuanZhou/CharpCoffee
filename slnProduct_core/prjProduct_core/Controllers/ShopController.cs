@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PagedList;
 using prjCSCoffee.Models;
 using prjProduct_core.Models;
@@ -259,49 +260,48 @@ namespace prjProduct_core.Controllers
                 return Content("null", "text/plain", System.Text.Encoding.UTF8);
             }
 
-            Random rng = new Random(Guid.NewGuid().GetHashCode());
+            Random rng = new Random();
             List<CRelatedViewModel> list = new List<CRelatedViewModel>();
 
             var productName = db.Coffees.Where(p => p.ProductId == Id).Select(n => n.CoffeeName).FirstOrDefault();
 
             var RoastingId = db.Products.Where(p => p.ProductId == Id).Select(r => r.Coffee.RoastingId).FirstOrDefault();
 
-            var relatedbyRoasting = db.Coffees.AsEnumerable().Where(p => p.RoastingId == RoastingId && p.CoffeeName != productName)
+            var relatedbyRoasting = db.Coffees.Include(p => p.Product).AsEnumerable().Where(p => p.RoastingId == RoastingId && p.CoffeeName != productName)
                 .OrderByDescending(x => rng.Next()).Select(p => new CRelatedViewModel()
                 {
                     ProductId = p.ProductId,
                     CoffeeName = p.CoffeeName,
-                    Price = Convert.ToInt32(db.Products.Where(p => p.ProductId == p.ProductId).Select(p => p.Price).FirstOrDefault())
+                    Price = Convert.ToInt32(p.Product.Price)
                 }).FirstOrDefault();
 
             list.Add(relatedbyRoasting);
 
             var ProcessId = db.Products.Where(p => p.ProductId == Id).Select(r => r.Coffee.ProcessId).FirstOrDefault();
 
-            var relatedbyProcess = db.Coffees.AsEnumerable().Where(p => p.ProcessId == ProcessId && p.CoffeeName != productName && p.CoffeeName != relatedbyRoasting.CoffeeName)
+            var relatedbyProcess = db.Coffees.Include(p => p.Product).AsEnumerable().Where(p => p.ProcessId == ProcessId && p.CoffeeName != productName && p.CoffeeName != relatedbyRoasting.CoffeeName)
                 .OrderByDescending(x => rng.Next()).Select(p => new CRelatedViewModel()
                 {
                     ProductId = p.ProductId,
                     CoffeeName = p.CoffeeName,
-                    Price = Convert.ToInt32(db.Products.Where(p => p.ProductId == p.ProductId).Select(p => p.Price).FirstOrDefault())
+                    Price = Convert.ToInt32(p.Product.Price)
                 }).FirstOrDefault();
 
             list.Add(relatedbyProcess);
 
             var ContinentId = db.Products.Where(p => p.ProductId == Id).Select(r => r.Country.ContinentId).FirstOrDefault();
-            //
-            var relatedbyCountry = db.Coffees.Where(p => p.Country.ContinentId == ContinentId && p.CoffeeName != productName && p.CoffeeName != relatedbyRoasting.CoffeeName && p.CoffeeName != relatedbyProcess.CoffeeName).ToList();
-            
-            var a = relatedbyCountry.AsEnumerable().OrderByDescending(x => rng.Next()).Select(p => new CRelatedViewModel()
-            {
-                ProductId = p.ProductId,
-                CoffeeName = p.CoffeeName,
-                Price = Convert.ToInt32(db.Products.Where(p => p.ProductId == p.ProductId).Select(p => p.Price).FirstOrDefault())
-            }).FirstOrDefault();
-            if (relatedbyCountry != null)
-            {
-                list.Add(a);
-            }
+
+            var relatedbyContinent = db.Coffees.Include(p => p.Product).ThenInclude(p => p.Country).AsEnumerable()
+                .Where(p => p.Country.ContinentId == ContinentId && p.CoffeeName != productName && p.CoffeeName != relatedbyRoasting.CoffeeName && p.CoffeeName != relatedbyProcess.CoffeeName).OrderByDescending(x => rng.Next())
+                .Select(p => new CRelatedViewModel()
+                {
+                    ProductId = p.ProductId,
+                    CoffeeName = p.CoffeeName,
+                    Price = Convert.ToInt32(p.Product.Price)
+                }).FirstOrDefault();
+
+            list.Add(relatedbyContinent);
+
             return PartialView(list);
         }
 
