@@ -45,7 +45,7 @@ namespace prjProduct_core.Controllers
             }
             else
             {
-                return Content("尚未加入任何比較", "text/plain", System.Text.Encoding.UTF8);
+                return Content("null", "text/plain", System.Text.Encoding.UTF8);
             }
         }
         public IActionResult AddCompare(int? Id)
@@ -63,17 +63,17 @@ namespace prjProduct_core.Controllers
             }
             if (compareIdList.Contains(Convert.ToInt32(Id)))
             {
-                return Content("已經加入過比較列表", "text/plain", System.Text.Encoding.UTF8);
+                return Content("beenAdd", "text/plain", System.Text.Encoding.UTF8);
             }
             else if (compareIdList.Count >= 3)
             {
-                return Content("已加入三樣商品請先前往比較", "text/plain", System.Text.Encoding.UTF8);
+                return Content("over", "text/plain", System.Text.Encoding.UTF8);
             }
 
             compareIdList.Add(Convert.ToInt32(Id));
             jsonCompare = JsonSerializer.Serialize(compareIdList);
             HttpContext.Response.Cookies.Append(CDictionary.AddCompare, jsonCompare);
-            return Content("商品加入比較列表", "text/plain", System.Text.Encoding.UTF8);
+            return Content("add", "text/plain", System.Text.Encoding.UTF8);
         }
 
         public IActionResult DeleteCompare(int? Id)

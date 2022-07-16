@@ -1,5 +1,4 @@
 ﻿@model prjProduct_core.ViewModel.CProductViewModel
-
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
@@ -80,7 +79,7 @@
                             <!-- Wishlist & Compare -->
                             <div class="wishlist-compare d-flex flex-wrap align-items-center">
                                 <a href="#" class="wishlist-btn ml-15"><i class="icon_heart_alt"></i></a>
-                                <a href="#" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i></a>
+                                <a style="cursor:pointer" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i><span hidden id="comid">@Model.ProductId</span></a>
                             </div>
                         </div>
 
@@ -131,105 +130,105 @@
             <div class="col-12">
                 <div class="product_details_tab clearfix">
                     <!-- Tabs -->
-    <ul class="nav nav-tabs" role="tablist" id="product-details-tab">
-        <li class="nav-item">
-            <a href="#description" class="nav-link active" data-toggle="tab" role="tab">Description</a>
-        </li>
-        <li class="nav-item">
-            <a href="#addi-info" class="nav-link" data-toggle="tab" role="tab">Additional Information</a>
-        </li>
-        <li class="nav-item">
-            <a href="#reviews" class="nav-link" data-toggle="tab" role="tab">評價&回覆 <span class="text-muted"></span></a>
-        </li>
-    </ul>
-    <!-- Tab Content -->
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane fade show active" id="description">
-            <div class="description_area">
-                <p></p>
-                <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. In scelerisque augue at the moment mattis. Proin vitae arcu sit amet justo sollicitudin tincidunt sit amet ut velit.Proin placerat vel augue eget euismod. Phasellus cursus orci eu tellus vestibulum, vestibulum urna accumsan. Vestibulum ut ullamcorper sapien. Pellentesque molestie, est ac vestibulum eleifend, lorem ipsum mollis ipsum.</p>
-            </div>
-        </div>
-        <div role="tabpanel" class="tab-pane fade" id="addi-info">
-            <div class="additional_info_area">
-                <p>
-                    What should I do if I receive a damaged parcel?
-                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit impedit similique qui, itaque delectus labore.</span>
-                </p>
-                <p>
-                    I have received my order but the wrong item was delivered to me.
-                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis quam voluptatum beatae harum tempore, ab?</span>
-                </p>
-                <p>
-                    Product Receipt and Acceptance Confirmation Process
-                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum ducimus, temporibus soluta impedit minus rerum?</span>
-                </p>
-                <p>
-                    How do I cancel my order?
-                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum eius eum, minima!</span>
-                </p>
-            </div>
-        </div>
-        <div role="tabpanel" class="tab-pane fade" id="reviews">
-            <div class="reviews_area">
-                <ul>
-                    <li>
-                    </li>
-                </ul>
-            </div>
+                    <ul class="nav nav-tabs" role="tablist" id="product-details-tab">
+                        <li class="nav-item">
+                            <a href="#description" class="nav-link active" data-toggle="tab" role="tab">Description</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#addi-info" class="nav-link" data-toggle="tab" role="tab">Additional Information</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#reviews" class="nav-link" data-toggle="tab" role="tab">評價&回覆 <span class="text-muted"></span></a>
+                        </li>
+                    </ul>
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade show active" id="description">
+                            <div class="description_area">
+                                <p></p>
+                                <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. In scelerisque augue at the moment mattis. Proin vitae arcu sit amet justo sollicitudin tincidunt sit amet ut velit.Proin placerat vel augue eget euismod. Phasellus cursus orci eu tellus vestibulum, vestibulum urna accumsan. Vestibulum ut ullamcorper sapien. Pellentesque molestie, est ac vestibulum eleifend, lorem ipsum mollis ipsum.</p>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="addi-info">
+                            <div class="additional_info_area">
+                                <p>
+                                    What should I do if I receive a damaged parcel?
+                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit impedit similique qui, itaque delectus labore.</span>
+                                </p>
+                                <p>
+                                    I have received my order but the wrong item was delivered to me.
+                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis quam voluptatum beatae harum tempore, ab?</span>
+                                </p>
+                                <p>
+                                    Product Receipt and Acceptance Confirmation Process
+                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum ducimus, temporibus soluta impedit minus rerum?</span>
+                                </p>
+                                <p>
+                                    How do I cancel my order?
+                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum eius eum, minima!</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="reviews">
+                            <div class="reviews_area">
+                                <ul>
+                                    <li>
+                                    </li>
+                                </ul>
+                            </div>
 
-            <div class="submit_a_review_area mt-50">
-                <h4>給予評價</h4>
-                <form action="" method="post">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group d-flex align-items-center">
-                                <span class="mr-15">評價星數:</span>
-                                <div class="stars">
-                                    <input type="radio" name="star" value="1" class="star-1 rc" id="star-1">
-                                    <label class="star-1" for="star-1">1</label>
-                                    <input type="radio" name="star" value="2" class="star-2 rc" id="star-2">
-                                    <label class="star-2" for="star-2">2</label>
-                                    <input type="radio" name="star" value="3" class="star-3 rc" id="star-3">
-                                    <label class="star-3" for="star-3">3</label>
-                                    <input type="radio" name="star" value="4" class="star-4 rc" id="star-4">
-                                    <label class="star-4" for="star-4">4</label>
-                                    <input type="radio" name="star" value="5" class="star-5 rc" id="star-5">
-                                    <label class="star-5" for="star-5">5</label>
-                                    <span></span>
-                                </div>
+                            <div class="submit_a_review_area mt-50">
+                                <h4>給予評價</h4>
+                                <form action="" method="post">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group d-flex align-items-center">
+                                                <span class="mr-15">評價星數:</span>
+                                                <div class="stars">
+                                                    <input type="radio" name="star" value="1" class="star-1 rc" id="star-1">
+                                                    <label class="star-1" for="star-1">1</label>
+                                                    <input type="radio" name="star" value="2" class="star-2 rc" id="star-2">
+                                                    <label class="star-2" for="star-2">2</label>
+                                                    <input type="radio" name="star" value="3" class="star-3 rc" id="star-3">
+                                                    <label class="star-3" for="star-3">3</label>
+                                                    <input type="radio" name="star" value="4" class="star-4 rc" id="star-4">
+                                                    <label class="star-4" for="star-4">4</label>
+                                                    <input type="radio" name="star" value="5" class="star-5 rc" id="star-5">
+                                                    <label class="star-5" for="star-5">5</label>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="comments">評價內容</label>
+                                                <textarea class="form-control" id="comments" rows="5" data-max-length="150"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button id="btnSummit" class="btn alazea-btn">提出評價</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="comments">評價內容</label>
-                                <textarea class="form-control" id="comments" rows="5" data-max-length="150"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button id="btnSummit" class="btn alazea-btn">提出評價</button>
+                            <p id="btnComment" style="cursor:pointer" class="text-primary mt-3">查看評論與回覆</p>
+                            <div id="divComment"></div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-            <p id="btnComment" style="cursor:pointer" class="text-primary mt-3">查看評論與回覆</p>
-            <div id="divComment"></div>
         </div>
     </div>
-    </div>
-    </div>
-    </div>
-    </div>
 </section>
-    <!--===================Comments and Ranking Area End=====================-->
-    <!-- ##### Single Product Details Area End ##### -->
-    <!-- ##### Related Product Area Start ##### -->
-    <div class="related-products-area">
-    </div>
+<!--===================Comments and Ranking Area End=====================-->
+<!-- ##### Single Product Details Area End ##### -->
+<!-- ##### Related Product Area Start ##### -->
+<div class="related-products-area">
+</div>
 
 
-    @section Scripts{
-        <script>
+@section Scripts{
+    <script>
         //=====================設定評論星數=====================
         const pId =@Model.ProductId;
         let starNum=0;
@@ -276,7 +275,6 @@
                     if (data != "null") {
                          $(".related-products-area").load('@Url.Content("~/Shop/partialViewRelated")' + "?Id=@Model.ProductId")
                     }
-                })
-        </script>
-
-    }
+             })
+    </script>
+}

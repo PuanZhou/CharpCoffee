@@ -23,7 +23,7 @@
                         <div class="product-meta d-flex">
                             <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
                             <a href="cart.html" class="add-to-cart-btn">加入購物車</a>
-                            <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
+                            <a style="cursor:pointer" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@item.ProductId</span></a>
                         </div>
                     </div>
                     <!-- Product Info -->
@@ -38,3 +38,51 @@
         }
     </div>
 </div>
+
+<script>
+    //=====================加入比較按鈕=====================
+    $(".compare-btn").click(function () {
+        let comid = $(this.children).text();
+        $('.bootstrap-growl').remove();
+        $.get('@Url.Content("~/compare/AddCompare")', { "Id": comid },
+            function (data) {
+                if (data === "add") {
+                    $.bootstrapGrowl("加入比較清單", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+                else if (data === "beenAdd") {
+                    $.bootstrapGrowl("該商品已加入過比較清單!", {
+                        ele: "body",
+                        type: "warning",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+                else{
+                    $.bootstrapGrowl("比較清單已加入3樣商品 <a href='@Url.Content("~/Compare/CompareView")' style='font-weight: bolder;font-size:18px; color: #4F9D9D'>前往比較頁面</a>", {
+                        ele: "body",
+                        type: "primary",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+            }
+        );
+    });
+</script>
