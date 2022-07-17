@@ -295,27 +295,32 @@ namespace prjCSCoffee.Controllers
             ViewBag.Total = total;
             ViewBag.ItemName = ItemName;
 
-            string checkMacValue = "HashKey=5294y06JbISpM5x9&";
-            checkMacValue += "ChoosePayment=Credit&";
-            checkMacValue += "ClientBackURL=https://developers.opay.tw/AioMock/MerchantClientBackUrl&";
-            checkMacValue += "CreditInstallment=&";
-            checkMacValue += "EncryptType=1&";
-            checkMacValue += "InstallmentAmount=&";
-            checkMacValue += $"ItemName={ItemName}&";
-            checkMacValue += "MerchantID=2000132&";
-            checkMacValue += $"MerchantTradeDate={timenow}&";
-            checkMacValue += $"MerchantTradeNo={tradeNo}&";
-            checkMacValue += "PaymentType=aio&";
-            checkMacValue += "Redeem=&";
-            checkMacValue += "ReturnURL=https://developers.opay.tw/AioMock/MerchantReturnUrl&";
-            checkMacValue += "StoreID=&";
-            checkMacValue += $"TotalAmount={total}&";
-            checkMacValue += "TradeDesc=建立信用卡測試訂單&";
-            checkMacValue += "HashIV=v77hoKGq4kWxNNIS";
+            NameValueCollection parameters = HttpUtility.ParseQueryString(string.Empty);
 
-            checkMacValue = HttpUtility.UrlEncode(checkMacValue, Encoding.UTF8).ToLower();
+            parameters["HashKey"] = "5294y06JbISpM5x9";
+            parameters["ChoosePayment"] = "Credit";
+            parameters["ClientBackURL"] = "https://developers.opay.tw/AioMock/MerchantClientBackUrl";
+            parameters["CreditInstallment"] = "";
+            parameters["EncryptType"] = "1";
+            parameters["InstallmentAmount"] = "";
+            parameters["ItemName"] = ItemName;
+            parameters["MerchantID"] = "2000132";
+            parameters["MerchantTradeDate"] = timenow;
+            parameters["MerchantTradeNo"] = tradeNo;
+            parameters["PaymentType"] = "aio";
+            parameters["Redeem"] = "";
+            parameters["ReturnURL"] = "https://developers.opay.tw/AioMock/MerchantReturnUrl";
+            parameters["StoreID"] = "";
+            parameters["TotalAmount"] = total.ToString();
+            parameters["TradeDesc"] = "建立信用卡測試訂單";
+            parameters["HashIV"] = "v77hoKGq4kWxNNIS";
+
+            string checkMacValue = parameters.ToString();
+
+            checkMacValue = checkMacValue.Replace("=", "%3d").Replace("&", "%26");
+
             using var hash = SHA256.Create();
-            var byteArray = hash.ComputeHash(Encoding.UTF8.GetBytes(checkMacValue));
+            var byteArray = hash.ComputeHash(Encoding.UTF8.GetBytes(checkMacValue.ToLower()));
             checkMacValue = Convert.ToHexString(byteArray).ToUpper();
             ViewBag.checkMacValue = checkMacValue;
 
