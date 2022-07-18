@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.CProductViewModel>
-
 @*標題*@
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
@@ -55,7 +54,7 @@
                         <div class="widget-desc">
                             <ul>
                                 <li>
-                                    <ul class="dropdown test1 " >
+                                    <ul class="dropdown test1 ">
                                         <li style="color: #808080" class="list">
                                             產地國家
                                             <ul class="coffeelist animate__animated animate__fadeIn" id="coffcontry">
@@ -114,60 +113,28 @@
                     <div class="shop-widget best-seller mb-50">
                         <h4 class="widget-title">推薦產品</h4>
                         <div class="widget-desc">
-
-                            <!-- Single Best Seller Products -->
-                            <div class="single-best-seller-product d-flex align-items-center">
-                                <div class="product-thumbnail">
-                                    <a href="shop-details.html"><img src="img/bg-img/4.jpg" alt=""></a>
-                                </div>
-                                <div class="product-info">
-                                    <a href="shop-details.html">Cactus Flower</a>
-                                    <p>$10.99</p>
-                                    <div class="ratings">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
+                            @{
+                                foreach (Product item in ViewBag.Recommend)
+                                {
+                                    <!-- Single Best Seller Products -->
+                                    <div class="single-best-seller-product d-flex align-items-center">
+                                        <div class="product-thumbnail">
+                                            <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/img/coffee-img/been2.jpg" alt=""></a>
+                                        </div>
+                                        <div class="product-info">
+                                            <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId">@item.ProductName</a>
+                                            <p>NT$@Convert.ToInt32(item.Price).ToString("0")</p>
+                                            <div class="ratings">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Best Seller Products -->
-                            <div class="single-best-seller-product d-flex align-items-center">
-                                <div class="product-thumbnail">
-                                    <a href="shop-details.html"><img src="img/bg-img/5.jpg" alt=""></a>
-                                </div>
-                                <div class="product-info">
-                                    <a href="shop-details.html">Tulip Flower</a>
-                                    <p>$11.99</p>
-                                    <div class="ratings">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Best Seller Products -->
-                            <div class="single-best-seller-product d-flex align-items-center">
-                                <div class="product-thumbnail">
-                                    <a href="shop-details.html"><img src="img/bg-img/34.jpg" alt=""></a>
-                                </div>
-                                <div class="product-info">
-                                    <a href="shop-details.html">Recuerdos Plant</a>
-                                    <p>$9.99</p>
-                                    <div class="ratings">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
+                                }
+                            }
 
                         </div>
                     </div>
@@ -181,7 +148,7 @@
                     </div>
                     <!-- Pagination -->
                     <nav aria-label="Page navigation">
-                       
+
                     </nav>
                 </div>
             </div>
@@ -199,12 +166,12 @@
         .list {
             cursor: default;
             user-select: none;
-            color:#1e1e1e
-        }
-        .coffcate{
-            height:800px;
+            color: #1e1e1e
         }
 
+        .coffcate {
+            height: 800px;
+        }
     </style>
 }
 

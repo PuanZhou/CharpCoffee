@@ -40,6 +40,16 @@ namespace prjProduct_core.Controllers
                 TakeDown = p.TakeDown,
                 Star = p.Star
             });
+
+
+            //左側推薦商品欄位
+            Random rng = new Random();
+            var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
+
+            var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
+
+            ViewBag.Recommend = recommend;
+
             return View(q);
         }
 
