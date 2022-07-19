@@ -383,3 +383,6 @@ C:\Users\Student\Desktop\product(改版後)7.13\slnProduct_core\prjProduct_core\
 C:\Users\Student\Desktop\product(改版後)7.13\slnProduct_core\prjProduct_core\obj\Debug\net5.0\ref\prjProduct_core.dll
 C:\Users\Student\Desktop\product(改版後)7.13\slnProduct_core\prjProduct_core\obj\Debug\net5.0\prjProduct_core.pdb
 C:\Users\Student\Desktop\product(改版後)7.13\slnProduct_core\prjProduct_core\obj\Debug\net5.0\prjProduct_core.genruntimeconfig.cache
+C:\Users\Student\Desktop\product(改版後)7.13\slnProduct_core\prjProduct_core\obj\Debug\net5.0\prjProduct_core.csprojAssemblyReference.cache
+C:\Users\Student\Desktop\product(改版後)7.13\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\CArticle\Hot.cshtml.g.cs
+C:\Users\Student\Desktop\product(改版後)7.13\slnProduct_core\prjProduct_core\obj\Debug\net5.0\Razor\Views\CArticle\Recommend.cshtml.g.cs

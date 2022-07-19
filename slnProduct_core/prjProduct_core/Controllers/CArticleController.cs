@@ -52,7 +52,10 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult faceToArticleDetail(int? id)
         {
-            
+            if (id == null)
+            {
+                return RedirectToAction("faceToArticle");
+            }
             IEnumerable<CArticleViewModel> datas = null;
             var list = db.Articles.Where(t => t.ArticleId == id).Select(a => new CArticleViewModel()
             {
@@ -70,7 +73,32 @@ namespace prjCSCoffee.Controllers
             return View(datas);
         }
 
+        public IActionResult Hot()
+        {
+            Random rng = new Random();
+            var q1 = db.Products.OrderByDescending(p => p.Stock).Take(10).ToList();
+            var q2 = q1.Select(p => p).OrderBy(p => rng.Next()).Take(5).ToList();
+            List<Product> q3 = new List<Product>();
+            foreach (Product item in q2)
+            {
+                q3.Add(item);
+            }
 
+            return PartialView(q3);
+        }
+        public IActionResult Recommend()
+        {
+            Random rng = new Random();
+            var q1 = db.Products.AsEnumerable().Where(p => p.CategoryId == 2).Take(10).ToList();
+            var q2 = q1.OrderBy(p => rng.Next()).Take(5).ToList();
+            List<Product> q3 = new List<Product>();
+            foreach (Product item in q2)
+            {
+                q3.Add(item);
+            }
+
+            return PartialView(q3);
+        }
 
         //內域(用戶不可見-管理用)
         //public IActionResult List (CKeywordViewModel vModel)
