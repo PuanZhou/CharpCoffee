@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.COrderViewModel>
 
+<style>
+    td {
+        white-space: normal
+    }
+</style>
+
 <form class="form-inline">
     查詢訂單：
     <select class="custom-select widget-title" id="selYear" name="oYear"></select>
@@ -37,7 +43,7 @@
                 付款方式
             </th>
             <th scope="col">
-                明細
+                明細及申請取消
             </th>
         </tr>
     </thead>
@@ -46,28 +52,30 @@
         {
             <tr>
                 <td>
-                    @item.OrderId
+                    @item.TradeNo
+                    <input type="hidden" value="@item.TradeNo">
                 </td>
-                <td scope="row">
+                <td>
                     @item.OrderDate.ToShortDateString()
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderAddress)
+                    @item.OrderAddress
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderReceiver)
+                    @item.OrderReceiver
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderPhone)
+                    @item.OrderPhone
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.orderstatement)
+                    @item.orderstatement
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.payway)
+                    @item.payway
                 </td>
                 <td>
-                    <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#boxCenter">檢視</button>
+                    <button class="btn btn-outline-secondary detail" data-toggle="modal" data-target="#boxCenter">檢視</button>
+                    <button class="btn btn-outline-danger cancel">申請</button>
                 </td>
             </tr>
         }
@@ -95,12 +103,26 @@
                 </table>
                 <span id="usecou"></span><br />
                 <span id="Mbefore"></span><br />
-                <span id="Mafter"></span><br/>
+                <span id="Mafter"></span><br />
                 <span id="Mtotal"></span>
-                    <!-- ##### 詳細內容 ##### -->
+                <!-- ##### 詳細內容 ##### -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="sendEmail" data-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### 取消訂單視窗 ##### -->
+<div class="modal fade" id="Modelcancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">是否申請取消訂單？</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+                <button type="button" class="btn btn-primary" id="goCancel">是</button>
             </div>
         </div>
     </div>
@@ -118,7 +140,6 @@
     //Year
     for (let y = nowY; y >= nowY - 5; y--) {
         let item = document.createElement("option");
-        console.log(y);
         item.value = y;
         item.innerHTML = y;
         docfrag.appendChild(item);
@@ -151,39 +172,81 @@
 
     //動態繫結 查看明細
     docfrag = document.createDocumentFragment();
-    $("tbody").on("click", "button", function () {
+    $("tbody").on("click", ".detail", function () {
         $("#floattb").html("");
-        let ordid = $(this).parents().get(1).firstElementChild.innerHTML;
-        $.get('@Url.Content("~/MemberFactory/QueryOrdDetail")', { "id": ordid },
+        let TradeNo = $(this).parents().get(1).firstElementChild.textContent.trim();
+        $.get('@Url.Content("~/MemberFactory/QueryOrdDetail")', { "id": TradeNo},
             function (data) {
                 //生成明細
                 let subtotal = 0;
                 let usecou = "";
                 let couprice = 0;
-                $.each(data, function(index,values){  //index索引
-                    //console.log(values.商品名) //出現商品名
+                $.each(data, function (index, values) {
                     $("#floattb").append(`<tr><td>${values.商品名}</td><td>${values.商品單價}</td><td>${values.商品數量}</td><td>${values.小計}</td>`);
                     subtotal += values.小計;
                     usecou = values.使用的優惠券;
                     couprice = values.優惠券金額;
-                    console.log(data);
                 })
-                $("#usecou").html(`使用的優惠券：${usecou}  優惠券金額：${couprice}`);
+                $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：${couprice}`);
                 $("#Mbefore").html(`折價前金額：${subtotal}`);
-                $("#Mafter").html(`折價後金額：${subtotal-couprice}`);
-                $("#Mtotal").html(`總金額：${subtotal-couprice}`);
+                $("#Mafter").html(`折價後金額：${subtotal - couprice}`);
+                $("#Mtotal").html(`總金額：${subtotal - couprice}`);
+            });
+    });
 
+    let TradeNoID = null; //取消訂單用
+    let state = null;
+    //動態繫結 詢問取消訂單
+    $("tbody").on("click", ".cancel", function () {
+        state = $(this).parent().prev().prev();
+        if (state.text().trim() === "已收到訂單") {
+            TradeNoID = $(this).parents().get(1).firstElementChild.textContent.trim();
+            $('#Modelcancel').modal('show');
+        }
+        else {
+            $.bootstrapGrowl("商品已出貨不可取消，或是您的商品已取消或審核中。", {
+                ele: "body",
+                type: "danger",
+                offset: { from: "top", amount: 300 },
+                align: "center",
+                width: "auto",
+                delay: 3500,
+                allow_dissmiss: true,
+                stackup_spacing: 10
+            });
+        }
 
-            })
     })
 
+    //確定取消訂單
+    $("#goCancel").click(function () {
+        $.get('@Url.Content("~/MemberFactory/OrdCancel")', { "id": TradeNoID },
+            function (data) {
+                if (data == "check") {
+                    state.text("審核中");
+                    $.bootstrapGrowl("已將您的訂單交由工作人員審核中，審核完畢將會為您取消訂單", {
+                        ele: "body",
+                        type: "success",//樣式
+                        offset: { from: "top", amount: 300 },
+                        align: "center",//出現位置
+                        width: "auto",
+                        delay: 5000,//延遲
+                        allow_dissmiss: true, //是否允許使用者關閉
+                        stackup_spacing: 10 //條間距
+                    });
+                    $('#Modelcancel').modal('hide');
+                }
+
+            }
+        );
+    });
+
     //Search
-    let btnSearch = document.querySelector("#Findord"); btnSearch.addEventListener("click", async function (event) {
-        console.log(selMon2.value);
+    let btnSearch = document.querySelector("#Findord");
+    btnSearch.addEventListener("click", async function (event) {
         event.preventDefault();
         const ordrespon = await fetch('@Url.Content("~/MemberFactory/QueryOrder")' + `?oYear=${selY.value}&oMonth=${selMon.value}&oMonth2=${selMon2.value}`);
         const orddata = await ordrespon.json();
-        console.log(orddata);
         if (orddata.length == 0) {
             alert("查無資料")
         }

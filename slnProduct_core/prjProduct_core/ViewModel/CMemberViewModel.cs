@@ -29,7 +29,7 @@ namespace prjCSCoffee.ViewModel
 
         [DisplayName("手機號碼")]
         [Required(ErrorMessage = "不可為空")]
-        [RegularExpression("^[0]{1}[9]{1}[0-9]{8}$", ErrorMessage = "手機格式有誤")]
+        [RegularExpression(@"^[0]{1}[9]{1}[0-9]{8}$", ErrorMessage = "手機格式有誤")]
         public string MemberPhone
         {
             get { return _mem.MemberPhone; }
@@ -39,7 +39,7 @@ namespace prjCSCoffee.ViewModel
         public int MemberId
         {
             get { return _mem.MemberId; }
-            //set { _mem.MemberId = value; }
+            set { _mem.MemberId = value; }
         }
 
         public int ShoppingCarId
@@ -60,12 +60,16 @@ namespace prjCSCoffee.ViewModel
 
         [DisplayName("密碼")]
         [Required(ErrorMessage = "不可為空")]
-        [RegularExpression("/^[a-zA-Z0-9].{8,50}$/")]
+        [RegularExpression(@"^[a-zA-Z0-9]{8,50}$", ErrorMessage = "密碼格式有誤")]
         public string MemberPassword
         {
             get { return _mem.MemberPassword; }
             set { _mem.MemberPassword = value; }
         }
+
+        [Required(ErrorMessage = "不可為空")]
+        [Compare("MemberPassword", ErrorMessage = "密碼不相符")]
+        public string checkPW { get; set; }
 
         [DisplayName("地址")]
         [Required(ErrorMessage = "不可為空")]

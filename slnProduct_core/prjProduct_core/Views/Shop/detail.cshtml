@@ -78,7 +78,7 @@
                             </form>
                             <!-- Wishlist & Compare -->
                             <div class="wishlist-compare d-flex flex-wrap align-items-center">
-                                <a href="#" class="wishlist-btn ml-15"><i class="icon_heart_alt"></i></a>
+                                <a href="javascript:void(0);" class="wishlist-btn ml-15"><i class="icon_heart_alt"><span hidden id="comid">@Model.ProductId</span></i></a>
                                 <a style="cursor:pointer" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i><span hidden id="comid">@Model.ProductId</span></a>
                             </div>
                         </div>
@@ -276,5 +276,19 @@
                          $(".related-products-area").load('@Url.Content("~/Shop/partialViewRelated")' + "?Id=@Model.ProductId")
                     }
              })
+
+        //====================加入收藏================================
+        $(".wishlist-btn").click(async function (event) {
+            let likeid = event.currentTarget.textContent;
+            console.log(likeid);
+            $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
+                function (data) {
+                    if (data == "此商品已收藏過" || data == "已加入收藏") {
+                        alert(data);
+                    } else {
+                        window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
+                    }
+                });
+        }
     </script>
 }

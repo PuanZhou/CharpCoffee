@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prjCSCoffee.Models;
 using prjCSCoffee.ViewModel;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace prjProduct_core.Controllers
@@ -27,54 +29,33 @@ namespace prjProduct_core.Controllers
 
             if (HomeController.loginmem==null)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });   //如果沒有登入則要求登入
+                return RedirectToAction("Login", "Home");   //如果沒有登入則要求登入
             }
             else
             {
-                return View();
-            }
-        }
-
-        public IActionResult EditPartialView(int id) //修改資料 
-        {
-            if (HomeController.loginmem == null)
-            {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });   //如果沒有登入則要求登入
-            }
-            else
-            {
-                CMemberViewModel cvmem = new CMemberViewModel();
-                //cvmem.MemberId = HomeController.loginmem.MemberId;
-                cvmem.MemberPhone = HomeController.loginmem.MemberPhone;
-                cvmem.MemberName = HomeController.loginmem.MemberName;
-                cvmem.MemberEmail = HomeController.loginmem.MemberEmail;
-                cvmem.MemberAddress = HomeController.loginmem.MemberAddress;
-                cvmem.MemberPassword = HomeController.loginmem.MemberPassword;
-                cvmem.MemberBirthDay = HomeController.loginmem.MemberBirthDay;
-                //還有圖片
-                return PartialView(cvmem);
+                var mem = db.Members.FirstOrDefault(m => m.MemberId.Equals(HomeController.loginmem.MemberId));
+                return View(mem);
             }
         }
 
         [HttpPost]
-        public IActionResult EditPartialView(CMemberViewModel cmem)
+        public IActionResult Index(CMemberViewModel cmem)
         {
             if (HomeController.loginmem == null)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });   //如果沒有登入則要求登入
+                return RedirectToAction("Login", "Home");
             }
             else
             {
                 Member mem = db.Members.FirstOrDefault(m => m.MemberId.Equals(cmem.MemberId));
                 if (mem != null && ModelState.IsValid) //符合驗證
                 {
-                    if(cmem.photo !=null )  //如果有上傳照片
+                    if (cmem.photo != null)  //如果有上傳照片
                     {
-                        string photoname = Guid.NewGuid().ToString()+".jpg";
+                        string photoname = Guid.NewGuid().ToString() + ".jpg";
                         cmem.photo.CopyTo(new FileStream(_environment.WebRootPath + "/img/Mem-img/" + photoname, FileMode.Create));
                         mem.MemberPhotoPath = photoname;
                     }
-
                     mem.MemberName = cmem.MemberName;
                     mem.MemberEmail = cmem.MemberEmail;
                     mem.MemberAddress = cmem.MemberAddress;
@@ -83,16 +64,17 @@ namespace prjProduct_core.Controllers
                 db.SaveChanges();
                 mem = db.Members.FirstOrDefault(m => m.MemberId.Equals(cmem.MemberId));
                 HomeController.loginmem = mem; //刷新
-                return RedirectToAction("Index");
+                string json = JsonSerializer.Serialize(HomeController.loginmem);
+                HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, json);
+                return View(mem);
             }
-
         }
 
         public IActionResult MyLikePartial()
         {
             if (HomeController.loginmem == null)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Login" }); 
+                return RedirectToAction("Login", "Home");
             }
             else
             {
@@ -112,7 +94,7 @@ namespace prjProduct_core.Controllers
         {
             if (HomeController.loginmem == null)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });   //如果沒有登入則要求登入
+                return RedirectToAction("Login", "Home");   //如果沒有登入則要求登入
             }
             else
             {
@@ -132,38 +114,26 @@ namespace prjProduct_core.Controllers
         {
             if (HomeController.loginmem == null)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });   //如果沒有登入則要求登入
+                return RedirectToAction("Login", "Home");   //如果沒有登入則要求登入
             }
             else
             {
 
                 var ord = db.Orders.Where(o => o.MemberId.Equals(HomeController.loginmem.MemberId))
-                    .Select(o=>new COrderViewModel(){ 
-                        OrderId = o.OrderId,
+                    .Select(o => new COrderViewModel()
+                    {
+                        TradeNo = o.TradeNo,
                         OrderDate = o.OrderDate,
                         OrderAddress = o.OrderAddress,
                         OrderReceiver = o.OrderReceiver,
                         OrderPhone = o.OrderPhone,
                         orderstatement = o.OrderState.OrderState1,
                         payway = o.Payment.Payment1
-                    });
-                
+                    }).ToList();
+
                 return PartialView(ord);
             }
         }
-
-        public IActionResult GiveBackPartialView() //退貨
-        {
-            if (HomeController.loginmem == null)
-            {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });   //如果沒有登入則要求登入
-            }
-            else
-            {
-                return PartialView();
-            }
-        }
-
 
 
     }

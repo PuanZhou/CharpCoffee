@@ -16,7 +16,7 @@
                         <a href="#">Hot</a>
                     </div>
                     <div class="product-meta d-flex">
-                        <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                        <a href="javascript:viod(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                         <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
                         <a style="cursor:pointer" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
                     </div>
@@ -104,5 +104,19 @@
                 }
             }
         );
+    });
+
+    //============================加入收藏==============================
+    $(".wishlist-btn").click(async function (event) {
+        let likeid = event.currentTarget.textContent;
+        $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
+            function (data) {
+                if (data == "此商品已收藏過" || data == "已加入收藏") {
+                    alert(data);
+                } else {
+                    window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
+                }
+            });
+
     });
 </script>
