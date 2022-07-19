@@ -27,6 +27,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Login</li>
+
                     </ol>
                 </nav>
             </div>
@@ -42,8 +43,11 @@
             <div class="col-12 col-lg-8">
                 <div class="checkout_details_area clearfix">
                     <h5>登入會員</h5>
-                    <form action="" method="post">
+                    <form method="post">
                         <div class="row">
+                            <div class="col-12 mb-4">
+                                <span id="spwarn" class="text-danger"></span> @*錯誤訊息*@
+                            </div>
                             <div class="col-12 mb-4">
                                 <input type="text" class="form-control" id="txtAccount" name="txtAccount" min="0" placeholder="請輸入手機號碼" />
                             </div>
@@ -53,12 +57,11 @@
                                     <button class="btn btn-light" type="button" id="btneye"><i class="fa-solid fa-eye-slash"></i></button>
                                 </div>
                             </div>
-                            <div class="checkout-btn mt-30">
-                                <button type="submit" class="btn alazea-btn mt-15">登入</button>
+                            <div class="checkout-btn mt-30" style="margin:auto auto;">
+                                <button type="submit" class="btn alazea-btn btn-lg mt-15" id="btnlogin">登入</button>
                                 <br />
-                                <a href="/Home/Create" class="forget">前往註冊</a>
-
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#boxCenter">忘記密碼</button>
+                                <a href="/Home/Create" style="float: left;" class="forget">註冊</a>
+                                <a href="#" style="float: right;" class="" data-toggle="modal" data-target="#boxCenter">忘記密碼</a>
                             </div>
                         </div>
                     </form>
@@ -89,7 +92,6 @@
 @section Scripts{
     <script>
         let eyeclick = false;
-
         $("#btneye").click(function () {
             eyeclick = !eyeclick;
             if (eyeclick) {
@@ -103,15 +105,33 @@
         })
 
         //忘記密碼
-
         $("#sendEmail").click(function () {
             let mail = $("#recipient-name").val()
-            console.log(mail);
             $.get('@Url.Content("~/MemberFactory/SendMail")', { "MemberEmail": mail },
                 function (data) {
-                    alert(data);
-                    //window.location.href = '@Url.Content("~/Home/Login")';
+                     alert(data);
+                     $("#recipient-name").html("");
                 })
+        })
+
+        //偵測密碼
+        let txtAcc = $("#txtAccount");
+        let txtPW = $("#txtPW");
+        $("#btnlogin").click(function (eve) {
+            eve.preventDefault();
+            if (txtAcc.val() == "" || txtPW.val() == "") {
+                $("#spwarn").html('<i class="fa-solid fa-circle-xmark">請輸入帳號或密碼</i>');
+            }
+            else {
+                $.post('@Url.Content("~/Home/CanLogin")', { "txtAccount": txtAcc.val(), "txtPW": txtPW.val() }, function (data) {
+                    if (data == "OK") {
+                        window.location.href = '/'; //「/」回到最外層
+                    }
+                    else {
+                        $("#spwarn").html('<i class="fa-solid fa-circle-xmark">請輸入正確的帳號或密碼</i>');
+                    }
+                })
+            }
         })
     </script>
 }

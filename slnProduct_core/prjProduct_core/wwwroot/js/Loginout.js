@@ -1,7 +1,5 @@
 ﻿let nameval = document.querySelector("#memname");
-console.log(nameval);
 let loginhref = document.querySelector("#loginID");
-console.log(loginhref);
 let loguotdiv = document.querySelector("#logoutDiv");
 
 if (nameval.innerHTML != "Login") {

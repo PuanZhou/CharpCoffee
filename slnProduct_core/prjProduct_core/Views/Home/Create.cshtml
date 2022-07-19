@@ -39,30 +39,37 @@
                             <div class="col-12 mb-4">
                                 <label for="name">姓名*</label>
                                 <input type="text" class="form-control" maxlength="50" id="name" name="MemberName">
+                                <span asp-validation-for="MemberName" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="email_address">電子信箱*</label>
-                                <input type="email" class="form-control" maxlength="50" id="email" name="MemberEmail">
+                                <input type="email" class="form-control" id="email" name="MemberEmail">
+                                <span asp-validation-for="MemberEmail" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="phone">手機號碼*</label>
-                                <input type="text" class="form-control" maxlength="10" id="phone" name="MemberPhone" placeholder="手機號碼為10字元" pattern="[0-9]{10}">
+                                <input type="text" class="form-control" maxlength="10" id="phone" name="MemberPhone" placeholder="手機號碼為10字元" pattern="[0-9]{10}" />
+                                <span asp-validation-for="MemberPhone" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="PW">密碼*</label>
-                                <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八" pattern="[0-9a-zA-Z]{8,50}">
+                                <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八" pattern="[0-9a-zA-Z]{8,50}" />
+                                <span asp-validation-for="MemberPassword" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="checkPW">確認密碼*</label>
                                 <input type="password" class="form-control" maxlength="50" id="checkPW" name="checkPW">
+                                <span asp-validation-for="checkPW" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="address">地址*</label>
                                 <input type="text" class="form-control" maxlength="50" id="address" name="MemberAddress">
+                                <span asp-validation-for="MemberAddress" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="birth">生日*</label>
                                 <input type="date" class="form-control" id="birth" name="MemberBirthDay">
+                                <span asp-validation-for="MemberBirthDay" class="text-danger"></span>
                                 <input hidden type="text" name="ShoppingCarId" value="@ViewBag.CARTID">
                                 <input hidden type="text" name="BlackList" value="0">
                             </div>
@@ -98,8 +105,8 @@
                             <h5 class="warn" id="warnBirth">生日格式</h5>
                         </div>
                         <div class="checkout-btn mt-30">
-                            <button type="submit" class="btn alazea-btn w-100">註冊</button><br />
-                            <input type="button" class="btn alazea-btn w-100" id="creatDemo" value="註冊Demo">
+                            <button type="submit" class="btn alazea-btn w-100" id="btncreat">註冊</button><br />
+                            <input type="button" class="btn btn-primary" id="creatDemo" value="註冊Demo">
                         </div>
                     </div>
                 </div>
@@ -135,6 +142,7 @@
         let inputbirth = $("#birth");
         let warnBirth = $("#warnBirth");
 
+        let nameFlag = false, emailFlag = false, phoneFlag = false, pwflag = false, chpwFlag = false, addressFlag = false, birthFlag = false;
 
         function Emptywarn(ele,strinput) {
             ele.html(`<i class="fa-solid fa-circle-xmark">${strinput}不得為空</i>`).css("color", "red");
@@ -149,27 +157,33 @@
         inputName.blur(() => {
             if (inputName.val().trim() == "") {
                 Emptywarn(warnName, "姓名");
+                nameFlag = false;
             }
             else {
                 OKwarn(warnName, "姓名");
+                nameFlag = true;
             }
         });
 
         inputAddress.blur(() => {
             if (inputAddress.val().trim() == "") {
                 Emptywarn(warnAddress, "地址");
+                addressFlag = false;
             }
             else {
                 OKwarn(warnAddress, "地址");
+                addressFlag = true;
             }
         });
 
         inputbirth.blur(() => {
             if (inputbirth.val().trim() == "") {
                 Emptywarn(warnBirth, "生日");
+                birthFlag = false;
             }
             else {
                 OKwarn(warnBirth, "生日");
+                birthFlag = true;
             }
         });
 
@@ -177,9 +191,11 @@
             console.log("dded");
             if (re.test(inputPW.val())) {
                 OKwarn(warnPW, "密碼");
+                pwflag = true;
             }
             else {
                 warnPW.html(`<i class="fa-solid fa-circle-xmark">密碼格式有誤</i>`).css("color", "red");
+                pwflag = false;
             }
 
         })
@@ -188,9 +204,11 @@
             console.log("dded");
             if (inputCheckPW.val() == inputPW.val()) {
                 OKwarn(warnCheckPW, "再次確認密碼");
+                chpwFlag = true;
             }
             else {
                 warnCheckPW.html(`<i class="fa-solid fa-circle-xmark">密碼不一致</i>`).css("color", "red");
+                chpwFlag = false;
             }
 
         })
@@ -200,6 +218,7 @@
         inputEmail.blur(async () => {
             if (inputEmail.val().trim() == "") {
                 Emptywarn(warnEmail, "信箱");
+                emailFlag = false;
             }
             else {
                 const namerespon = await fetch('@Url.Content("~/MemberFactory/QueryMemEmail")' + `?MemberEmail=${inputEmail.val()}`)
@@ -208,9 +227,11 @@
 
                     if (datas == "True") {
                         Existwarn(warnEmail, "信箱");
+                        emailFlag = false;
                     }
                     else {
                         OKwarn(warnEmail, "信箱");
+                        emailFlag = true;
                     }
                 });
             }
@@ -220,19 +241,30 @@
         inputPhone.blur( function() {
             if (inputPhone.val().trim() == "") {
                 Emptywarn(warnPhone, "手機");
+                phoneFlag = false;
             }
             else {
                 $.get('@Url.Content("~/MemberFactory/QueryMemPhone")', { "MemberPhone": inputPhone.val() }, function (data) {
                     if (data == "True") {
                         Existwarn(warnPhone, "手機");
+                        phoneFlag = false;
                     }
                     else {
                         OKwarn(warnPhone, "手機");
+                        phoneFlag = true;
                     }
                 });
             }
 
         });
+
+            //送出條件
+        $("#btncreat").click(function (eve) {
+            if (nameFlag && emailFlag && phoneFlag && addressFlag && pwflag && chpwFlag && birthFlag) return;
+                else {
+                eve.preventDefault();
+            }
+        })
 
         $("#creatDemo").click(() => {
             inputName.val("黃阿花");
@@ -242,7 +274,7 @@
             inputCheckPW.val("1qaz2wsxC");
             inputEmail.val("flower@@gmail.com")
             inputPhone.val("0977222333");
-
+            
         })
 
     </script>

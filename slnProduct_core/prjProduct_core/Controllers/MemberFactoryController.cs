@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using prjCSCoffee.Models;
 using prjProduct_core.Controllers;
@@ -61,12 +62,12 @@ namespace prjCSCoffee.Controllers
 
         }
 
-        public IActionResult QueryOrdDetail(int? id) //此id為ordertID
+        public IActionResult QueryOrdDetail(string id) //此id為ordertID 
         {
             //1搜尋order的coupid 2.從coupid去cdb.oupon找名字
             string coupname = "";
             decimal couprice = 0;
-            var thiscouid = db.Orders.FirstOrDefault(o => o.OrderId == id).CouponId;
+            var thiscouid = db.Orders.FirstOrDefault(o => o.TradeNo == id && o.MemberId == HomeController.loginmem.MemberId).CouponId;
             if (thiscouid == null)
             {
                 coupname = "無";
@@ -78,26 +79,36 @@ namespace prjCSCoffee.Controllers
                 coupname = coupon.CouponName;
                 couprice = coupon.Money;
             }
-
-            var detai = db.OrderDetails.Where(d => d.OrderId == id).Select(d => new
+            var coup = db.OrderDetails.Include(od => od.Order).ThenInclude(c => c.Coupon).Where(o => o.Order.TradeNo == id).Select(f => new
             {
-                商品名 = d.Product.ProductName,
-                商品單價 = d.Product.Price,
-                商品數量 = d.Quantity,
-                小計 = d.Product.Price * d.Quantity,
+                商品名 = f.Product.ProductName,
+                商品單價 = f.Product.Price,
+                商品數量 = f.Quantity,
+                小計 = f.Product.Price * f.Quantity,
                 使用的優惠券 = coupname,
                 優惠券金額 = couprice
             });
-
-
-            return Json(detai);
+            return Json(coup);
         }
+
+
+        public IActionResult OrdCancel(string id)
+        {
+            var state = db.Orders.FirstOrDefault(o => o.TradeNo == id && o.MemberId == HomeController.loginmem.MemberId);
+            if (state != null)
+            {
+                state.OrderStateId = 5; //變成審核中
+                db.SaveChanges();
+            }
+            return Content("check", "text/plain", Encoding.UTF8);
+        }
+
 
         public IActionResult AddtoMyLike(int id)
         {
             if (HomeController.loginmem == null)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });
+                return RedirectToAction("Login", "Home");
             }
             else
             {
@@ -126,7 +137,7 @@ namespace prjCSCoffee.Controllers
         {
             if (HomeController.loginmem == null)
             {
-                return RedirectToRoute(new { controller = "Home", action = "Login" });
+                return RedirectToAction("Login", "Home");
             }
             else
             {

@@ -1,13 +1,14 @@
-﻿
-@{ ViewData["Title"] = "Index"; }
+﻿@model prjProduct_core.Models.Member
 
+@{ ViewData["Title"] = "Index"; }
 @section Style{
     <style>
-        .moviehand {
-            cursor: pointer;
+        #memphoto {
+            border-radius: 50%;
+            width: 350px;
+            height: 350px;
         }
     </style>
-
 }
 
 
@@ -34,23 +35,87 @@
 <!-- ##### Breadcrumb Area End ##### -->
 <!-- ##### Portfolio Area Start ##### -->
 <section class="alazea-portfolio-area portfolio-page section-padding-0-100">
-<div class="container">
+    <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="alazea-portfolio-filter">
                     <div class="portfolio-filter">
-                        <button class="btn" id="memedit">會員資料</button>
-                        <button class="btn" id="memorder">訂單查詢</button> 
+                        <a href="/MemCenter/Index" class="btn" id="memedit">會員資料</a>
+                        <button class="btn" id="memorder">訂單查詢</button>
                         <button class="btn" id="memcoupon">優惠券</button>
                         <button class="btn" id="memmylike">我的收藏</button>
-                        <button class="btn" id="membackprod">退貨</button>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="" id="funcChange">
+            <!-- ##### Edit Start ##### -->
+            <div class="checkout_area mb-100">
+                <div class="container">
+                    <form id="form" method="post" action="Index" enctype="multipart/form-data">
+                        <div class="row justify-content-between">
+                            <div class="col-12 col-lg-7">
+                                <div class="checkout_details_area clearfix">
+                                    <h5>Billing Details</h5>
+                                    <div class="row">
+                                        <input type="hidden" value="@Model.MemberId" name="MemberId" />
+                                        <div class="col-12 mb-4">
+                                            <label for="name">姓名*</label>
+                                            <input type="text" class="form-control" maxlength="50" id="name" name="MemberName" value="@Model.MemberName" />
+                                            <span asp-validation-for="MemberName" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-12 mb-4">
+                                            <label for="email_address">電子信箱*</label>
+                                            <input type="email" class="form-control" maxlength="50" id="email" name="MemberEmail" value="@Model.MemberEmail" />
+                                            <span asp-validation-for="MemberEmail" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-12 mb-4">
+                                            <label for="phone">手機號碼*</label>
+                                            <input type="text" disabled class="form-control" id="phone" name="MemberPhone" value="@Model.MemberPhone" />
+                                        </div>
+                                        <div class="col-12 mb-4">
+                                            <label for="PW">密碼*</label>
+                                            <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八" value="@Model.MemberPassword" />
+                                            <span asp-validation-for="MemberPassword" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-12 mb-4">
+                                            <label for="address">地址*</label>
+                                            <input type="text" class="form-control" maxlength="50" id="address" name="MemberAddress" value="@Model.MemberAddress" />
+                                            <span asp-validation-for="MemberAddress" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-12 mb-4">
+                                            <label for="birth">生日*</label>
+                                            <input type="text" disabled class="form-control" id="birth" name="MemberBirthDay" value="@Model.MemberBirthDay.ToShortDateString()" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="col-12 col-lg-4">
+                                <div class="checkout-content ">
+                                    <h5>頭像</h5>
+                                    <div class="subtotal d-flex justify-content-between align-items-center">
+                                        <img src="~/img/Mem-img/@Model.MemberPhotoPath" id="memphoto" onerror="this.src='/img/Mem-img/catMoney.jpg'" />
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="photofile" aria-describedby="inputGroupFileAddon04">
+                                            <label class="custom-file-label" for="photofile" id="labfile">選擇檔案</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                        </div>
+                                    </div>
+                                    <br /><br />
+                                    <div class="checkout-btn mt-30">
+                                        <button type="submit" class="btn alazea-btn w-100" id="memEdit">修改</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- ##### Edit End ##### -->
         </div>
     </div>
 </section>
@@ -61,7 +126,7 @@
 
 @section Scripts{
     <script>
-        $("#funcChange").load('@Url.Content("~/MemCenter/EditPartialView")');
+
         $("#memedit").click(() => {
             $("#funcChange").show("slow",2000, function () {
                 $("#funcChange").load('@Url.Content("~/MemCenter/EditPartialView")')  //先hide再show
@@ -74,7 +139,6 @@
             });
         });
         $("#memmylike").click(() => {
-
             $("#funcChange").show(1000, function () {
                 $("#funcChange").load('@Url.Content("~/MemCenter/MyLikePartial")');
             });
@@ -86,11 +150,16 @@
             });
         });
 
-        $("#membackprod").click(() => {
-            $("#funcChange").show(1000, function () {
-                $("#funcChange").load('@Url.Content("~/MemCenter/GiveBackPartialView")');
-            });
-        });
+        //修改頭像預覽圖片
+        $("#photofile").change(function () {
+            let file = this.files[0];
+            let reader = new FileReader();
+            reader.onload = function (eve) {
+                $("#memphoto").attr("src", eve.target.result);
+            }
+            reader.readAsDataURL(file);
+            $("#labfile").text(file.name);
+        })
 
     </script>
 }

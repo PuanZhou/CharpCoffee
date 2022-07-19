@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -45,27 +46,22 @@ namespace prjProduct_core.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Login(CLoginViewModel login) //登入資料送出
+        public IActionResult CanLogin(string txtAccount, string txtPW) //登入資料送出
         {
-            //後端登入?
-
-            var mem = db.Members.FirstOrDefault(m => m.MemberPhone == login.txtAccount);
+            var mem = db.Members.FirstOrDefault(m => m.MemberPhone == txtAccount);
             if (mem != null)
             {
-                if (mem.MemberPassword.Equals(login.txtPW))
+                if (mem.MemberPassword == txtPW)
                 {
-
                     string jsonUser = JsonSerializer.Serialize(mem);  //將物件轉字串
                     HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, jsonUser); //放入到session紀錄登入資訊
                     loginmem = JsonSerializer.Deserialize<Member>(jsonUser);
                     MemName = $"{loginmem.MemberName}您好";
-                    return RedirectToAction("Index");
-
+                    return Content("OK", "text/plain", Encoding.UTF8);
                 }
-
             }
-            return View();
+            return Content("NO", "text/plain", Encoding.UTF8); ;
+
 
         }
 
@@ -74,7 +70,7 @@ namespace prjProduct_core.Controllers
             HttpContext.Session.Remove(CDictionary.SK_LOGINED_USER);
             loginmem = null;
             MemName = "Login";
-            return RedirectToAction("Index");  //ajax登出
+            return RedirectToAction("Index"); 
         }
 
         public IActionResult Create()
@@ -86,24 +82,24 @@ namespace prjProduct_core.Controllers
         [HttpPost]
         public IActionResult Create(CMemberViewModel newmem)
         {
-            //if (ModelState.IsValid)
-            //{
-            Member mem = new Member()
+            if (ModelState.IsValid)
             {
-                MemberName = newmem.MemberName,
-                MemberEmail = newmem.MemberEmail,
-                MemberAddress = newmem.MemberAddress,
-                MemberPhone = newmem.MemberPhone,
-                MemberPassword = newmem.MemberPassword,
-                MemberBirthDay = newmem.MemberBirthDay,
-            };
+                Member mem = new Member()
+                {
+                    MemberName = newmem.MemberName,
+                    MemberEmail = newmem.MemberEmail,
+                    MemberAddress = newmem.MemberAddress,
+                    MemberPhone = newmem.MemberPhone,
+                    MemberPassword = newmem.MemberPassword,
+                    MemberBirthDay = newmem.MemberBirthDay,
+                };
 
-            db.Members.Add(mem);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-            //}
-            //else
-            //    return View
+                db.Members.Add(mem);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+                return View();
         }
 
 
