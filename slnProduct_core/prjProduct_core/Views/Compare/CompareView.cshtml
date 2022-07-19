@@ -60,6 +60,20 @@
         }
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>比較列表中已無任何商品，請先回到商品頁面重新將商品加入比較</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="returnView" class="btn btn-info">回到商品頁面</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script>
         $(".remove").click(function () {
@@ -68,8 +82,10 @@
             $.get('@Url.Content("~/compare/DeleteCompare")', { "Id": Id },
                 function (data) {
                     if (data === "null") {
-                        alert("比較列表中無任何商品，請前往加入比較");
-                        window.location = '@Url.Action("View","Shop")';
+                        $("#staticBackdrop").modal('show');
+                        $('#returnView').click(function () {
+                            window.location.href = '@Url.Content("~/Shop/View")';
+                        })
                     }
                     else {
                         $('.bootstrap-growl').remove();
@@ -86,6 +102,6 @@
                     }
                 }
             )
-        })
+        });
     </script>
 }
