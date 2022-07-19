@@ -1,51 +1,131 @@
 ﻿
+.img1 {
+    top: 10em;
+    left:57em;
+}
 .img2 {
-    left: 2em;
+    top: 12em;
+    left: 76em;
 }
 
 .img3 {
-    right: 2em;
+    top: 21em;
+    left: 80em;
 }
 
 .img4 {
-    top: 9em;
+    top: 30em;
+    left: 80em;
 }
 
 .img5 {
-    top: 17em;
+    top: 38em;
+    left: 74em;
 }
 
 .img6 {
-    top: 25em;
+    top: 44em;
+    left: 51em;
 }
 
 .img7 {
-    top: 33em;
+    top: 44em;
+    left: 36em;
 }
 
 .img8 {
-    top: 41em;
+    top: 38em;
+    left: 18em;
 }
 
 .img9 {
-    top: 49em;
+    top: 30em;
+    left: 14em;
 }
-
-.img1 {
-    position: fixed;
-    width: 7em;
-    height: 7em;
-    filter: grayscale(0.4)
-}@media(max-width:1350px){
-     .img1{display:none}
- }
-
 .img10 {
-    filter: grayscale(0)
+    top: 22em;
+    left: 11em;
 }
+.img11 {
+    top: 13em;
+    left: 17em;
+}
+.img12 {
+    top: 9em;
+    left: 37em;
+}
+
+.img13 {
+    position: fixed;
+    width: 17em;
+    height: 6.5em;
+    opacity: 0;
+    z-index: 99;
+}
+.img14 {
+    position: fixed;
+    width: 3em;
+    height: 3em;
+    left:1em;
+    z-index: 99;
+    display:none;
+}
+.img15{
+    top:8em;
+}
+.img16 {
+    top: 11.5em;
+}
+.img17 {
+    top: 15em;
+}
+.img18 {
+    top: 18.5em;
+}
+.img19 {
+    top: 22em;
+}
+.img20 {
+    top: 25.5em;
+}
+.img21 {
+    top: 29em;
+}
+.img22 {
+    top: 32.5em;
+}
+.img23 {
+    top: 36em;
+}
+.img24 {
+    top: 39.5em;
+}
+.img25 {
+    top: 43em;
+}
+.img26 {
+    top: 46.5em;
+}
+
+
+
 .body1 {
-    background-image: url(../Constellation/Constellation_background01.jpg);
-    background-attachment:fixed;
+    background-image: url(../Constellation/Constellation_background09.jpg);
+    background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: 100% 100%;
+}
+@media(max-width:1500px) {
+    .img13 {
+        display: none
+    }
+    .body1 {
+        background-image: url(../Constellation/Constellation_background01.jpg)
+    }
+    .img14{
+        display:block;
+    }
+    .bgimg1{
+        background-image:url(../Constellation/Constellation_background04.jpg);
+    }
 }
