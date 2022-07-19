@@ -25,6 +25,13 @@
             height: 75px;
             width: 175px;
         }
+        .right-banner {
+            position: fixed;
+            top: 50vh;
+            right: 2rem;
+            z-index:999;
+        }
+
     </style>
 </head>
 <body>
@@ -37,7 +44,7 @@
     </div>
 
     <!-- ##### Header Area Start ##### -->
-    <header class="header-area ">
+    <header class="header-area" style="z-index:10000">
 
         <!-- ***** Top Header Area ***** -->
         <div class="top-header-area">
@@ -48,7 +55,7 @@
                             <!-- Top Header Content -->
                             <div class="top-header-meta">
                                 @*<a href="#" data-toggle="tooltip" data-placement="bottom" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: infodeercreative@gmail.com</span></a>
-                                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
+                                <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
                                 <a href="#" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: cscoffee@msit141.com.tw</span></a>
                                 <a href="#" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Tel: 02-2222-2222</span></a>
                             </div>
@@ -126,20 +133,14 @@
                                     <li><a href="portfolio.html">填寫問券</a></li>
                                     <li><a asp-area="" asp-controller="Constellation" asp-action="faceToConstellation">星座咖啡</a></li>
                                 </ul>
-                                <!-- Compare Icon -->
-                                <div id="compare">
-                                    <img src="~/img/Icon/coffee_comapre_icon.png" style="cursor:pointer" title="前往比較頁面" />
-                                </div>
                                 <!-- Search Icon -->
                                 <div id="searchIcon">
                                     <i class="fa fa-search" aria-hidden="true"></i>
                                 </div>
-
                             </div>
                             <!-- Navbar End -->
                         </div>
                     </nav>
-
                     <!-- Search Form -->
                     <div class="search-form">
                         <form action="#" method="get">
@@ -154,10 +155,11 @@
         </div>
     </header>
     <!-- ##### Header Area End ##### -->
-
-
     <div>
-
+        <div class="btn-group-vertical right-banner" role="group" aria-label="Basic example">
+            <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /></button>
+            <button type="button" class="btn btn-light">購物車</button>
+        </div>
         <main role="main" class="pb-3">
 
             @RenderBody()
@@ -207,10 +209,10 @@
                 if (data === "null") {
                     $.bootstrapGrowl("尚未加入任何比較!", {
                         ele: "body",
-                        type: "danger", 
-                        offset: { from: "bottom", amount:50 }, 
-                        align: "right", 
-                        width: "auto" , 
+                        type: "danger",
+                        offset: { from: "bottom", amount:50 },
+                        align: "right",
+                        width: "auto" ,
                         delay: 3000,
                         allow_dismiss: true,
                         stackup_spacing: 10
