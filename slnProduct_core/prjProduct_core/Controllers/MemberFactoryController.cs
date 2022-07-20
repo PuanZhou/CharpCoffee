@@ -42,14 +42,13 @@ namespace prjCSCoffee.Controllers
             var ord = db.Orders.Where(o => o.MemberId == HomeController.loginmem.MemberId &&
             o.OrderDate.Year == oYear && o.OrderDate.Month >= oMonth && o.OrderDate.Month <= oMonth2).Select(o => new
             {
-                訂單編號 = o.OrderId,
+                訂單編號 = o.TradeNo,
                 訂單日期 = o.OrderDate.ToShortDateString(),
                 收件地址 = o.OrderAddress,
                 收件人 = o.OrderReceiver,
                 收件電話 = o.OrderPhone,
                 訂單狀態 = o.OrderState.OrderState1,
                 付款方式 = o.Payment.Payment1,
-
             });
 
             if (ord != null)
