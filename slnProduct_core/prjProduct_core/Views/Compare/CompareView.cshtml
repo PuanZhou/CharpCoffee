@@ -100,8 +100,17 @@
                             stackup_spacing: 10
                         });
                     }
+                    ReportCompareCount();
                 }
             )
         });
+
+        //==================目前比較數量===============
+    function ReportCompareCount() {
+         $.get('@Url.Content("~/Compare/ReportCompareCount")',
+                function (data) {
+                    $("#compare-count").html(`&nbsp&nbsp${data}`);
+                }
+    )};
     </script>
 }

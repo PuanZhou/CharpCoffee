@@ -527,7 +527,7 @@
         })
         /*下拉式選單*/
 
-           //=====================加入比較按鈕=====================
+    //=====================加入比較按鈕=====================
     $(".compare-btn").click(function () {
         let comid = $(this.children).text();
         $('.bootstrap-growl').remove();
@@ -569,9 +569,17 @@
                         stackup_spacing: 10
                     });
                 }
-            }
+                ReportCompareCount();
+             }
         );
     });
+    //==================目前比較數量===============
+    function ReportCompareCount() {
+         $.get('@Url.Content("~/Compare/ReportCompareCount")',
+                function (data) {
+                    $("#compare-count").html(`&nbsp&nbsp${data}`);
+                }
+    )};
            //============================加入收藏==============================
     $(".wishlist-btn").click(async function (event) {
         let likeid = event.currentTarget.textContent;
