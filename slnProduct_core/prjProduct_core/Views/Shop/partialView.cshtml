@@ -102,7 +102,13 @@
                         stackup_spacing: 10
                     });
                 }
-            }
+
+         $.get('@Url.Content("~/Compare/ReportCompareCount")',
+                function (data) {
+                    $("#compare-count").html(`&nbsp&nbsp${data}`);
+                }
+            );
+         }
         );
     });
 

@@ -104,5 +104,19 @@ namespace prjProduct_core.Controllers
                 return Content("null", "text/plain", System.Text.Encoding.UTF8);
             }
         }
+
+        public IActionResult ReportCompareCount()
+        {
+            if (HttpContext.Request.Cookies.Keys.Contains(CDictionary.AddCompare))
+            {
+                string json = HttpContext.Request.Cookies[CDictionary.AddCompare];
+                List<int> compareList = JsonSerializer.Deserialize<List<int>>(json);
+                return Content(compareList.Count.ToString(), "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                return Content("0", "text/plain", System.Text.Encoding.UTF8);
+            }
+        }
     }
 }
