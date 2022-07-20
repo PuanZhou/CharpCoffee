@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace prjProduct_core.Controllers
 {
+    //幫我開直播
     public class APIController : Controller
     {
         private readonly CoffeeContext db;
