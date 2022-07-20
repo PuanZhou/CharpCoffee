@@ -17,7 +17,7 @@
                 開始日期
             </th>
             <th scope="col">
-                使用期限
+                剩餘時間
             </th>
         </tr>
     </thead>
@@ -36,10 +36,38 @@
             <td>
                 @item.startDate.ToShortDateString()
             </td>
-            <td>
+            <td class="countdown">
                 @item.deadline.ToShortDateString()
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<script>
+    //倒數
+    let Countdown = $(".countdown");
+    let timearr = [];
+    $.each(Countdown, function (index, value) {  //value:element
+        timearr.push(value.innerText);
+    })
+
+    function count() {
+        let now = new Date().getTime();
+        for (let i = 0; i < timearr.length; i++) {
+            let deadtime = new Date(timearr[i]).getTime();
+            let distance = deadtime - now;
+            let days = Math.floor(distance / (24 * 60 * 60 * 1000));
+            let hours = Math.floor((distance % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            let minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
+            let seconds = Math.floor((distance % (60 * 1000)) / 1000);
+
+            Countdown.get(i).innerText = `${days}天${hours}小時${minutes}分${seconds}秒`;
+        }
+    }
+    count();
+    let timer = setInterval(count, 1000);
+
+
+
+</script>
