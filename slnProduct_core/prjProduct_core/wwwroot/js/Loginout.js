@@ -1,19 +1,17 @@
 ﻿let nameval = document.querySelector("#memname");
 let loginhref = document.querySelector("#loginID");
-let loguotdiv = document.querySelector("#logoutDiv");
+let loguot = document.querySelector("#logout");
 
-if (nameval.innerHTML != "Login") {
-        //如果有登入連結為會員中心
-        loginhref.setAttribute("href", "/MemCenter/Index");
+if (nameval.innerHTML != "Login") {//如果有登入
+        //連結為會員中心
+        loginhref.setAttribute("href", "#");
         //顯示登出
-        loguotdiv.removeAttribute("hidden");
-        //$("#loginID").after('<a href="/Home/Logout" id="logoutID"><span id="memname"> 登出</span></a>');
-        //console.log($("#loginID"));
+        loguot.removeAttribute("hidden");
     }
 
     else {   //如果沒登入連結為登入會員
     loginhref.setAttribute("href", "/Home/Login");
         //隱藏登出
-    loguotdiv.setAttribute("hidden","");
+    loguot.setAttribute("hidden","");
     }
 

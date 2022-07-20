@@ -88,7 +88,6 @@ namespace prjCSCoffee.ViewModel
         }
 
         [DisplayName("生日")]
-        [Required(ErrorMessage = "不可為空")]
         public DateTime MemberBirthDay
         {
             get { return _mem.MemberBirthDay; }
@@ -108,5 +107,6 @@ namespace prjCSCoffee.ViewModel
         }
 
         public IFormFile photo { get; set; }
+
     }
 }

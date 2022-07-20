@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using prjCSCoffee.Models;
+using prjCSCoffee.ViewModel;
 using prjProduct_core.Controllers;
 using prjProduct_core.Models;
 using System;

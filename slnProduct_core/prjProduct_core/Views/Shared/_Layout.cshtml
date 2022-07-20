@@ -67,21 +67,18 @@
                                     <div class="dropdown">
                                         <button class="btn btn-secondary dropdown-toggle mr-30" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">會員專區</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">會員資訊</a>
-                                            <a class="dropdown-item" href="#">會員oo</a>
+                                            <a class="dropdown-item" href="/MemCenter/Index">會員中心</a>
+                                            @*<a class="dropdown-item" href="#">會員通知?</a>
                                             <a class="dropdown-item" href="#">會員xx</a>
-                                            <a class="dropdown-item" href="#">會員ox</a>
-                                            <a class="dropdown-item" href="#">會員xo</a>
+                                            <a class="dropdown-item" href="#">會員ox</a>*@
                                             <a class="dropdown-item" href="/home/onlineServices">即時客服</a>
+                                            <a class="dropdown-item" href="/Home/Logout" id="logout" hidden>登出</a>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Login -->
                                 <div class="login">
                                     <a href="/Home/Login" id="loginID"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@HomeController.MemName</span></a>
-                                </div>
-                                <div class="logout" id="logoutDiv" hidden>
-                                    <a href="/Home/Logout" id="logoutID"><i class="fa fa-user" aria-hidden="true"></i> <span>登出</span></a>
                                 </div>
                                 <!-- Cart -->
                                 <div class="cart">

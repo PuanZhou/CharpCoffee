@@ -92,14 +92,15 @@ namespace prjProduct_core.Controllers
                     MemberPhone = newmem.MemberPhone,
                     MemberPassword = newmem.MemberPassword,
                     MemberBirthDay = newmem.MemberBirthDay,
+                    ShoppingCarId = newmem.ShoppingCarId
                 };
 
                 db.Members.Add(mem);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Login");
             }
-            else
-                return View();
+            return View();
         }
 
 

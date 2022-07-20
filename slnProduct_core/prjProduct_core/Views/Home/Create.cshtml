@@ -27,7 +27,7 @@
 </div>
 <!-- ##### Breadcrumb Area End ##### -->
 <!-- ##### Checkout Area Start ##### -->
-<form id="creatform" method="post">
+<form id="creatform" name="creatform" method="post">
     <div class="checkout_area mb-100">
         <div class="container">
             <div class="row justify-content-between">
@@ -71,7 +71,7 @@
                                 <input type="date" class="form-control" id="birth" name="MemberBirthDay">
                                 <span asp-validation-for="MemberBirthDay" class="text-danger"></span>
                                 <input hidden type="text" name="ShoppingCarId" value="@ViewBag.CARTID">
-                                <input hidden type="text" name="BlackList" value="0">
+                                <input hidden type="text" name="BlackList" value="false">
                             </div>
                         </div>
 
@@ -261,9 +261,7 @@
             //送出條件
         $("#btncreat").click(function (eve) {
             if (nameFlag && emailFlag && phoneFlag && addressFlag && pwflag && chpwFlag && birthFlag) return;
-                else {
-                eve.preventDefault();
-            }
+                else { eve.preventDefault(); }
         })
 
         $("#creatDemo").click(() => {
@@ -274,7 +272,7 @@
             inputCheckPW.val("1qaz2wsxC");
             inputEmail.val("flower@@gmail.com")
             inputPhone.val("0977222333");
-            
+            nameFlag = true; emailFlag = true; phoneFlag = true; addressFlag = true; pwflag = true; chpwFlag = true; birthFlag = true;
         })
 
     </script>
