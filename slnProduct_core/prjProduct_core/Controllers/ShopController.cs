@@ -22,55 +22,81 @@ namespace prjProduct_core.Controllers
         }
 
 
-        public IActionResult view()
+        public async Task<IActionResult> view(string search)
         {
-
-
-            var q = db.Products.Select(p => new CProductViewModel()
+            if (string.IsNullOrEmpty(search))
             {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                CategoryId = p.CategoryId,
-                Category = p.Category,
-                Country = p.Country,
-                Coffee = p.Coffee,
-                Price = p.Price,
-                Description = p.Description,
-                Stock = p.Stock,
-                TakeDown = p.TakeDown,
-                Star = p.Star
-            });
+                var q = db.Products.Select(p => new CProductViewModel()
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    CategoryId = p.CategoryId,
+                    Category = p.Category,
+                    Country = p.Country,
+                    Coffee = p.Coffee,
+                    Price = p.Price,
+                    Description = p.Description,
+                    Stock = p.Stock,
+                    TakeDown = p.TakeDown,
+                    Star = p.Star
+                });
+                //左側推薦商品欄位
+                Random rng = new Random();
+                var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
 
+                var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
 
-            //左側推薦商品欄位
-            Random rng = new Random();
-            var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
+                ViewBag.Recommend = recommend;
+                return View(q);
+            }
+            else
+            {
+                var q = db.Products.Where(p => p.ProductName.Contains(search)).Select(p => new CProductViewModel()
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    CategoryId = p.CategoryId,
+                    Category = p.Category,
+                    Country = p.Country,
+                    Coffee = p.Coffee,
+                    Price = p.Price,
+                    Description = p.Description,
+                    Stock = p.Stock,
+                    TakeDown = p.TakeDown,
+                    Star = p.Star
+                });
+                //左側推薦商品欄位
+                Random rng = new Random();
+                var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
 
-            var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
+                var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
 
-            ViewBag.Recommend = recommend;
-
-            return View(q);
+                ViewBag.Recommend = recommend;
+                return View(await q.AsNoTracking().ToListAsync());
+            }
         }
 
         public IActionResult detail(int? id)
         {
 
-            var q = db.Products.Where(p => p.ProductId == id).Select(p => new CProductViewModel()
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                CategoryId = p.CategoryId,
-                Category = p.Category,
-                Coffee = p.Coffee,
-                Country = p.Country,
-                Price = p.Price,
-                Description = p.Description,
-                Stock = p.Stock,
-                TakeDown = p.TakeDown,
-                Star = p.Star
+            var q = db.Products.Include(p => p.Coffee).ThenInclude(p => p.Roasting)
+                .Include(p => p.Coffee).ThenInclude(p => p.Process)
+                .Include(p => p.Coffee).ThenInclude(p => p.Package)
+                .Where(p => p.ProductId == id).Select(p => new CProductViewModel()
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    CategoryId = p.CategoryId,
+                    Category = p.Category,
+                    Coffee = p.Coffee,
+                    Country = p.Country,
+                    Price = p.Price,
+                    Description = p.Description,
+                    Stock = p.Stock,
+                    TakeDown = p.TakeDown,
+                    Star = p.Star
 
-            }).ToList();
+                }).ToList();
             return View(q[0]);
         }
 
@@ -103,14 +129,11 @@ namespace prjProduct_core.Controllers
 
         }
 
-        public IActionResult partialView(int id)
+        public IActionResult partialView()
         {
-            int pagesize = 15;
-            int now = 0;
 
-            now = (id - 1) * pagesize;
 
-            var q = db.Products.Skip(now).Take(pagesize).Select(p => new CProductViewModel()
+            var q = db.Products.Select(p => new CProductViewModel()
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -128,12 +151,10 @@ namespace prjProduct_core.Controllers
             return PartialView(q);
         }
 
-        public IActionResult partialViewForCatgory(int id, int page)
+        public IActionResult partialViewForCatgory(int id)
         {
-            int pagesize = 15;
-            int now = 0;
-            now = (page - 1) * pagesize;
-            var q = db.Products.Where(p => p.CategoryId == id).Skip(now).Take(pagesize).Select(p => new CProductViewModel()
+
+            var q = db.Products.Where(p => p.CategoryId == id).Select(p => new CProductViewModel()
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -149,12 +170,10 @@ namespace prjProduct_core.Controllers
             });
             return PartialView(q);
         }
-        public IActionResult partialViewContry(int id, int page)
+        public IActionResult partialViewContry(int id)
         {
-            int pagesize = 15;
-            int now = 0;
-            now = (page - 1) * pagesize;
-            var q = db.Coffees.Where(p => p.CountryId == id).Skip(now).Take(pagesize).Select(p => new CCoffeeViewModel()
+
+            var q = db.Coffees.Where(p => p.CountryId == id).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,
@@ -172,12 +191,10 @@ namespace prjProduct_core.Controllers
             });
             return PartialView(q);
         }
-        public IActionResult partialViewRoast(int id, int page)
+        public IActionResult partialViewRoast(int id)
         {
-            int pagesize = 15;
-            int now = 0;
-            now = (page - 1) * pagesize;
-            var q = db.Coffees.Where(p => p.RoastingId == id).Skip(now).Take(pagesize).Select(p => new CCoffeeViewModel()
+
+            var q = db.Coffees.Where(p => p.RoastingId == id).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,
@@ -195,12 +212,10 @@ namespace prjProduct_core.Controllers
             });
             return PartialView(q);
         }
-        public IActionResult partialViewProcess(int id, int page)
+        public IActionResult partialViewProcess(int id)
         {
-            int pagesize = 15;
-            int now = 0;
-            now = (page - 1) * pagesize;
-            var q = db.Coffees.Where(p => p.ProcessId == id).Skip(now).Take(pagesize).Select(p => new CCoffeeViewModel()
+
+            var q = db.Coffees.Where(p => p.ProcessId == id).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,
@@ -218,12 +233,10 @@ namespace prjProduct_core.Controllers
             });
             return PartialView(q);
         }
-        public IActionResult partialViewPacking(int id, int page)
+        public IActionResult partialViewPacking(int id)
         {
-            int pagesize = 15;
-            int now = 0;
-            now = (page - 1) * pagesize;
-            var q = db.Coffees.Where(p => p.PackageId == id).Skip(now).Take(pagesize).Select(p => new CCoffeeViewModel()
+
+            var q = db.Coffees.Where(p => p.PackageId == id).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,
@@ -257,7 +270,7 @@ namespace prjProduct_core.Controllers
                 TakeDown = p.TakeDown,
                 Star = p.Star
 
-            });
+            }).FirstOrDefault();
             return PartialView(q);
         }
 

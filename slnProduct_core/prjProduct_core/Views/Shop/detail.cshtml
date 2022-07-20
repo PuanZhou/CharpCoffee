@@ -1,4 +1,5 @@
 ﻿@model prjProduct_core.ViewModel.CProductViewModel
+
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
@@ -70,10 +71,10 @@
                             <!-- Add to Cart Form -->
                             <form class="cart clearfix d-flex align-items-center" method="post">
                                 @*<div class="quantity">
-                                        <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (!isNaN(qty)) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                        <input type="text" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
-                                        <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                    </div>*@
+                    <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (!isNaN(qty)) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                    <input type="text" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
+                    <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                </div>*@
                                 <a href="@Url.Action("AddtoCart","Shopping", new { id = Model.ProductId})" style="cursor:pointer" class="btn alazea-btn ml-15"><span hidden id="addtocart">@Model.ProductId</span>Add to cart</a>
                             </form>
                             <!-- Wishlist & Compare -->
@@ -82,24 +83,15 @@
                                 <a style="cursor:pointer" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i><span hidden id="comid">@Model.ProductId</span></a>
                             </div>
                         </div>
-
                         @{
                             if (Model.CategoryId == 1)
                             {
 
                                 <div class="products--meta">
-                                    <p><span>產地:</span> <span>台灣</span></p>
-                                    <p><span>烘培程度:</span>非常重</p>
-                                    <p><span>處理方法:</span> <span>日曬法</span></p>
-                                    <p>
-                                        <span>Share on:</span>
-                                        <span>
-                                            <a href="#"><i class="fa-brand fa-facebook"></i></a>
-                                            <a href="#"><i class="fa-brand fa-twitter"></i></a>
-                                            <a href="#"><i class="fa-brand fa-pinterest"></i></a>
-                                            <a href="#"><i class="fa-brand fa-google-plus"></i></a>
-                                        </span>
-                                    </p>
+                                    <p><span>產地:</span> <span>@Model.Coffee.Country.CountryName</span></p>
+                                    <p><span>烘培程度:</span>@Model.Coffee.Roasting.RoastingName</p>
+                                    <p><span>處理方法:</span> <span>@Model.Coffee.Process.ProcessName</span></p>
+                                    <p><span>包裝方式:</span> <span>@Model.Coffee.Package.PackageName</span></p>
                                 </div>
                             }
                             else
@@ -107,15 +99,6 @@
                                 <div class="products--meta">
                                     <p><span>產地:</span> <span>台灣</span></p>
                                     <p><span>產品種類:</span> <span>@Model.CategoryName</span></p>
-                                    <p>
-                                        <span>Share on:</span>
-                                        <span>
-                                            <a href="#"><i class="fa-brand fa-facebook"></i></a>
-                                            <a href="#"><i class="fa-brand fa-twitter"></i></a>
-                                            <a href="#"><i class="fa-brand fa-pinterest"></i></a>
-                                            <a href="#"><i class="fa-brand fa-google-plus"></i></a>
-                                        </span>
-                                    </p>
                                 </div>
                             }
                         }
@@ -289,6 +272,7 @@
                         window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
                     }
                 });
-        }
+        })
+            
     </script>
 }

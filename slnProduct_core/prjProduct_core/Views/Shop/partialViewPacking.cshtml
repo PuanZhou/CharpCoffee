@@ -1,58 +1,159 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.CCoffeeViewModel>
+<style>
+    .pagination {
+        position: relative;
+        z-index: 1;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+    }
 
-        @{
-            foreach (var pd in Model)
-            {
-                <!-- Single Product Area -->
-                <div class="col-12 col-sm-6 col-lg-4 ">
-                    <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
-                        <!-- Product Image -->
-                        <div class="product-img">
-                            <a asp-action="detail" asp-route-id="@pd.ProductId"><img src="../img/Home-img/02.jpg" alt=""></a>
-                            <!-- Product Tag -->
-                            <div class="product-tag">
-                                <a href="#">Hot</a>
-                            </div>
-                            <div class="product-meta d-flex">
-                                <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
-                                <a asp-action="addToCart" asp-route-id="@pd.ProductId" class="add-to-cart-btn">Add to cart</a>
-                                <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
-                            </div>
-                        </div>
-                        <!-- Product Info -->
-                        <div class="product-info mt-15 text-center">
-                            <a>
-                                @Html.ActionLink(@pd.CoffeeName, "detail", new { id = pd.ProductId }, new { })
-                            </a>
-                            <h6>NT$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
-                        </div>
-                    </div>
-                </div>
-            }
+        .pagination li a {
+            color: #707070;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 18px;
+            line-height: 44px;
+            padding: 0;
+            margin: 0 10px;
         }
 
+        .pagination li span {
+            color: #707070;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 18px;
+            line-height: 44px;
+            padding: 0;
+            margin: 0 10px;
+        }
 
-    <div  class="col-12">
-        <ul class="pagination left pull-left" id="btnul">
+        .pagination li a:hover, .pagination li a:focus, .pagination li .current, .pagination li .current:hover {
+            border-color: #70c745;
+            background-color: #70c745;
+            color: #ffffff;
+        }
+</style>
+@{
+    <div class="col-12">
+        <ul class="pagination left pull-left " id="btnul">
         </ul>
     </div>
+    foreach (var pd in Model)
+    {
+        <!-- Single Product Area -->
+        <div class="col-12 col-sm-6 col-lg-4 list-item">
+            <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
+                <!-- Product Image -->
+                <div class="product-img">
+                    <a asp-action="detail" asp-route-id="@pd.ProductId"><img src="../img/Home-img/02.jpg" alt=""></a>
+                    <!-- Product Tag -->
+                    <div class="product-tag">
+                        <a href="#">Hot</a>
+                    </div>
+                    <div class="product-meta d-flex">
+                        <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                        <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+                        <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                    </div>
+                </div>
+                <!-- Product Info -->
+                <div class="product-info mt-15 text-center">
+                    <a asp-action="detail" asp-route-id="@pd.ProductId">
+                        @pd.CoffeeName
+                    </a>
+                    <h6>$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-12">
+        <ul class="pagination left pull-left " id="btnul">
+        </ul>
+    </div>
+}
+<script>
+    // 每個頁面要顯示幾個項目
+    var perPage = 9;
+    // 總共有多少個項目
+    var numItems = $(".list-item").length;
 
+    $(".list-item").slice(perPage).hide();
 
-    <script>
+    $('.pagination').pagination({
 
-    $("#btnul").append(function () {
-        $.get('@Url.Content("~/API/loadPacking")' + "?id=" +@Model.Select(p=>p.PackageId).FirstOrDefault(), function (data) {
-            let cont = parseInt(data) + 1;
+        items: numItems,
+        itemsOnPage: perPage,
+        prevText: "&laquo;",
+        nextText: "&raquo;",
+        onPageClick: function (pageNumber) {
+            // 計算出 起始 以及結束
+            var from = perPage * (pageNumber - 1);
+            var to = from + perPage;
+            $(".list-item").hide().slice(from, to).show();
 
-                for (let i = 1; i < cont+1; i++) {
-                    $("#btnul").append(`<li class=" page-item"><a href="#" class=" page-link " id="Page${i}" onclick="loadpage()">${i}</a></li>`)
-                }
-        })
-    });
-
-        function loadpage() {
-            let id = $(event.target).attr("id").substr(4);
-            /*console.log(id)*/
-             $("#showcard").load('@Url.Content("~/Shop/partialViewPacking")' + "?id=" +@Model.Select(p=>p.PackageId).FirstOrDefault()+"&page="+id);
         }
-    </script>
+    })
+               //=====================加入比較按鈕=====================
+    $(".compare-btn").click(function () {
+        let comid = $(this.children).text();
+        $('.bootstrap-growl').remove();
+        $.get('@Url.Content("~/compare/AddCompare")', { "Id": comid },
+            function (data) {
+                if (data === "add") {
+                    $.bootstrapGrowl("加入比較清單", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+                else if (data === "beenAdd") {
+                    $.bootstrapGrowl("該商品已加入過比較清單!", {
+                        ele: "body",
+                        type: "warning",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+                else{
+                    $.bootstrapGrowl("比較清單已加入3樣商品 <a href='@Url.Content("~/Compare/CompareView")' style='font-weight: bolder;font-size:18px; color: #4F9D9D'>前往比較頁面</a>", {
+                        ele: "body",
+                        type: "primary",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+            }
+        );
+    });
+           //============================加入收藏==============================
+    $(".wishlist-btn").click(async function (event) {
+        let likeid = event.currentTarget.textContent;
+        $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
+            function (data) {
+                if (data == "此商品已收藏過" || data == "已加入收藏") {
+                    alert(data);
+                } else {
+                    window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
+                }
+            });
+
+    });
+</script>

@@ -31,6 +31,21 @@
             right: 2rem;
             z-index:999;
         }
+        .micicon {
+            -webkit-transition-duration: 500ms;
+            transition-duration: 500ms;
+            position: absolute;
+            top: 41px;
+            right: 60px;
+            z-index: 200;
+            cursor: pointer;
+            color: #707070;
+            margin-right: 20px;
+        }
+
+            .micicon:hover, .micicon.current {
+                color: #70c745;
+            }
 
     </style>
 </head>
@@ -140,19 +155,21 @@
                     </nav>
                     <!-- Search Form -->
                     <div class="search-form">
-                        <form action="#" method="get">
+                        <form asp-controller="Shop" asp-action="view" method="get">
                             <input type="search" name="search" id="search" placeholder="請輸入關鍵字">
                             <button type="submit" class="d-none"></button>
+                            <p id="instructions" style="margin-bottom:-10px; font-size:small"></p>
                         </form>
                         <!-- Close Icon -->
+                        <div class="micicon"><i class="bi bi-mic" aria-hidden="true" id="btnvoice"></i></div>
                         <div class="closeIcon"><i class="fa fa-times" aria-hidden="true"></i></div>
+
                     </div>
                 </div>
             </div>
         </div>
     </header>
     <!-- ##### Header Area End ##### -->
-    
     <!-- ##### Right-Banner ##### -->
     <div>
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
@@ -186,9 +203,52 @@
     <!-- Bootstrap-growl -->
     <script src="~/js/jquery.bootstrap-growl.min.js"></script>
     <script>new WOW().init();</script>
-
+    <script type="text/javascript" src="~/js/jquery.simplePagination.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
+        //====================語音控制==========================
+
+        var recognition = new window.webkitSpeechRecognition;
+        var text = $("#search");
+        var instructions = $("#instructions");
+        var content = '';
+        recognition.continuous = true;
+        //recognition 9s start
+        recognition.lang = "zh-ha"
+
+        recognition.onstart = function () {
+            instructions.text("麥克風已經開啟")
+        }
+        recognition.onspeechend = function () {
+            instructions.text("沒有輸入語音")
+        }
+        recognition.onerror = function () {
+            instructions.text("請在試一次")
+        }
+        recognition.onresult = function (e) {
+            var current = e.resultIndex;
+            var transcript = e.results[current][0].transcript;
+            if (content == '') {
+                content += transcript;
+            }
+            else {
+                content = '';
+                content += transcript;
+            }
+            text.val(content);
+        }
+        $("#btnvoice").click(function (event) {
+            if (content.length) {
+                content += '';
+            }
+            recognition.start();
+            setTimeout(() => { recognition.isFinal = true }, 3000)
+
+        })
+        text.on('input', function () {
+            content = $(this).val;
+        })
+
         //===================購物車物品數量計算=====================
         async function CountCart() {
             let countCart = document.querySelector("#countCart");
