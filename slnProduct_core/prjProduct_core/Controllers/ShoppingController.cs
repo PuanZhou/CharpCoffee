@@ -4,6 +4,7 @@ using prjCSCoffee.Models;
 using prjCSCoffee.ViewModel;
 using prjProduct_core.Controllers;
 using prjProduct_core.Models;
+using prjProduct_core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,27 +22,13 @@ namespace prjCSCoffee.Controllers
         {
             db = conetxt;
         }
-        int UserId = 0;   
-
-        //public IActionResult List()
-        //{           
-        //    //HomeController.loginmem
-        //    var datas = db.Products.OrderBy(f => f.ProductId).ToList();
-        //    List<CProductViewModel_09> list = new List<CProductViewModel_09>();
-        //    foreach(Product item in datas)
-        //    {
-        //        CProductViewModel_09 p = new CProductViewModel_09();
-        //        p.product = item;
-        //        list.Add(p);
-        //    }
-        //    return View(list);
-        //}
-
+        int UserId = 3;         
         public IActionResult ShoppingCar()
         {
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
-            {
-                UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            //{
+                //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
                 var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId)
                   .Select(t => new CShoppingCarDetailsViewModel
                   {
@@ -61,6 +48,9 @@ namespace prjCSCoffee.Controllers
                        Fcouponid = c.CouponId,
                        Fcouponname = c.Coupon.CouponName,
                        Fcouponmoney = c.Coupon.Money,
+                       Fcouponstart=c.Coupon.CouponStartDate,
+                       Fcouponend=c.Coupon.CouponDeadline,
+                       Fcondition=c.Coupon.Condition,
                        fcoupon = c.Coupon
                    }).ToList();
 
@@ -81,18 +71,20 @@ namespace prjCSCoffee.Controllers
                         t2.CouponId = (int)item1.Fcouponid;
                         t2.CouponName = item1.Fcouponname;
                         t2.Money = item1.Fcouponmoney;
+                        t2.CouponStartDate = item1.Fcouponstart;
+                        t2.CouponDeadline = item1.Fcouponend;
+                        t2.Condition = item1.Fcondition;
                         cc.Add(t2);
                     };
                     t.couponall = cc;
                     list.Add(t);
                 }
                 return View(list);
-            }
-            else
-            {
-
-                return RedirectToAction("Login", "Home");
-            }
+            //}
+            //else
+            //{
+            //    return RedirectToAction("Login", "Home");
+            //}
 
            
         }     
@@ -103,9 +95,8 @@ namespace prjCSCoffee.Controllers
         }
 
         public IActionResult UseCoupon(int? id)
-        {
+        {           
             var money = db.Coupons.Where(t => t.CouponId == id).Select(t => t.Money);
-
             string jsonCart = "";
             List<CDeliveryViewModel> list = new List<CDeliveryViewModel>();
             if (!HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
@@ -123,16 +114,16 @@ namespace prjCSCoffee.Controllers
                 list.Add(t);
             }
             jsonCart = JsonSerializer.Serialize(list);
-            HttpContext.Session.SetString(
-                CDictionary.SK_使用的折價卷, jsonCart);
+            HttpContext.Session.SetString(CDictionary.SK_使用的折價卷, jsonCart);
             return View();
         }
 
-        public IActionResult AddtoCart(int? id)
-        {
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
-            {
-                UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+        public IActionResult AddtoCart(int? id ,int quantity)
+        {//TODO 修2 加了數量ㄉ格子、detail的div記得加上
+            //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            //{
+                //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
                 //表示該產品是購物車狀態
                 var currentCar = db.ShoppingCarDetails
                     .Where(m => m.ProductsId == id && m.MemberId == UserId)
@@ -147,27 +138,26 @@ namespace prjCSCoffee.Controllers
                     carDetail.MemberId = UserId;
                     carDetail.ProductsId = product.ProductId;
                     carDetail.Price = product.Price;
-                    carDetail.Quantity = 1;
+                    carDetail.Quantity = quantity;
                     db.ShoppingCarDetails.Add(carDetail);
                 }
                 else
                 {
-                    //若產品為購物車狀態，即將該產品數量加1
-                    currentCar.Quantity += 1;
+                    currentCar.Quantity += quantity;
                 }
                 db.SaveChanges();
-                return RedirectToAction("view", "shop");
-            }
-            else
-            {
-
-                return RedirectToAction("Login", "Home");
-            }
+                return RedirectToAction("ShoppingCar");
+            //}
+            //else
+            //{
+            //    return RedirectToAction("Login", "Home");
+            //}
            
         }
         public IActionResult Delete(int? id)
         {
-            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
             var prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId == UserId && t.ProductsId == id);
             
                 db.ShoppingCarDetails.Remove(prod);
@@ -177,7 +167,7 @@ namespace prjCSCoffee.Controllers
         }
         public IActionResult Plus(int? id)
         {
-            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
             ShoppingCarDetail prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId==UserId && t.ProductsId == id);
 
             if (prod != null)
@@ -189,7 +179,8 @@ namespace prjCSCoffee.Controllers
         }
         public IActionResult Reduce(int? id)
         {
-            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
             ShoppingCarDetail prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId == UserId && t.ProductsId == id);
 
             if (prod != null)
@@ -202,6 +193,8 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult Car2()
         {
+            ////UserId = HomeController.loginmem.MemberId;                  
+
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
             {
                 int pay = 0;
@@ -213,13 +206,15 @@ namespace prjCSCoffee.Controllers
                 }
                 ViewData["discount"] = pay;
             }
+
+            var add = db.Members.FirstOrDefault(m => m.MemberId == UserId).MemberAddress;
+            ViewBag.memAddress = add;
             return View();
         }      
 
         [HttpPost]
         public IActionResult Car2(CDeliveryViewModel vModel)
         {
-            //HttpContext.Session.Clear();
             string jsonCart = "";
             List<CShoppingCartItem> list = null;
             if (!HttpContext.Session.Keys.Contains(CDictionary.SK_付款資訊))
@@ -229,14 +224,44 @@ namespace prjCSCoffee.Controllers
                 jsonCart = HttpContext.Session.GetString(CDictionary.SK_付款資訊);
                 list = JsonSerializer.Deserialize<List<CShoppingCartItem>>(jsonCart);
             }
+
+
+
+            int discountmoney = 0;
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
+            {
+                string jsonCart3 = HttpContext.Session.GetString(CDictionary.SK_使用的折價卷);
+                var list3 = JsonSerializer.Deserialize<List<CDeliveryViewModel>>(jsonCart3);
+                foreach (var item1 in list3)
+                {
+                    discountmoney = item1.discountmoney;
+                }
+            }
+            var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => new {fPrice=t.Price*t.Quantity});
+            int total = 0;
+            int fee = 0;
+            foreach (var item1 in datas)
+            {
+                total += (int)item1.fPrice;
+            }
+            total = total - discountmoney;
+            if (total < 1200)
+            {
+                fee = 100;
+                total = total + fee;
+            }
+
+
             CShoppingCartItem item = new CShoppingCartItem()
             {
                 Receiver = vModel.fReceiver,
-                phone=vModel.fPhone,
+                Phone = vModel.fPhone,
                 Address = vModel.fAddress,
-                payment = vModel.payment,
-                discount=vModel.fdiscount              
+                Payment = vModel.payment,
+                Discount = vModel.discountid,
+                Fee = fee
             };
+
             list.Add(item);
             jsonCart = JsonSerializer.Serialize(list);
             HttpContext.Session.SetString(
@@ -247,36 +272,38 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult Car3()
         {
+
+            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            ViewBag.discountmoney = 0;
             int discountmoney = 0;
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_付款資訊))
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
             {
                 string jsonCart3 = HttpContext.Session.GetString(CDictionary.SK_使用的折價卷);
                 var list3 = JsonSerializer.Deserialize<List<CDeliveryViewModel>>(jsonCart3);
                 foreach (var item in list3)
                 {
                     discountmoney = item.discountmoney;
+                    ViewBag.discountmoney= item.discountmoney;
                 }
             }
 
+            var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId)
+                  .Select(t => new {
+                      Fid = t.ProductsId,
+                      FName = t.Products.ProductName,
+                      Fcount = t.Quantity,
+                      Fprice = t.Price,
+                      Fproduct = t.Products
+                  });
+
+            #region 金流支付
             //金流的
             string tradeNo = Guid.NewGuid().ToString();
             tradeNo = tradeNo.Substring(tradeNo.Length - 12, 12);
             ViewBag.tradeNo = tradeNo;
             string timenow = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-            ViewBag.timenow = timenow;
-
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
-            {
-                UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
-            }
-            var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId)
-                   .Select(t => new {
-                       Fid = t.ProductsId,
-                       FName = t.Products.ProductName,
-                       Fcount = t.Quantity,
-                       Fprice = t.Price,
-                       Fproduct = t.Products
-                   });
+            ViewBag.timenow = timenow;           
+           
             int total = 0;
             string ItemName = "";
             foreach (var item in datas)
@@ -286,7 +313,7 @@ namespace prjCSCoffee.Controllers
                 ItemName += $"{item.FName} {Convert.ToInt32(item.Fprice).ToString("0")}元X{item.Fcount}#";
             }
             total = total - discountmoney;
-            if (total < 1200) total += 100;
+            if (total < 1200) { total = total + 100; }
 
             ItemName = ItemName.Substring(0, ItemName.Length - 1);
             ViewBag.Total = total;
@@ -298,13 +325,14 @@ namespace prjCSCoffee.Controllers
             var byteArray = hash.ComputeHash(Encoding.UTF8.GetBytes(checkMacValue));
             checkMacValue = Convert.ToHexString(byteArray).ToUpper();
             ViewBag.checkMacValue = checkMacValue;
+            #endregion
 
             List<CShoppingCartItem> list = new List<CShoppingCartItem>();
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_付款資訊))
             {
                 string jsonCart = HttpContext.Session.GetString(CDictionary.SK_付款資訊);
                 var list1 = JsonSerializer.Deserialize<List<CShoppingCartItem>>(jsonCart);
-                var list2 = db.Payments.Where(t => t.PaymentId == list1[0].payment).Select(p => p.Payment1).ToArray();
+                var paymentname = db.Payments.FirstOrDefault(t => t.PaymentId == list1[0].Payment).Payment1;
 
                 foreach (var item in datas)
                 {
@@ -316,14 +344,10 @@ namespace prjCSCoffee.Controllers
                     foreach (var item1 in list1)
                     {
                         t.Receiver = item1.Receiver;
-                        t.phone = item1.phone;
-                        t.payment = item1.payment;
+                        t.Phone = item1.Phone;
+                        t.Payment = item1.Payment;
                         t.Address = item1.Address;
-                        t.discount = item1.discount;
-                        foreach (var item2 in list2)
-                        {
-                            t.paymentname = item2;
-                        }
+                        t.Paymentname = paymentname;
                     }
                     list.Add(t);
                 }
@@ -335,12 +359,8 @@ namespace prjCSCoffee.Controllers
         [HttpPost]
         public IActionResult Car3(CShoppingCartItem vModel)
         {
-            //加訂單流水號
-            //訂單時間、交易金額、產品名稱
-
+            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
             
-
-            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_付款資訊))
             {
                 string jsonCart = HttpContext.Session.GetString(CDictionary.SK_付款資訊);
@@ -348,10 +368,11 @@ namespace prjCSCoffee.Controllers
                 foreach (var item in cart)
                 {
                     vModel.Receiver = item.Receiver;
-                    vModel.phone = item.phone;
+                    vModel.Phone = item.Phone;
                     vModel.Address = item.Address;
-                    vModel.payment = item.payment;
-                    vModel.discount = item.discount;
+                    vModel.Payment = item.Payment;
+                    vModel.Discount = item.Discount;
+                    vModel.Fee = item.Fee;
                 }
             }
             //產生Order明細
@@ -359,13 +380,15 @@ namespace prjCSCoffee.Controllers
             order.MemberId = UserId;
             order.OrderDate = DateTime.Now;
             order.OrderStateId = 1;
-            order.PaymentId = vModel.payment;
+            order.PaymentId = vModel.Payment;
             order.OrderAddress = vModel.Address;
             order.OrderReceiver = vModel.Receiver;
-            order.OrderPhone = vModel.phone;
-            order.CouponId = vModel.discount;      //TODO 5 折價卷還沒確定，記得用完要刪掉折價眷
+            order.OrderPhone = vModel.Phone;         
+            if (vModel.Discount != 0) order.CouponId = vModel.Discount; 
+            order.Fee = vModel.Fee;
+            order.TradeNo = vModel.MerchantTradeNo;
             db.Orders.Add(order);
-            db.SaveChanges();
+            //db.SaveChanges();
 
             System.Threading.Thread.Sleep(1000);
             //產生OrderDetail 明細
@@ -378,49 +401,81 @@ namespace prjCSCoffee.Controllers
                 detail.ProductId = (int)item.ProductsId;
                 detail.Quantity = (int)item.Quantity;
                 db.OrderDetails.Add(detail);
-            }
-            db.SaveChanges();
+            }            
 
+            //刪除product庫存
+            var data3 = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => new {
+                tProductid = t.ProductsId,
+                tQuantity = t.Quantity
+            }).ToList();
+            foreach (var item in data3)
+            {
+                Product prod = db.Products.FirstOrDefault(p => p.ProductId == item.tProductid);
+                prod.Stock -= item.tQuantity;
+            }           
+
+            //刪除coupon
+            if (vModel.Discount != 0)
+            {
+                var delcoupon = db.CouponDetails.FirstOrDefault(m => m.MemberId == UserId && m.CouponId == vModel.Discount);
+                db.CouponDetails.Remove(delcoupon);
+            }
+                        
             //刪除ShoppingCarDetail明細
-            var data2 = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t=>t.ProductsId).ToList();
+            var data2 = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => t.ProductsId).ToList();
             foreach (var item in data2)
             {
-                Delete(item);               
+                //Delete(item);
             }
+            //db.SaveChanges();
+
+
+            HttpContext.Session.Remove(CDictionary.SK_付款資訊);
+            HttpContext.Session.Remove(CDictionary.SK_使用的折價卷);    
+
             return RedirectToAction("view", "shop");
         }
 
+        public IActionResult RelatedpartialView(int? id)
+        {
+            ////UserId = HomeController.loginmem.MemberId;                  
+            Random rng = new Random(Guid.NewGuid().GetHashCode());
+            List<CRelatedViewModel> list = new List<CRelatedViewModel>();
+            
+            var data = db.Products.AsEnumerable().OrderByDescending(p => p.Stock).Select(p => new CRelatedViewModel()
+            {
+                ProductId = p.ProductId,
+                CoffeeName = p.ProductName,
+                Price = (int)p.Price
+            }).Take(20).OrderByDescending(x => rng.Next());
 
-        //public IActionResult Maps()
-        //{
-        //    var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId)
-        //           .Select(t => new {
-        //               Fid = t.ProductsId,
-        //               Fcount = t.Quantity,
-        //               Fprice = t.Price,
-        //               Fproduct = t.Products
-        //           });          
+            var data1 = db.ShoppingCarDetails.Where(m => m.MemberId == UserId).Select(p => p.ProductsId).ToList();
 
-        //    List<CShoppingCartItem> list = new List<CShoppingCartItem>();
-        //    foreach (var item in datas)
-        //    {
-        //        CShoppingCartItem t = new CShoppingCartItem();
-        //        t.productId = (int)item.Fid;
-        //        t.count = (int)item.Fcount;
-        //        t.price = (decimal)item.Fprice;
-        //        t.product = item.Fproduct;
-        //        list.Add(t);
-        //    }
-        //    return View(list);
-        //}
+            foreach (var item in data)
+            {
+                foreach(var item1 in data1)
+                {
+                    if (item.ProductId != item1)
+                    {
+                        list.Add(item);
+                        break;
+                    }
+                }
+                if (list.Count == 3) break;              
+            }                     
+
+            return PartialView(list);
+        }               
+      
     }
 }
 
 
-//TODO 2 最上方小圖顯示購物車總數量
-//TODO 3 運費還沒算
 
-//TODO 5 買家取貨地圖
-//TODO 6 刪除已購入的庫存、折價眷
+
+//TODO 1 買家取貨地圖
+//TODO 2 懸浮購物車
+//TODO 3 優惠眷倒數計時、起訖日
+//TODO 4 地圖關於我們連結
 
 

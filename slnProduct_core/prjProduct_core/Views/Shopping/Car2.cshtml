@@ -3,6 +3,42 @@
     ViewData["Title"] = "Car2";
 }
 
+@section Style
+{
+    <style>
+        .prebtn {
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+            min-width: 150px;
+            height: 46px;
+            color: whitesmoke;
+            background-color: #9D9D9D;
+            border: 2px solid #9D9D9D;
+            border-radius: 2px;
+            padding: 0 20px;
+            font-size: 16px;
+            line-height: 42px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+
+            .prebtn:hover {
+                font-size: 16px;
+                color: #9D9D9D;
+                font-weight: 600;
+                background-color: transparent;
+                box-shadow: none;
+            }
+
+        #map{
+            margin:30px;
+
+        }
+    </style>
+}
+
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
@@ -38,57 +74,186 @@
                     </div>
 
                     <form asp-action="Car2" enctype="multipart/form-data">
-                        <div class="form-horizontal">
-                            <h4>填寫訂單收件人資料</h4>
-                            <hr />
-                            <div class="form-group">
-                                <span class="control-label col-md-2">收件人姓名</span>
-                                <div class="col-3">
-                                    <input type="text" id="fReceiver" name="fReceiver" required="required" class="form-control" placeholder="請輸入中文全名" />
+                        <div class="row">
+                            <div class="col-6" id="couponlist">
+                                <div class="coupon-discount">
+                                    <h5 class="alert alert-secondary">收貨人資訊</h5>
+                                    <div class="form-group">
+                                        <span class="control-label col-md-2">收件人姓名</span>
+                                        <div class="col-8">
+                                            <input type="text" id="fReceiver" name="fReceiver" required="required" class="form-control" placeholder="請輸入中文全名" value="KK" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <span class="control-label col-md-2">收件人電話</span>
+                                        <div class="col-8">
+                                            <input type="text" id="fPhone" name="fPhone" required="required" class="form-control" placeholder="請輸入格式為:09xxxxxxxx" pattern="09\d{8}" value="0911111111" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <span class="control-label col-md-2">收件人電話</span>
-                                <div class="col-3">
-                                    <input type="text" id="fPhone" name="fPhone" required="required" class="form-control" placeholder="請輸入格式為:09xxxxxxxx" pattern="09\d{8}"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <span class="control-label col-md-2">收件人地址</span>
-                                <div class="col-3">
-                                    <input type="text" id="fAddress" name="fAddress" required="required" class="form-control" placeholder="請輸入收件地址"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <span class="control-label col-md-2">付款方式</span>
-                                <div class="col-md-10">
-                                    @Html.RadioButton("payment", "2", true) 信用卡<br />
-                                    @Html.RadioButton("payment", "1")貨到付款
-                                </div>
-                            </div>
-
-                            <input type="hidden" id="fdiscount" name="fdiscount" value="@ViewData["discount"]" class="form-control" />
-
-                            <div class="form-group">
-                                <div class="col-md-offset-2 col-md-10">
-                                    @Html.ActionLink("返回上一步", "ShoppingCar", "Shopping", null, new { @class = "btn btn-light" })
-                                    <input type="submit" value="前往最後確認" class="btn btn-info" id="nextpage" />
+                            <div class="col-6" id="couponlist">
+                                <div class="coupon-discount ">
+                                    <h5 class="alert alert-secondary">付款方式</h5>
+                                    <div class="form-group">
+                                        <span class="control-label col-md-2">付款方式</span>
+                                        <div class="col-md-10">
+                                            @Html.RadioButton("payment", "2", true) 信用卡<br />
+                                            @Html.RadioButton("payment", "1")貨到付款
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
+                            <div class="col-12" id="couponlist">
+                                <div class="coupon-discount">
+                                    <h5 class="alert alert-secondary">配貨方式</h5>
+                                    <div class="form-group">
+                                        <div class="col-md-10">                                            
+                                            <div id="search">
+                                                <input type="hidden" id="memaddress" value="@ViewBag.memAddress" />
+                                                <select id="slPlaceTypes" onchange="TimDiaDiem(this.value)" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                                                    <option selected>請選擇配送方式</option>
+                                                    <option>宅配到府</option>
+                                                    <option value="convenience_store">超商取貨</option>
+                                                </select>
+                                            </div>
+                                            <input id="content" name="fAddress" placeholder="請輸入寄送地址" style="width:300px" /><br />
+                                            <div id="map" style="width:1000px; height:500px"></div>
+                                            
+                                            <input type="hidden" id="discountid" name="discountid" value="@ViewData["discount"]" class="form-control" />
+
+                                            <div class="form-group">
+                                                <div class="col-md-offset-2 col-md-10">
+                                                    @Html.ActionLink("返回上一步", "ShoppingCar", "Shopping", null, new { @class = "btn prebtn" })
+                                                    <input type="submit" value="前往最後確認" class="btn alazea-btn" id="nextpage" style="border-radius:10px;" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
                     </form>
+
                 </div>
             </div>
         </div>
 
-       
+
 
     </div>
 </div>
 <!-- ##### Cart Area End ##### -->
 
+@section Scripts
+{  
+    <script type="text/javascript">       
+
+        //地圖======
+        var bando = null;
+        var lat = 0;
+        var long = 0;
+        var infowindow = null;
+        var arrMarkers = [];
+
+        function initMap() {
+            infowindow = new google.maps.InfoWindow();
+            window.navigator.geolocation.getCurrentPosition(function (pos) {
+                lat = pos.coords.latitude;
+                long = pos.coords.longitude;
+                console.log(lat, long)
+                bando = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: lat, lng: long },
+                    zoom: 15
+                });
+                var marker = new google.maps.Marker({
+                    position: { lat: lat, lng: long },                    
+                    map: bando,
+                    icon: { url:'http://maps.google.com/mapfiles/ms/micons/flag.png'}
+                });
+            });
+            
+        }
+       
+        function TimDiaDiem(loaidiadiem) {
+            if (loaidiadiem == "宅配到府") {
+                $("#content").val($("#memaddress").val());
+            }
+            else if (loaidiadiem == "convenience_store"){
+                var req = {
+                    location: { lat: lat, lng: long },
+                    radius: '1000',
+                    type: loaidiadiem
+                }
+                var service = new google.maps.places.PlacesService(bando);
+                service.nearbySearch(req, function (result, status) {
+                    if (status == google.maps.places.PlacesServiceStatus.OK && result && result.length > 0) {
+                        for (var i in arrMarkers)
+                            arrMarkers[i].setMap(null);
+                        arrMarkers = [];
+                        for (var i in result) {
+                            var place = result[i];
+                            var marker = new google.maps.Marker({
+                                map: bando,
+                                title: place.name,
+                                content: '<strong>' + place.name + "</strong><br />" + place.vicinity,
+                                position: place.geometry.location,
+                                data: place
+                            });
+                            google.maps.event.addListener(marker, 'click', function () {
+                                infowindow.setContent(this.content);
+                                infowindow.open(bando, this);
+                                TimDuong(this.data);
+                            });
+                            arrMarkers.push(marker);
+                        }
+                    }
+                })
+            }
+
+            else return;           
+        }
+
+        var ddisplay = null;
+        function TimDuong(place) {
+            var dservice = new google.maps.DirectionsService();
+
+            if (ddisplay) ddisplay.setMap(null);
+
+            ddisplay = new google.maps.DirectionsRenderer();
+            ddisplay.setMap(bando);
+            var req = {
+                origin: { lat: lat, lng: long },
+                destination: place.geometry.location,
+                travelMode: "WALKING",
+                provideRouteAlternatives: true
+            };
+            dservice.route(req, function (result, status) {
+                if (status == "OK") ddisplay.setDirections(result);
+            });
+
+
+            var shopname = place.name;
+            var shopaddress = (place.plus_code.compound_code).substring(10) + (place.vicinity).substring(3);
+            //$("#content").val(shopaddress)
+            var t = document.querySelector("#content");
+            t.value = shopaddress;
+
+            //console.log(place)
+            //console.log(place.name)
+            //console.log((place.plus_code.compound_code).substring(10) + (place.vicinity).substring(3))
+            //console.log((place.vicinity).substring(3))
+        }
+
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGpyWf0sKrCz1tKARvQDXEtpuRZQQ5JhI&libraries=places&callback=initMap"
+            async defer></script>
+
+
+}
 
 
 

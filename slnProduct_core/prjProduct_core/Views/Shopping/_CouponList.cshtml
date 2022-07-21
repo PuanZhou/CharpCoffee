@@ -1,19 +1,198 @@
 ﻿@model prjCSCoffee.Models.CShoppingCartItem
 
+<style>
+    .coupon {
+        width: 530px;
+        height: 110px;
+        background: -webkit-linear-gradient(left, #5151A2, #5151A2);
+        background: -o-linear-gradient(left, #5151A2, #5151A2);
+        background: -moz-linear-gradient(left, #5151A2, #5151A2);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        margin-top: 48px;
+    }
+
+        .coupon:after {
+            border-left: 10px dotted white;
+            right: -5px;
+            content: ' ';
+            width: 0;
+            height: 100%;
+            position: absolute;
+            top: 0;
+        }
+
+    .coupon_text {
+        flex: 1;
+        color: white;
+        padding: 25px;
+        font-size: 20px;
+        position: relative;
+        background-image: radial-gradient(circle at right top, #fff, #fff 15px, transparent 16px), radial-gradient(circle at right bottom, #fff, #fff 15px, transparent 16px);
+        border-right: 1px dashed #FFF;
+    }
+
+        .coupon_text > b {
+            font-size: 30px;
+        }
+
+
+        .coupon_text > div {
+            font-size: 15px;
+        }
+
+
+    .coupon_btn {
+        background-color: #FFE66F;
+        margin-left: -1px;
+        border: none;
+        height: 110px;
+        line-height: 110px;
+        padding: 3px 40px 0 40px;
+        background-image: radial-gradient(circle at left top, #fff, #fff 15px, transparent 16px), radial-gradient(circle at left bottom, #fff, #fff 15px, transparent 16px);
+    }
+
+        .coupon_btn > p > a {
+            background: -webkit-linear-gradient(top, #8E8E8E, #8E8E8E);
+            background: -o-linear-gradient(top, #fae8e9, #f2a799);
+            background: -moz-linear-gradient(top, #fae8e9, #f2a799);
+            padding: 6px 20px;
+            vertical-align: middle;
+            font-size: 10px;
+            border-radius: 30px;
+            color: white;
+        }
+
+        .coupon_btn > p {
+            margin: 5px;
+            color: #7B7B7B;
+        }
+
+        .coupon_btn .clockimg > img {
+            position: absolute;
+            right: 75px;
+            top: -43px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .coupon_btn .clocktext {
+            position: absolute;
+            right: 6px;
+            top: -33px;
+            width: 70px;
+            height: 30px;
+            background-color: #FFAAD5;
+        }
+</style>
+
+
 
 @for (int i = 0; i < Model.couponall.Count; i++)
-    {
-        int money = (int)@Model.couponall[i].Money;
+{
+    int money = (int)@Model.couponall[i].Money;
 
-        <div class="card" style="width: 15rem; border-radius:10px; margin:5px;">
-            <div class="card-body">
-                <h5 class="card-title"> @Model.couponall[i].CouponName</h5>
-                <p class="card-text">折抵NT$ @money 元</p>
-                <a href="#" class="btn alazea-btn w-25" id="pay">使用</a>
+    DateTime start = DateTime.Now;
+
+    DateTime end = @Model.couponall[i].CouponDeadline;
+
+    TimeSpan ts = end.Subtract(start); //兩時間天數相減
+
+    int dayCount = ts.Days + 1; //相距天數
+
+    if (dayCount > 0)
+    {
+        <div class="coupon">
+            <div class="coupon_text">
+                <span class="card-title" style="font-size:25px;"> @Model.couponall[i].CouponName -- 折抵NT$ @money 元</span><br />
+                <span style="font-size:15px;">※消費滿NT$@Model.couponall[i].Condition 元可使用</span>
+            </div>
+
+            <div class="coupon_btn">
+                <div class="clockimg">
+                    <img src="~/img/Icon/clock.gif" style="height:40px; width:40px;" />
+                </div>
+                <div class="clocktext">
+                    <p>剩下 @dayCount 天</p>
+                </div>
+                <p>期限至：</p>
+                <p>@Model.couponall[i].CouponDeadline.ToShortDateString()</p>
+                <p><a href="#" id="pay">使用</a></p>
                 <input type="hidden" id="moeny" value="@money" />
                 <input type="hidden" id="moenyid" value="@Model.couponall[i].CouponId" />
+                <input type="hidden" id="moenycondition" value="@Model.couponall[i].Condition" />
+            </div>
+        </div>
+
+
+
+    }
+
+    else
+    {
+        <div class="coupon">
+            <div class="coupon_text">
+                <span class="card-title" style="font-size:25px;"> @Model.couponall[i].CouponName -- 折抵NT$ @money 元</span><br />
+                <span style="font-size:15px;">※消費滿NT$@Model.couponall[i].Condition 元可使用</span>
+            </div>
+
+            <div class="coupon_btn">
+                <div class="clocktext">
+                    <p>已過期</p>
+                </div>
+                <p>期限至：</p>
+                <p>@Model.couponall[i].CouponDeadline.ToShortDateString()</p>
+                <p><a href="#" id="pay" style="pointer-events: none;">使用</a></p>
+                <input type="hidden" id="moeny" value="@money" />
+                <input type="hidden" id="moenyid" value="@Model.couponall[i].CouponId" />
+                <input type="hidden" id="moenycondition" value="@Model.couponall[i].Condition" />
             </div>
         </div>
     }
 
+
+
+}
+
+
+
+
+
+
+
+@*@model prjCSCoffee.Models.CShoppingCartItem
+
+
+    @for (int i = 0; i < Model.couponall.Count; i++)
+    {
+        int money = (int)@Model.couponall[i].Money;
+        //DateTime tstart = @Model.couponall[i].CouponStartDate;
+        //DateTime tend = @Model.couponall[i].CouponDeadline;
+        //DateTime over = tend - tstart;
+
+        DateTime start = @Model.couponall[i].CouponStartDate;
+
+        DateTime end = @Model.couponall[i].CouponDeadline;
+
+        TimeSpan ts = end.Subtract(start); //兩時間天數相減
+
+        double dayCount = ts.Days; //相距天數
+
+
+        <div class="card" style="width: 25rem; border-radius:10px; margin:5px;">
+            <div class="card-body">
+                <span class="card-title"> @Model.couponall[i].CouponName</span>
+                <img src = "~/img/Icon/clock.gif" style="height:50px; width:50px;" />
+                <p>折抵NT$ @money 元</p>
+                <a href = "#" class="btn alazea-btn w-25" id="pay" style="border-radius:10px;">使用</a>
+                <input type = "hidden" id="moeny" value="@money" />
+                <input type = "hidden" id="moenyid" value="@Model.couponall[i].CouponId" />
+                <input type = "hidden" id="moenycondition" value="@Model.couponall[i].Condition" />
+            </div>
+        </div>
+
+
+    }*@
 

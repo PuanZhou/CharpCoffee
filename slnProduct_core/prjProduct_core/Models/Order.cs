@@ -22,7 +22,10 @@ namespace prjProduct_core.Models
         public string OrderReceiver { get; set; }
         public string OrderPhone { get; set; }
         public int? CouponId { get; set; }
+        public decimal? Fee { get; set; }
+        public string TradeNo { get; set; }
 
+        public virtual Coupon Coupon { get; set; }
         public virtual Member Member { get; set; }
         public virtual OrderState OrderState { get; set; }
         public virtual Payment Payment { get; set; }
