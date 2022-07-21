@@ -12,6 +12,6 @@ if (nameval.innerHTML != "Login") {//如果有登入
     else {   //如果沒登入連結為登入會員
     loginhref.setAttribute("href", "/Home/Login");
         //隱藏登出
-    loguot.setAttribute("hidden","");
+    loguot.setAttribute("hidden","hidden");
     }
 

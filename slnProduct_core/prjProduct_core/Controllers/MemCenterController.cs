@@ -98,7 +98,8 @@ namespace prjProduct_core.Controllers
             }
             else
             {
-                var cou = db.CouponDetails.Where(c => c.MemberId == HomeController.loginmem.MemberId).Select(c => new CCouponDetailViewModel()
+                
+                var cou = db.CouponDetails.Where(c => c.MemberId == HomeController.loginmem.MemberId &&c.Coupon.CouponDeadline>=DateTime.Now).Select(c => new CCouponDetailViewModel()
                 {
                     couponName = c.Coupon.CouponName,
                     money = c.Coupon.Money,
@@ -106,6 +107,7 @@ namespace prjProduct_core.Controllers
                     startDate = c.Coupon.CouponStartDate,
                     deadline = c.Coupon.CouponDeadline
                 });
+
                 return PartialView(cou);
             }
         }
@@ -129,7 +131,7 @@ namespace prjProduct_core.Controllers
                         OrderPhone = o.OrderPhone,
                         orderstatement = o.OrderState.OrderState1,
                         payway = o.Payment.Payment1
-                    }).ToList();
+                    });
 
                 return PartialView(ord);
             }
