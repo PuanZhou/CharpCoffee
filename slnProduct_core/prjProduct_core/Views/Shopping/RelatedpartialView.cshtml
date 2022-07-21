@@ -1,0 +1,38 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CRelatedViewModel>
+
+<div class="container wow fadeInUp" data-wow-delay="100ms">
+    <div class="row">
+        <div class="col-12">
+            <!-- Section Heading -->
+            <div class="section-heading text-center">
+                <h2>猜您可能還會喜歡......</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        @foreach (var item in Model)
+        {
+            <!-- Single Product Area -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="single-product-area mb-100">
+                    <!-- Product Image -->
+                    <div class="product-img">
+                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/img/Home-img/03.jpg" alt=""></a>
+                        <div class="product-meta" >
+                            <a href="@Url.Action("AddtoCart","Shopping", new { id = item.ProductId, quantity=1})" style="cursor:pointer; margin:0 auto;" class="add-to-cart-btn" onclick="return alert('已成功加入購物車')"><span hidden id="addtocart">@item.ProductId</span>加入購物車</a>
+                        </div>
+                    </div>
+                    <!-- Product Info -->
+                    <div class="product-info mt-15 text-center">
+                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductId">
+                            <p>@item.CoffeeName</p>
+                        </a>
+                        <h6>NT$@item.Price</h6>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
