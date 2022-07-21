@@ -21,6 +21,10 @@
     <link href="~/css/PagedList.css" rel="stylesheet" />
     @await RenderSectionAsync("Style", required: false)
     <style>
+        .pdpicbox {
+           
+            height: 250px;
+        }
         .nvlogo {
             height: 75px;
             width: 175px;
@@ -46,7 +50,249 @@
             .micicon:hover, .micicon.current {
                 color: #70c745;
             }
+        .coffc {
+            margin-left: 5px;
+            font-size: 5px;
+        }
 
+        .coff {
+            position: relative;
+            margin: 10px 0px;
+            width: 180px;
+            height: 40px;
+            box-shadow: 0 30px 30px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fff;
+            padding: 10px 10px;
+        }
+
+        .list {
+            cursor: default;
+            user-select: none;
+            color: #1e1e1e
+        }
+
+        .coffcate {
+            height: 800px;
+        }
+        /*換頁按鈕---------------------------------------------------------------------------------------------------------------------*/
+        .pagination {
+            position: relative;
+            z-index: 1;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+
+            .pagination li a {
+                color: #707070;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                text-align: center;
+                font-size: 18px;
+                line-height: 44px;
+                padding: 0;
+                margin: 0 10px;
+            }
+
+            .pagination li span {
+                color: #707070;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                text-align: center;
+                font-size: 18px;
+                line-height: 44px;
+                padding: 0;
+                margin: 0 10px;
+            }
+
+            .pagination li a:hover, .pagination li a:focus, .pagination li .current, .pagination li .current:hover {
+                border-color: #70c745;
+                background-color: #70c745;
+                color: #ffffff;
+            }
+        /*list--------------------------------------------------------------------------------------------------------------------------------------*/
+        .dropdown1 {
+            position: relative;
+            margin: 25px 0px;
+            width: 180px;
+            height: 25px;
+        }
+
+            .dropdown1::before {
+                content: '';
+                position: absolute;
+                right: 20px;
+                top: 23px;
+                z-index: 10000;
+                width: 8px;
+                height: 8px;
+                border: 2px solid #333;
+                border-top: 2px solid #fff;
+                border-right: 2px solid #fff;
+                transform: rotate(-45deg);
+                transition: 0.5s;
+                pointer-events: none;
+            }
+
+            .dropdown1.active {
+                margin-bottom: 220px;
+            }
+
+                .dropdown1.active::before {
+                    top: 25px;
+                    transform: rotate(-225deg);
+                }
+
+            .dropdown1 input {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+                background: #fff;
+                border: none;
+                outline: none;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+                padding: 20px 20px;
+                border-radius: 10px;
+                margin-top: 10px;
+            }
+
+            .dropdown1 .option {
+                position: absolute;
+                top: 55px;
+                width: 100%;
+                background: #fff;
+                box-shadow: 0 30px 30px rgba(0,0,0,0.05);
+                border-radius: 10px;
+                overflow: hidden;
+                display: none;
+            }
+
+            .dropdown1.active .option {
+                display: block;
+            }
+
+            .dropdown1 .option div {
+                padding: 6px 20px;
+                cursor: pointer;
+            }
+
+                .dropdown1 .option div:hover {
+                    background: #70c745;
+                    color: #ffffff
+                }
+
+        /*改card圖片-------------------------------------------------------------------*/
+
+        .single-product-area .pd-img {
+            position: relative;
+            z-index: 1;
+            -webkit-transition-duration: 500ms;
+            transition-duration: 500ms;
+        }
+
+            .single-product-area .pd-img a {
+                display: block;
+            }
+
+            .single-product-area .pd-img img {
+                position: relative;
+                z-index: 1;
+                width: 100%;
+            }
+
+            .single-product-area .pd-img .product-tag a {
+                background-color: #429edf;
+                border-radius: 2px;
+                display: inline-block;
+                height: 20px;
+                padding: 0 10px;
+                line-height: 20px;
+                text-transform: uppercase;
+                color: #ffffff;
+                font-weight: 700;
+                font-size: 12px;
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                z-index: 10;
+            }
+
+            .single-product-area .pd-img .product-tag.sale-tag a {
+                background-color: #e61d47;
+            }
+
+            .single-product-area .pd-img .product-meta {
+                position: absolute;
+                bottom: 30px;
+                left: 15px;
+                right: 15px;
+                z-index: 100;
+                visibility: hidden;
+                opacity: 0;
+                -webkit-transition-duration: 500ms;
+                transition-duration: 500ms;
+            }
+
+                .single-product-area .pd-img .product-meta a {
+                    font-size: 16px;
+                    color: #ffffff;
+                    font-weight: 600;
+                    background-color: #303030;
+                    -webkit-box-flex: 0;
+                    -ms-flex: 0 0 50px;
+                    flex: 0 0 50px;
+                    max-width: 50px;
+                    width: 50px;
+                    height: 50px;
+                    line-height: 50px;
+                    text-transform: uppercase;
+                    text-align: center;
+                }
+
+                    .single-product-area .pd-img .product-meta a:hover, .single-product-area .pd-img .product-meta a:focus {
+                        background-color: #70c745;
+                    }
+
+                .single-product-area .pd-img .product-meta .add-to-cart-btn {
+                    -webkit-box-flex: 0;
+                    -ms-flex: 0 0 calc(100% - 100px);
+                    flex: 0 0 calc(100% - 100px);
+                    max-width: calc(100% - 100px);
+                    width: calc(100% - 100px);
+                    border-left: 1px solid rgba(235, 235, 235, 0.5);
+                    border-right: 1px solid rgba(235, 235, 235, 0.5);
+                }
+
+        .single-product-area .product-info a p {
+            margin-bottom: 0;
+            -webkit-transition-duration: 300ms;
+            transition-duration: 300ms;
+        }
+
+            .single-product-area .product-info a p:hover, .single-product-area .product-info a p:focus {
+                color: #70c745;
+            }
+
+        .single-product-area .product-info h6 {
+            margin-bottom: 0;
+            font-size: 18px;
+        }
+
+        .single-product-area:hover .pdt-img {
+            box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .single-product-area:hover .pd-img .product-meta {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>

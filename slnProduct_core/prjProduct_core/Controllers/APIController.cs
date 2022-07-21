@@ -21,7 +21,73 @@ namespace prjProduct_core.Controllers
         {
             db = context;
             _host = hostEnvironment;
-        }   
+        }
+        //===============計算產品數量===============
+        public IActionResult CategoryidCount(int id)
+        {
+            if (id == 0)
+            {
+                var q = db.Products;
+                return Content($"{q.Count()}","text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                var q = db.Products.Where(p => p.CategoryId == id);
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }                   
+        }
+        public IActionResult RoastCount(int id)
+        {
+            if (id == 0)
+            {
+                var q = db.Products;
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                var q = db.Products.Where(p => p.Coffee.RoastingId == id);
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+        }
+        public IActionResult RackCount(int id)
+        {
+            if (id == 0)
+            {
+                var q = db.Products;
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                var q = db.Products.Where(p => p.Coffee.PackageId == id);
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+        }
+        public IActionResult ProssCount(int id)
+        {
+            if (id == 0)
+            {
+                var q = db.Products;
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                var q = db.Products.Where(p => p.Coffee.ProcessId == id);
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+        }
+        public IActionResult ContryCount(int id)
+        {
+            if (id == 0)
+            {
+                var q = db.Products;
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                var q = db.Products.Where(p => p.Coffee.CountryId == id);
+                return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
+            }
+        }
         //===============計算評論與回覆數量===============
         public IActionResult CountComments(int productId)
         {

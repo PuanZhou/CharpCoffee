@@ -38,6 +38,7 @@ namespace prjProduct_core.Controllers
                     Description = p.Description,
                     Stock = p.Stock,
                     TakeDown = p.TakeDown,
+                    ClickCount = p.ClickCount,
                     Star = p.Star,
                     MainPhotoPath=p.MainPhotoPath
                 });
@@ -64,6 +65,7 @@ namespace prjProduct_core.Controllers
                     Description = p.Description,
                     Stock = p.Stock,
                     TakeDown = p.TakeDown,
+                    ClickCount = p.ClickCount,
                     Star = p.Star,
                     MainPhotoPath = p.MainPhotoPath
                 });
@@ -103,7 +105,31 @@ namespace prjProduct_core.Controllers
                 }).ToList();
             return View(q[0]);
         }
+        public IActionResult forhomedetail(int? id)
+        {
 
+            var q = db.Products.Include(p => p.Coffee).ThenInclude(p => p.Roasting)
+                .Include(p => p.Coffee).ThenInclude(p => p.Process)
+                .Include(p => p.Coffee).ThenInclude(p => p.Package)
+                .Include(p => p.Photos)
+                .Where(p => p.ProductId == id).Select(p => new CProductViewModel()
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    CategoryId = p.CategoryId,
+                    Category = p.Category,
+                    Coffee = p.Coffee,
+                    Country = p.Country,
+                    Price = p.Price,
+                    Description = p.Description,
+                    Stock = p.Stock,
+                    TakeDown = p.TakeDown,
+                    Star = p.Star,
+                    MainPhotoPath = p.MainPhotoPath,
+                    Photos = p.Photos.Select(p => p.ImagePath).ToList()
+                }).ToList();
+            return View(q[0]);
+        }
         public IActionResult addToCart(int? id)
         {
 
@@ -145,6 +171,7 @@ namespace prjProduct_core.Controllers
                 CategoryId = p.CategoryId,
                 Category = p.Category,
                 Coffee = p.Coffee,
+                ClickCount = p.ClickCount,
                 Country = p.Country,
                 Price = p.Price,
                 Description = p.Description,
@@ -172,6 +199,7 @@ namespace prjProduct_core.Controllers
                 Description = p.Description,
                 Stock = p.Stock,
                 TakeDown = p.TakeDown,
+                ClickCount=p.ClickCount,
                 Star = p.Star,
                 MainPhotoPath = p.MainPhotoPath
             });

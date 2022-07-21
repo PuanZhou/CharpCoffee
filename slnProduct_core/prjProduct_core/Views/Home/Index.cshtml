@@ -1,6 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<prjProduct_core.ViewModel.CProductViewModel>
 <!-- ##### Hero Area Start ##### -->
 <section class="hero-area" style="z-index:9999">
     <div class="hero-post-slides owl-carousel">
@@ -103,6 +101,75 @@
     </div>
 </section>
 <!-- ##### video Area End ##### -->
+<!-- ##### Product Area Start ##### -->
+<section class="new-arrivals-products-area bg-gray section-padding-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Section Heading -->
+                <div class="section-heading text-center">
+                    <h1>產品促銷</h1>
+                    <p>"以最划算優化的價格與最好的品質滿足您的需求"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var pd in Model)
+            {
+                <!-- Single Product Area --><div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="100ms">
+                        <!-- Product Image -->
+                        <div class="pd-img">
+                            <a asp-controller="Shop" asp-action="forhomedetail" asp-route-id="@pd.ProductId">
+                                @if (pd.MainPhotoPath == null)
+                                {
+                                    <img class="pdpicbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                                }
+                                else
+                                {
+                                    <img class="pdpicbox" src="~/images/@pd.MainPhotoPath">
+                                }
+                            </a>
+                            <!-- Product Tag -->
+                            @if (pd.ClickCount > 30)
+                            {
+                                <div class="product-tag">
+                                    <a href="#">Hot</a>
+                                </div>
+                            }
+                            <div class="product-meta d-flex">
+                                @if (pd.CategoryId == 1)
+                                {
+                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+                                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+                                }
+                            </div>
+                        </div>
+                        <!-- Product Info -->
+                        <div class="product-info mt-15 text-center">
+                            <a asp-controller="Shop" asp-action="forhomedetail" asp-route-id="@pd.ProductId">@pd.ProductName</a>
+                            <h6 style="text-decoration: line-through;">$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
+                            <h6>$@((Convert.ToInt32( pd.Price)*0.8).ToString("0"))</h6>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="col-12 text-center">
+                <a asp-controller="Shop" asp-action="view" class="btn alazea-btn">Go Shop</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- ##### Product Area End ##### -->
 <!-- ##### Portfolio Area Start ##### -->
 <section class="alazea-portfolio-area section-padding-100-0">
     <div class="container">
@@ -341,6 +408,42 @@
     </div>
 </section>
 <!-- ##### Portfolio Area End ##### -->
+<!-- ##### Testimonial Area Start ##### -->
+<section class="testimonial-area section-padding-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="testimonials-slides owl-carousel">
+                    <!-- Single Testimonial Slide -->
+                    <div class="single-testimonial-slide">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-6">
+                                <div class="testimonial-thumb">
+                                    <img src="/img/Mem-img/A9016.jpg">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="testimonial-content">
+                                    <!-- Section Heading -->
+                                    <div class="section-heading">
+                                        <h2>"雨林樹蛙"創辦人</h2>
+                                        <p>推動生物多樣性的保存，並透過土地使用、企業運作和消費者行為的改變，確保永續的生活發展</p>
+                                    </div>
+                                    <p>“多年來透過自身於國際間的影響力，投身雨林聯盟的推廣，不遺餘力。2021年，新冠疫情影響全球，不得不回到台灣的Joy Lee與志同道合的好友合資創辦了西夏普咖啡。除了讓客人們品嘗唇齒留香的咖啡以外，更在與顧客的對談交流中，潛移默化的向來客們推廣了雨林聯盟的理念。”</p>
+                                    <div class="testimonial-author-info">
+                                        <h6>Mr. JY Tsai</h6>
+                                        <p>CEO of 雨林樹蛙</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Testimonial Area End ##### -->
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>

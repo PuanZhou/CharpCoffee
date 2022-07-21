@@ -39,10 +39,6 @@
         }
 </style>
 @{
-    <div class="col-12">
-        <ul class="pagination left pull-left " id="btnul">
-        </ul>
-    </div>
     foreach (var pd in Model)
     {
         <!-- Single Product Area -->
@@ -50,11 +46,23 @@
             <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
                 <!-- Product Image -->
                 <div class="product-img">
-                    <a asp-action="detail" asp-route-id="@pd.ProductId"><img src="../img/Home-img/02.jpg" alt=""></a>
+                    <a asp-action="detail" asp-route-id="@pd.ProductId">
+                        @if (pd.Product.MainPhotoPath == null)
+                        {
+                            <img class="pdpicbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                        }
+                        else
+                        {
+                            <img class="pdpicbox" src="~/images/@pd.Product.MainPhotoPath">
+                        }
+                    </a>
                     <!-- Product Tag -->
-                    <div class="product-tag">
-                        <a href="#">Hot</a>
-                    </div>
+                    @if (pd.Product.ClickCount > 30)
+                    {
+                        <div class="product-tag">
+                            <a href="#">Hot</a>
+                        </div>
+                    }
                     <div class="product-meta d-flex">
                         <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
                         <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>

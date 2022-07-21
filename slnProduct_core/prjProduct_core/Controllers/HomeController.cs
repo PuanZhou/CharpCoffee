@@ -32,7 +32,23 @@ namespace prjProduct_core.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var q = db.Products.OrderByDescending(p => p.Stock).Take(4).Select(p => new CProductViewModel()
+            {
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                CategoryId = p.CategoryId,
+                Category = p.Category,
+                Coffee = p.Coffee,
+                ClickCount = p.ClickCount,
+                Country = p.Country,
+                Price = p.Price,
+                Description = p.Description,
+                Stock = p.Stock,
+                TakeDown = p.TakeDown,
+                Star = p.Star,
+                MainPhotoPath = p.MainPhotoPath
+            });
+            return View(q);
         }
 
         public IActionResult Privacy()
