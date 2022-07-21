@@ -44,9 +44,9 @@ namespace prjProduct_core.Controllers
                 });
                 //左側推薦商品欄位
                 Random rng = new Random();
-                var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
+                var bestSales = db.Products.Select(p => p).OrderBy(p => p.Stock).Take(20).ToList();
 
-                var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
+                var recommend = bestSales.OrderBy(p => rng.Next()).Take(3).ToList();
 
                 ViewBag.Recommend = recommend;
                 return View(q);

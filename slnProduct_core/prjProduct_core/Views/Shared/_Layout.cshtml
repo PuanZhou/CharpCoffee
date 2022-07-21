@@ -35,6 +35,16 @@
             right: 2rem;
             z-index:999;
         }
+        .Aibot {
+            cursor:pointer;
+            position: fixed;
+            top: 75vh;
+            right: 1.5rem;
+            z-index: 999;
+            animation: pulse;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+        }
         .micicon {
             -webkit-transition-duration: 500ms;
             transition-duration: 500ms;
@@ -416,12 +426,15 @@
         </div>
     </header>
     <!-- ##### Header Area End ##### -->
-    <!-- ##### Right-Banner ##### -->
+   
     <div>
+        <!-- ##### Right-Banner ##### -->
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
             <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /><span id="compare-count"></span></button>
             <button type="button" class="btn btn-light">購物車</button>
         </div>
+        <!-- ##### AiBot ##### -->
+        <img class="Aibot"  src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
         <main role="main" class="pb-3">
 
             @RenderBody()
