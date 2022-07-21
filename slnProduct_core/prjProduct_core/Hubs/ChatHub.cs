@@ -1,20 +1,18 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SignalRChat.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(string user, string message)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
-        }
+        public static List<string> ConnIDList = new List<string>();
 
-        //public async Task SendImage(string user, string message)
-        //{
-        //    await Clients.All.SendAsync("ReceiveImage", user, message);
-        //}
+        public async Task SendMessage(string selfUser, string message, string sendToUser)
+        {
+            await Clients.All.SendAsync("ReceiveMessage", selfUser, message, sendToUser);
+        }
     }
 }
