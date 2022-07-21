@@ -29,12 +29,13 @@ namespace prjCSCoffee.Models
 
 
         public string Receiver { get; set; }
-        public string phone { get; set; }
-        public int payment { get; set; }
-        public string paymentname { get; set; }
+        public string Phone { get; set; }
+        public int Payment { get; set; }
+        public string Paymentname { get; set; }
         public string Address { get; set; }
-        public int discount { get; set; }
-
+        public int Discount { get; set; }
+        public int Fee { get; set; }
+        public string MerchantTradeNo { get; set; }
 
         public List<Coupon> couponall { get; set; }
 
