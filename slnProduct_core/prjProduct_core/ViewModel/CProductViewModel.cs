@@ -19,8 +19,10 @@ namespace prjProduct_core.ViewModel
         public int? ClickCount { get; set; }
         public bool TakeDown { get; set; }
         public double? Star { get; set; }
+        public string MainPhotoPath { get; set; }
         public Category Category { get; set; }
         public  Country Country { get; set; }
         public  Coffee Coffee { get; set; }
+        public List<string> Photos { get; set; }
     }
 }

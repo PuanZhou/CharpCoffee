@@ -1,5 +1,4 @@
 ﻿@model prjProduct_core.ViewModel.CProductViewModel
-
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
@@ -34,26 +33,26 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <a class="product-img" href="../../img/Home-img/02.jpg" title="Product Image">
-                                        <img class="d-block w-100" src="../../img/Home-img/02.jpg" alt="1">
+                                        <img class="d-block w-100" src="../../images/@Model.MainPhotoPath" alt="1">
                                     </a>
                                 </div>
                                 <div class="carousel-item">
                                     <a class="product-img" href="../../img/Home-img/02.jpg" title="Product Image">
-                                        <img class="d-block w-100" src="../../img/Home-img/02.jpg" alt="1">
+                                        <img class="d-block w-100" src="../../images/@Model.Photos[0]" alt="1">
                                     </a>
                                 </div>
                                 <div class="carousel-item">
                                     <a class="product-img" href="../../img/Home-img/02.jpg" title="Product Image">
-                                        <img class="d-block w-100" src="../../img/Home-img/02.jpg" alt="1">
+                                        <img class="d-block w-100" src="../../images/@Model.Photos[1]" alt="1">
                                     </a>
                                 </div>
                             </div>
                             <ol class="carousel-indicators">
-                                <li class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url(../../img/Home-img/02.jpg); ">
+                                <li class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url(../../images/@Model.MainPhotoPath); ">
                                 </li>
-                                <li data-target="#product_details_slider" data-slide-to="1" style="background-image: url(../../img/Home-img/02.jpg); ">
+                                <li data-target="#product_details_slider" data-slide-to="1" style="background-image: url(../../images/@Model.Photos[0]); ">
                                 </li>
-                                <li data-target="#product_details_slider" data-slide-to="2" style="background-image: url(../../img/Home-img/02.jpg);">
+                                <li data-target="#product_details_slider" data-slide-to="2" style="background-image: url(../../images/@Model.Photos[1]);">
                                 </li>
                             </ol>
                         </div>
@@ -71,10 +70,10 @@
                             <!-- Add to Cart Form -->
                             <form class="cart clearfix d-flex align-items-center" method="post">
                                 @*<div class="quantity">
-                    <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (!isNaN(qty)) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                    <input type="text" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
-                    <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                </div>*@
+                                        <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (!isNaN(qty)) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <input type="text" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
+                                        <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    </div>*@
                                 <a href="@Url.Action("AddtoCart","Shopping", new { id = Model.ProductId})" style="cursor:pointer" class="btn alazea-btn ml-15"><span hidden id="addtocart">@Model.ProductId</span>Add to cart</a>
                             </form>
                             <!-- Wishlist & Compare -->
@@ -273,6 +272,6 @@
                     }
                 });
         })
-            
+
     </script>
 }

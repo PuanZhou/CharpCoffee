@@ -38,7 +38,8 @@ namespace prjProduct_core.Controllers
                     Description = p.Description,
                     Stock = p.Stock,
                     TakeDown = p.TakeDown,
-                    Star = p.Star
+                    Star = p.Star,
+                    MainPhotoPath=p.MainPhotoPath
                 });
                 //左側推薦商品欄位
                 Random rng = new Random();
@@ -63,7 +64,8 @@ namespace prjProduct_core.Controllers
                     Description = p.Description,
                     Stock = p.Stock,
                     TakeDown = p.TakeDown,
-                    Star = p.Star
+                    Star = p.Star,
+                    MainPhotoPath = p.MainPhotoPath
                 });
                 //左側推薦商品欄位
                 Random rng = new Random();
@@ -82,6 +84,7 @@ namespace prjProduct_core.Controllers
             var q = db.Products.Include(p => p.Coffee).ThenInclude(p => p.Roasting)
                 .Include(p => p.Coffee).ThenInclude(p => p.Process)
                 .Include(p => p.Coffee).ThenInclude(p => p.Package)
+                .Include(p => p.Photos)
                 .Where(p => p.ProductId == id).Select(p => new CProductViewModel()
                 {
                     ProductId = p.ProductId,
@@ -94,8 +97,9 @@ namespace prjProduct_core.Controllers
                     Description = p.Description,
                     Stock = p.Stock,
                     TakeDown = p.TakeDown,
-                    Star = p.Star
-
+                    Star = p.Star,
+                    MainPhotoPath = p.MainPhotoPath,
+                    Photos=p.Photos.Select(p=>p.ImagePath).ToList()
                 }).ToList();
             return View(q[0]);
         }
@@ -119,6 +123,7 @@ namespace prjProduct_core.Controllers
                 pd.Stock = q.Stock;
                 pd.TakeDown = q.TakeDown;
                 pd.Star = q.Star;
+                pd.MainPhotoPath = q.MainPhotoPath;
                 return View(pd);
             }
             else
@@ -145,7 +150,8 @@ namespace prjProduct_core.Controllers
                 Description = p.Description,
                 Stock = p.Stock,
                 TakeDown = p.TakeDown,
-                Star = p.Star
+                Star = p.Star,
+                MainPhotoPath = p.MainPhotoPath
             });
 
             return PartialView(q);
@@ -166,7 +172,8 @@ namespace prjProduct_core.Controllers
                 Description = p.Description,
                 Stock = p.Stock,
                 TakeDown = p.TakeDown,
-                Star = p.Star
+                Star = p.Star,
+                MainPhotoPath = p.MainPhotoPath
             });
             return PartialView(q);
         }
@@ -268,7 +275,8 @@ namespace prjProduct_core.Controllers
                 Description = p.Description,
                 Stock = p.Stock,
                 TakeDown = p.TakeDown,
-                Star = p.Star
+                Star = p.Star,
+                MainPhotoPath = p.MainPhotoPath
 
             }).FirstOrDefault();
             return PartialView(q);

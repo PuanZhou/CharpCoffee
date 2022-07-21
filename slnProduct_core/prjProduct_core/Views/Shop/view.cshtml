@@ -155,7 +155,9 @@
                                     <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
                                         <!-- Product Image -->
                                         <div class="pd-img">
-                                            <a asp-action="detail" asp-route-id="@pd.ProductId"><img src="../img/Home-img/02.jpg"></a>
+
+
+                                            <a asp-action="detail" asp-route-id="@pd.ProductId"><img src="~/images/@pd.MainPhotoPath"></a>
                                             <!-- Product Tag -->
                                             <div class="product-tag">
                                                 <a href="#">Hot</a>
