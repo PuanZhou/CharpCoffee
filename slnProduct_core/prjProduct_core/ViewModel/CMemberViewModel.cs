@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace prjCSCoffee.ViewModel
@@ -107,6 +109,21 @@ namespace prjCSCoffee.ViewModel
         }
 
         public IFormFile photo { get; set; }
+
+        public bool Newspaper { get; set; }
+
+        public string PWHasH(string pw)
+        {
+            string afterhash = "";
+            using (SHA256 mysha256 = SHA256.Create())
+            {
+                //現在輸入的pw變成byte陣列
+                byte[] bytes = Encoding.UTF8.GetBytes(pw);
+                var hash = mysha256.ComputeHash(bytes);
+                afterhash = Convert.ToBase64String(hash);
+            }
+            return afterhash;
+        }
 
     }
 }

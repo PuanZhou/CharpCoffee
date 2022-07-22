@@ -41,6 +41,7 @@
                 <div class="alazea-portfolio-filter">
                     <div class="portfolio-filter">
                         <a href="/MemCenter/Index" class="btn" id="memedit">會員資料</a>
+                        <button class="btn" id="memPW">修改密碼</button>
                         <button class="btn" id="memorder">訂單查詢</button>
                         <button class="btn" id="memcoupon">優惠券</button>
                         <button class="btn" id="memmylike">我的收藏</button>
@@ -61,22 +62,17 @@
                                         <input type="hidden" value="@Model.MemberId" name="MemberId" />
                                         <div class="col-12 mb-4">
                                             <label for="name">姓名*</label>
-                                            <input type="text" class="form-control" maxlength="50" id="name" name="MemberName" value="@Model.MemberName" />
+                                            <input type="text" class="form-control" maxlength="50" required id="name" name="MemberName" value="@Model.MemberName" />
                                             <span asp-validation-for="MemberName" class="text-danger"></span>
                                         </div>
                                         <div class="col-12 mb-4">
                                             <label for="email_address">電子信箱*</label>
-                                            <input type="email" class="form-control" maxlength="50" id="email" name="MemberEmail" value="@Model.MemberEmail" />
+                                            <input type="email" class="form-control" maxlength="50" required id="email" name="MemberEmail" value="@Model.MemberEmail" />
                                             <span asp-validation-for="MemberEmail" class="text-danger"></span>
                                         </div>
                                         <div class="col-12 mb-4">
                                             <label for="phone">手機號碼*</label>
-                                            <input type="text" disabled class="form-control" id="phone" name="MemberPhone" value="@Model.MemberPhone" />
-                                        </div>
-                                        <div class="col-12 mb-4">
-                                            <label for="PW">密碼*</label>
-                                            <input type="password" class="form-control" maxlength="50" id="PW" name="MemberPassword" placeholder="密碼需含大小寫英數字元，且長度不得小於八" value="@Model.MemberPassword" />
-                                            <span asp-validation-for="MemberPassword" class="text-danger"></span>
+                                            <input type="text" readonly class="form-control" id="phone" name="MemberPhone" value="@Model.MemberPhone" />
                                         </div>
                                         <div class="col-12 mb-4">
                                             <label for="address">地址*</label>
@@ -85,7 +81,11 @@
                                         </div>
                                         <div class="col-12 mb-4">
                                             <label for="birth">生日*</label>
-                                            <input type="text" disabled class="form-control" id="birth" name="MemberBirthDay" value="@Model.MemberBirthDay.ToShortDateString()" />
+                                            <input type="text" readonly class="form-control" id="birth" name="MemberBirthDay" value="@Model.MemberBirthDay.ToShortDateString()" /><br/>
+                                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+                                                <input type="checkbox" class="custom-control-input" id="news" name="Newspaper" checked="@Model.Newspaper">
+                                                <label class="custom-control-label" for="news">是否訂閱電子報？</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -150,6 +150,12 @@
             });
         });
 
+        $("#memPW").click(() => {
+            $("#funcChange").show(1000, function () {
+                $("#funcChange").load('@Url.Content("~/MemCenter/ChangePW")');
+            });
+        });
+
         //修改頭像預覽圖片
         $("#photofile").change(function () {
             let file = this.files[0];
@@ -159,6 +165,11 @@
             }
             reader.readAsDataURL(file);
             $("#labfile").text(file.name);
+        })
+
+        //修改送出
+        $("#memEdit").click(() => {
+            $("#news").val($("#news").prop('checked'));
         })
 
     </script>

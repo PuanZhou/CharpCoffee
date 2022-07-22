@@ -178,13 +178,14 @@
                                             <div class="product-meta d-flex">
                                                 @if (pd.CategoryId == 1)
                                                 {
-                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
                                                     <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
                                                 }
                                                 else
                                                 {
                                                     <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn"style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
 
                                                 }
@@ -627,11 +628,34 @@
            //============================加入收藏==============================
     $(".wishlist-btn").click(async function (event) {
         let likeid = event.currentTarget.textContent;
+        $(".bootstrap-growl").remove();
         $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
             function (data) {
-                if (data == "此商品已收藏過" || data == "已加入收藏") {
-                    alert(data);
-                } else {
+                if (data == "had") {
+                    $.bootstrapGrowl("商品已在收藏當中", {
+                        ele: "body",
+                        type: "danger",
+                        offset: { from: "top", amount: 100 },
+                        align: "center",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10,
+                    });
+                }
+                else if (data == "join") {
+                    $.bootstrapGrowl("已加入收藏", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "top", amount: 100 },
+                        align: "center",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10,
+                    });
+                }
+                else {
                     window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
                 }
             });

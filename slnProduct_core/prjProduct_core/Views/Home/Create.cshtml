@@ -33,8 +33,7 @@
             <div class="row justify-content-between">
                 <div class="col-12 col-lg-7">
                     <div class="checkout_details_area clearfix">
-                        <h5>Billing Details</h5>
-
+                        <h5>註冊資料</h5>
                         <div class="row">
                             <div class="col-12 mb-4">
                                 <label for="name">姓名*</label>
@@ -71,10 +70,13 @@
                                 <input type="date" class="form-control" id="birth" name="MemberBirthDay">
                                 <span asp-validation-for="MemberBirthDay" class="text-danger"></span>
                                 <input hidden type="text" name="ShoppingCarId" value="@ViewBag.CARTID">
-                                <input hidden type="text" name="BlackList" value="false">
+                                <input hidden type="text" name="BlackList" value="false"><br/>
+                                <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+                                    <input type="checkbox" class="custom-control-input" id="news" name="Newspaper">
+                                    <label class="custom-control-label" for="news">是否訂閱電子報？</label>
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -188,7 +190,6 @@
         });
 
         inputPW.blur(() => {
-            console.log("dded");
             if (re.test(inputPW.val())) {
                 OKwarn(warnPW, "密碼");
                 pwflag = true;
@@ -201,7 +202,6 @@
         })
 
         inputCheckPW.blur(() => {
-            console.log("dded");
             if (inputCheckPW.val() == inputPW.val()) {
                 OKwarn(warnCheckPW, "再次確認密碼");
                 chpwFlag = true;
@@ -260,6 +260,7 @@
 
             //送出條件
         $("#btncreat").click(function (eve) {
+            $("#news").val($("#news").prop('checked'));
             if (nameFlag && emailFlag && phoneFlag && addressFlag && pwflag && chpwFlag && birthFlag) return;
                 else { eve.preventDefault(); }
         })

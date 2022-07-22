@@ -24,6 +24,7 @@ namespace prjProduct_core.ViewModel
         public int LikeId { get; set; }
         public int MemberId { get; set; }
         public int ProductId { get; set; }
+        public int CategoryId { get; set; }
         public string productname { get; set; }
         public decimal? price { get; set; }
         public string MainPhotoPath { get; set; }
