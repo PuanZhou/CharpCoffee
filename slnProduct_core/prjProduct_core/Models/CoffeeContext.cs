@@ -19,6 +19,7 @@ namespace prjProduct_core.Models
 
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<ArticleComment> ArticleComments { get; set; }
         public virtual DbSet<Awesome> Awesomes { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Coffee> Coffees { get; set; }
@@ -43,14 +44,14 @@ namespace prjProduct_core.Models
         public virtual DbSet<ShoppingCar> ShoppingCars { get; set; }
         public virtual DbSet<ShoppingCarDetail> ShoppingCarDetails { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -86,6 +87,27 @@ namespace prjProduct_core.Models
                 entity.Property(e => e.ArticleDate).HasColumnType("date");
 
                 entity.Property(e => e.ArticleName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<ArticleComment>(entity =>
+            {
+                entity.ToTable("ArticleComment");
+
+                entity.Property(e => e.ArticleCommentId).HasColumnName("ArticleCommentID");
+
+                entity.Property(e => e.ArticleCommentParentId).HasColumnName("ArticleCommentParentID");
+
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.HasOne(d => d.Article)
+                    .WithMany(p => p.ArticleComments)
+                    .HasForeignKey(d => d.ArticleId)
+                    .HasConstraintName("FK_ArticleComment_Article");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.ArticleComments)
+                    .HasForeignKey(d => d.MemberId)
+                    .HasConstraintName("FK_ArticleComment_Members");
             });
 
             modelBuilder.Entity<Awesome>(entity =>
