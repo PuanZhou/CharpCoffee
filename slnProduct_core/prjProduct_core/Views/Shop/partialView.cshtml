@@ -171,7 +171,7 @@
     function ReportCompareCount() {
          $.get('@Url.Content("~/Compare/ReportCompareCount")',
                 function (data) {
-                    $("#compare-count").html(`&nbsp&nbsp${data}`);
+                    $("#compare-count").html(`${data}`);
                 }
     )};
 

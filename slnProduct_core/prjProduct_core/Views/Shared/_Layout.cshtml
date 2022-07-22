@@ -430,7 +430,7 @@
     <div>
         <!-- ##### Right-Banner ##### -->
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
-            <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /><span id="compare-count"></span></button>
+            <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /> <span class="badge badge-light" id="compare-count"></span></button>
             <button type="button" class="btn btn-light">購物車</button>
         </div>
         <!-- ##### AiBot ##### -->
@@ -546,7 +546,7 @@
         $(document).ready(function () {
             $.get('@Url.Content("~/Compare/ReportCompareCount")',
                 function (data) {
-                    $("#compare-count").html(`&nbsp&nbsp${data}`);
+                    $("#compare-count").html(`${data}`);
                 }
             );
         });
