@@ -25,9 +25,12 @@ namespace prjProduct_core.Controllers
 
         //================查購物車===================
         [HttpGet("{id}")]
-        public IQueryable<Product> Get(int id)
+        public string Get(int id)
         {
-            return db.ShoppingCarDetails.Where(m => m.MemberId == id).Select(x => x.Products);
+              var result = db.ShoppingCarDetails.AsEnumerable().Where(m => m.MemberId == id)
+                .Select(x => x);
+
+            return JsonSerializer.Serialize(result);
         }
 
         //================查購物車內某商品數量===================

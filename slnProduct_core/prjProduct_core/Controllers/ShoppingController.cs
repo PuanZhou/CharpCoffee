@@ -24,7 +24,7 @@ namespace prjCSCoffee.Controllers
         {
             db = conetxt;
         }
-        int UserId = 3;         
+        int UserId = 1;
         public IActionResult ShoppingCar()
         {
             //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
