@@ -67,7 +67,7 @@
                 <p class="text-center">
                     <a href="@Url.Content("~/Admin_Dashboard/Index")" class="d-flex align-items-center justify-content-center">
                         <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-                        返回管理首頁
+                        管理首頁
                     </a>
                 </p>
                 <div class="row justify-content-center form-bg-image" id="backgdimg">
@@ -118,6 +118,11 @@
                                 </div>
                                 <div class="d-grid">
                                     <input type="submit" class="btn btn-gray-800" id="submit" style="font-weight:bold" value="登入">
+                                </div>
+                                <br />
+                                <div>
+                                    <input type="button" class="btn btn-gray-800 col-2.5" style="font-weight:bold " id="demo1" value="Demo1" />
+                                    <input type="button" class="btn btn-gray-800 col-2.5" style="font-weight:bold" id="demo2" value="Demo2 " />
                                 </div>
                             </form>
                             <div class="d-flex justify-content-center align-items-center mt-4">
@@ -206,18 +211,9 @@
         await $(this).attr("src", '@Url.Content("~/Admin_Api/GetCaptcha?time=")' + (new Date()).getTime());
     });
 
-    @*$("#submit").mouseover(function () {
-        let randomCode = `@ApiController.randomCode`;
-        if ($("#captcha").val().toLowerCase() != randomCode.toLowerCase()) {
-            $(this).attr("type", "button");
-            $(this).off("click");
-            $(this).click(function () {
-                alert("驗證碼錯誤");
-                $("#imgcode").attr("src", '@Url.Content("~/Api/GetCaptcha?time=")' + (new Date()).getTime());
-            });
-        }
-        else {
-            $("#submit").attr("type", "submit");
-        }
-    })*@
+    // demo2 超級管理員
+    $("#demo2").click(() => {
+        $("#email").val("forgotpwd87@gmail.com");
+        $("#password").val("Zxc2842470");
+    })    
 </script>
