@@ -104,13 +104,14 @@
 
         })
 
-        //忘記密碼
+        //忘記密碼寄信
         $("#sendEmail").click(function () {
+            console.log("AA")
             let mail = $("#recipient-name").val()
             $.get('@Url.Content("~/MemberFactory/SendMail")', { "MemberEmail": mail },
                 function (data) {
-                     alert(data);
-                     $("#recipient-name").html("");
+                    $("#recipient-name").html("");
+                    $.boot
                 })
         })
 

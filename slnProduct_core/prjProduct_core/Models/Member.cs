@@ -25,6 +25,7 @@ namespace prjProduct_core.Models
         public DateTime MemberBirthDay { get; set; }
         public string MemberPhotoPath { get; set; }
         public bool BlackList { get; set; }
+        public bool Newspaper { get; set; }
 
         public virtual ShoppingCar ShoppingCar { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

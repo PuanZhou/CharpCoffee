@@ -1,7 +1,7 @@
-﻿using MailKit.Net.Smtp;
+﻿//using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
+//using MimeKit;
 using prjCSCoffee.Models;
 using prjCSCoffee.ViewModel;
 using prjProduct_core.Controllers;
@@ -9,6 +9,9 @@ using prjProduct_core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -115,7 +118,7 @@ namespace prjCSCoffee.Controllers
                 var haslike = db.MyLikes.Any(m => m.MemberId == HomeController.loginmem.MemberId && m.ProductId == id); //判斷是否已存在
                 if (haslike)
                 {
-                    return Content("此商品已收藏過", "text/plain", Encoding.UTF8);
+                    return Content("had", "text/plain", Encoding.UTF8);
                 }
                 else
                 {
@@ -126,7 +129,7 @@ namespace prjCSCoffee.Controllers
                     };
                     db.MyLikes.Add(mk);
                     db.SaveChanges();
-                    return Content("已加入收藏", "text/plain", Encoding.UTF8);
+                    return Content("join", "text/plain", Encoding.UTF8);
                 }
 
             }
@@ -148,36 +151,75 @@ namespace prjCSCoffee.Controllers
             }
         }
 
+        public IActionResult CheckNowPW(string txtPW)
+        {
+            if (HomeController.loginmem == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                string afterhash = new CMemberViewModel().PWHasH(txtPW);
+                string dbPW = db.Members.FirstOrDefault(m => m.MemberId == HomeController.loginmem.MemberId).MemberPassword;
+                if (afterhash == dbPW)
+                {
+                    return Content("True", "text/plain", Encoding.UTF8);
+                }
+                return Content("False", "text/plain", Encoding.UTF8);
+            }
+
+        }
+
+        public IActionResult ChangeNewPW(string txtNewPW)
+        {
+            if(HomeController.loginmem == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                
+                var mem = db.Members.FirstOrDefault(m => m.MemberId == HomeController.loginmem.MemberId);
+                string newPW = new CMemberViewModel().PWHasH(txtNewPW);
+                mem.MemberPassword = newPW;
+                db.SaveChanges();
+                return Content("OK", "text/plain", Encoding.UTF8);
+            }
+            
+        }
+
+
+
         public IActionResult SendMail(string MemberEmail)
         {//找不到會員
             var mem = db.Members.FirstOrDefault(m => m.MemberEmail == MemberEmail);
             if (mem != null)
             {
                 string newPW = Guid.NewGuid().ToString().Substring(0, 8);
-                mem.MemberPassword = newPW;
+                mem.MemberPassword = new CMemberViewModel().PWHasH(newPW);
                 db.Members.Update(mem);
                 db.SaveChanges();
 
                 //emailsend
                 try
                 {
-                    var msg = new MimeMessage();
-                    msg.From.Add(new MailboxAddress("CSPCoffee", "dateha.jp@gmail.com"));
-                    msg.To.Add(new MailboxAddress("User", "soujirofb@gmail.com"));
-                    msg.Subject = "咖啡豆之新的密碼";
-                    msg.Body = new TextPart("plain")
-                    {
-                        Text = $"尊敬的會員您好：\n\n您新的密碼為{newPW}。請以新密碼登入並修改您的舊密碼。\n如果未有忘記密碼的需求，請忽略此信件。\n" +
+                    MailMessage mmsg = new MailMessage();
+                    mmsg.From = new MailAddress("dateha.jp@gmail.com");
+                    mmsg.To.Add(new MailAddress("chiakiultra@gmail.com"));
+                    mmsg.Subject = "[C#Coffee]忘記密碼通知信";
+                    mmsg.Body = $"尊敬的會員您好：\n\n您新的密碼為{newPW}。請以新密碼登入並修改您的舊密碼。\n如果未有忘記密碼的需求，請忽略此信件。\n" +
                         $"請注意，由於部分信箱可能有收不到站方通知信件的情況，所以也請您不吝多留意「垃圾郵件夾」。\n" +
-                        $"※此封郵件為系統自動發送，請勿直接回覆此郵件。 \nRegards,\nCSPCoffee Customer Service"
-                    };
-                    using (SmtpClient clinet = new SmtpClient())
+                        $"※此封郵件為系統自動發送，請勿直接回覆此郵件。 \nRegards,\nCSPCoffee Customer Service";
+                    mmsg.IsBodyHtml = false;
+                    mmsg.BodyEncoding = Encoding.UTF8;
+                    mmsg.SubjectEncoding = Encoding.UTF8;
+                    using(SmtpClient clinet = new SmtpClient("smtp.gmail.com",587))
                     {
-                        clinet.Connect("smtp.gmail.com", 587, false);
-                        clinet.Authenticate("dateha.jp@gmail.com", "lpviyzzmupcnrrqp");
-                        clinet.Send(msg);
-                        clinet.Disconnect(true);
+                        clinet.EnableSsl = true;
+                        clinet.Credentials = new NetworkCredential("dateha.jp@gmail.com", "bstjpuocebhdytgy");
+                        clinet.Send(mmsg);
                     }
+                    return Content("信件已寄出", "text/plain", Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {
@@ -185,10 +227,20 @@ namespace prjCSCoffee.Controllers
                 }
 
             }
+            else
+            {
+                return Content("此信箱未被註冊", "text/plain", Encoding.UTF8);
 
-            return Content("信件已寄出", "text/plain", Encoding.UTF8);
+            }
+
         }
 
+
+        public IActionResult MailNews()//寄送電子報
+        {
+
+            return Content("");
+        }
 
     }
 }

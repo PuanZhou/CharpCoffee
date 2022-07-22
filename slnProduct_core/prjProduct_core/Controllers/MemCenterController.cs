@@ -60,6 +60,7 @@ namespace prjProduct_core.Controllers
                     mem.MemberEmail = cmem.MemberEmail;
                     mem.MemberAddress = cmem.MemberAddress;
                     mem.MemberPassword = cmem.MemberPassword;
+                    mem.Newspaper = cmem.Newspaper;
                 }
                 db.SaveChanges();
                 mem = db.Members.FirstOrDefault(m => m.MemberId.Equals(cmem.MemberId));
@@ -68,6 +69,19 @@ namespace prjProduct_core.Controllers
                 HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, json);
                 return View(mem);
             }
+        }
+
+        public IActionResult ChangePW()
+        {
+            if (HomeController.loginmem == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                return PartialView();
+            }
+            
         }
 
         public IActionResult MyLikePartial()
@@ -83,7 +97,8 @@ namespace prjProduct_core.Controllers
                     ProductId = k.ProductId,
                     productname = k.Product.ProductName,
                     price = k.Product.Price,
-                    MainPhotoPath = k.Product.MainPhotoPath
+                    MainPhotoPath = k.Product.MainPhotoPath,
+                    CategoryId = k.Product.CategoryId
                 });
                 return PartialView(mylike);
             }

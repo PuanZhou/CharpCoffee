@@ -13,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Security.Cryptography;//
+
 
 namespace prjProduct_core.Controllers
 {
@@ -51,7 +53,7 @@ namespace prjProduct_core.Controllers
             var mem = db.Members.FirstOrDefault(m => m.MemberPhone == txtAccount);
             if (mem != null)
             {
-                if (mem.MemberPassword == txtPW)
+                if (mem.MemberPassword == new CMemberViewModel().PWHasH(txtPW))
                 {
                     string jsonUser = JsonSerializer.Serialize(mem);  //將物件轉字串
                     HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, jsonUser); //放入到session紀錄登入資訊
@@ -90,9 +92,10 @@ namespace prjProduct_core.Controllers
                     MemberEmail = newmem.MemberEmail,
                     MemberAddress = newmem.MemberAddress,
                     MemberPhone = newmem.MemberPhone,
-                    MemberPassword = newmem.MemberPassword,
+                    MemberPassword = newmem.PWHasH(newmem.MemberPassword),
                     MemberBirthDay = newmem.MemberBirthDay,
-                    ShoppingCarId = newmem.ShoppingCarId
+                    ShoppingCarId = newmem.ShoppingCarId,
+                    Newspaper = newmem.Newspaper
                 };
 
                 db.Members.Add(mem);
