@@ -114,21 +114,21 @@
                                                 <input type="text" class="textBox1" placeholder="產地國家" readonly />
                                                 <div class="option">
                                                     <div onclick="showCn('衣索比亞')" class="coffcn" id="c_1">衣索比亞<span class="CountryCount" value="1"></span></div>
-                                                    <div onclick="showCn('肯亞')" class="coffcn" id="c_2">肯亞<span class="CountryCount"value="2"></span></div>
-                                                    <div onclick="showCn('盧安達')" class="coffcn" id="c_3">盧安達<span class="CountryCount"value="3"></span></div>
-                                                    <div onclick="showCn('巴西')" class="coffcn" id="c_4">巴西<span class="CountryCount"value="4"></span></div>
-                                                    <div onclick="showCn('祕魯')" class="coffcn" id="c_5">祕魯<span class="CountryCount"value="5"></span></div>
-                                                    <div onclick="showCn('巴拿馬')" class="coffcn" id="c_8">巴拿馬<span class="CountryCount"value="8"></span></div>
-                                                    <div onclick="showCn('瓜地馬拉')" class="coffcn" id="c_9">瓜地馬拉<span class="CountryCount"value="9"></span></div>
-                                                    <div onclick="showCn('薩爾瓦多')" class="coffcn" id="c_10">薩爾瓦多<span class="CountryCount"value="10"></span></div>
-                                                    <div onclick="showCn('宏都拉斯')" class="coffcn" id="c_11">宏都拉斯<span class="CountryCount"value="11"></span></div>
-                                                    <div onclick="showCn('哥倫比亞')" class="coffcn" id="c_12">哥倫比亞<span class="CountryCount"value="12"></span></div>
-                                                    <div onclick="showCn('哥斯大黎加')" class="coffcn" id="c_13">哥斯大黎加<span class="CountryCount"value="13"></span></div>
-                                                    <div onclick="showCn('印尼')" class="coffcn" id="c_14">印尼<span class="CountryCount"value="14"></span></div>
-                                                    <div onclick="showCn('巴布亞新幾內亞')" class="coffcn" id="c_15">巴布亞新幾內亞<span class="CountryCount"value="15"></span></div>
-                                                    <div onclick="showCn('台灣')" class="coffcn" id="c_16">台灣<span class="CountryCount"value="16"></span></div>
-                                                    <div onclick="showCn('尼加拉瓜')" class="coffcn" id="c_17">尼加拉瓜<span class="CountryCount"value="17"></span></div>
-                                                    <div onclick="showCn('日本')" class="coffcn" id="c_18">日本<span class="CountryCount"value="18"></span></div>
+                                                    <div onclick="showCn('肯亞')" class="coffcn" id="c_2">肯亞<span class="CountryCount" value="2"></span></div>
+                                                    <div onclick="showCn('盧安達')" class="coffcn" id="c_3">盧安達<span class="CountryCount" value="3"></span></div>
+                                                    <div onclick="showCn('巴西')" class="coffcn" id="c_4">巴西<span class="CountryCount" value="4"></span></div>
+                                                    <div onclick="showCn('祕魯')" class="coffcn" id="c_5">祕魯<span class="CountryCount" value="5"></span></div>
+                                                    <div onclick="showCn('巴拿馬')" class="coffcn" id="c_8">巴拿馬<span class="CountryCount" value="8"></span></div>
+                                                    <div onclick="showCn('瓜地馬拉')" class="coffcn" id="c_9">瓜地馬拉<span class="CountryCount" value="9"></span></div>
+                                                    <div onclick="showCn('薩爾瓦多')" class="coffcn" id="c_10">薩爾瓦多<span class="CountryCount" value="10"></span></div>
+                                                    <div onclick="showCn('宏都拉斯')" class="coffcn" id="c_11">宏都拉斯<span class="CountryCount" value="11"></span></div>
+                                                    <div onclick="showCn('哥倫比亞')" class="coffcn" id="c_12">哥倫比亞<span class="CountryCount" value="12"></span></div>
+                                                    <div onclick="showCn('哥斯大黎加')" class="coffcn" id="c_13">哥斯大黎加<span class="CountryCount" value="13"></span></div>
+                                                    <div onclick="showCn('印尼')" class="coffcn" id="c_14">印尼<span class="CountryCount" value="14"></span></div>
+                                                    <div onclick="showCn('巴布亞新幾內亞')" class="coffcn" id="c_15">巴布亞新幾內亞<span class="CountryCount" value="15"></span></div>
+                                                    <div onclick="showCn('台灣')" class="coffcn" id="c_16">台灣<span class="CountryCount" value="16"></span></div>
+                                                    <div onclick="showCn('尼加拉瓜')" class="coffcn" id="c_17">尼加拉瓜<span class="CountryCount" value="17"></span></div>
+                                                    <div onclick="showCn('日本')" class="coffcn" id="c_18">日本<span class="CountryCount" value="18"></span></div>
                                                 </div>
                                             </div>
                                         </li>
@@ -144,15 +144,15 @@
             <div class="col-12 col-md-8 col-lg-9">
                 <div class="shop-products-area">
                     <!--列出卡片-->
+                    <input type="button" value="test" id="btnod" />
                     <div class="row list-wrapper" id="showcard">
-
                         @{
-                            var q = Model.OrderBy(p => p.Price);
 
                             foreach (var pd in Model)
                             {
+
                                 <!-- Single Product Area -->
-                                <div class="col-12 col-sm-6 col-lg-4 list-item">
+                                <div class="col-12 col-sm-6 col-lg-4 list-item " id="pdc">
                                     <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
                                         <!-- Product Image -->
                                         <div class="pd-img">
@@ -195,7 +195,7 @@
                                             <a>
                                                 @Html.ActionLink(@pd.ProductName, "detail", new { id = pd.ProductId }, new { })
                                             </a>
-                                            <h6>$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
+                                            <h6 id="price">$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -461,6 +461,152 @@
 
 @section Scripts{
     <script>
+        let flag = true
+        $('#btnod').click(() => {
+            if (flag == true) {
+
+             @{var q1 = Model.OrderBy(p => p.Price);}
+                showCard();
+                showbtn();
+                flag = false;
+            }
+            else {
+
+                @{var q2 = Model.OrderByDescending(p => p.Price);}
+                showCard();
+                showbtn();
+                flag = true;
+            }
+
+        });
+
+            function showCard() {
+                let cardview = document.querySelector('#showcard')
+                if (flag == true) {
+                     $(cardview).empty().append(`@{
+
+
+                            foreach (var pd in q1)
+                            {
+                                <!-- Single Product Area -->
+                                <div class="col-12 col-sm-6 col-lg-4 list-item" id="pdc">
+                                    <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
+                                        <!-- Product Image -->
+                                        <div class="pd-img">
+
+
+                                            <a asp-action="detail" asp-route-id="@pd.ProductId">
+                                                @if (pd.MainPhotoPath == null)
+                                                {
+                                                    <img class="pdpicbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                                                }
+                                                else
+                                                {
+                                                    <img class="pdpicbox" src="~/images/@pd.MainPhotoPath">
+                                                }
+                                            </a>
+                                            <!-- Product Tag -->
+                                            @if (pd.ClickCount > 30)
+                                            {
+                                                <div class="product-tag">
+                                                    <a href="#">Hot</a>
+                                                </div>
+                                            }
+                                            <div class="product-meta d-flex">
+                                                @if (pd.CategoryId == 1)
+                                                {
+                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+                                                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <!-- Product Info -->
+                                        <div class="product-info mt-15 text-center">
+                                            <a>
+                                                @Html.ActionLink(pd.ProductName, "detail", new { id = pd.ProductId }, new { })
+                                            </a>
+                                            <h6 id="price">$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="col-12">
+                            <ul class="pagination left pull-left " id="btnul">
+                            </ul>
+                        </div>`)
+                }
+                else {
+                     $(cardview).empty().append(`@{
+
+
+                            foreach (var pd in q2)
+                            {
+                                <!-- Single Product Area -->
+                                <div class="col-12 col-sm-6 col-lg-4 list-item" id="pdc">
+                                    <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
+                                        <!-- Product Image -->
+                                        <div class="pd-img">
+
+
+                                            <a asp-action="detail" asp-route-id="@pd.ProductId">
+                                                @if (pd.MainPhotoPath == null)
+                                                {
+                                                    <img class="pdpicbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                                                }
+                                                else
+                                                {
+                                                    <img class="pdpicbox" src="~/images/@pd.MainPhotoPath">
+                                                }
+                                            </a>
+                                            <!-- Product Tag -->
+                                            @if (pd.ClickCount > 30)
+                                            {
+                                                <div class="product-tag">
+                                                    <a href="#">Hot</a>
+                                                </div>
+                                            }
+                                            <div class="product-meta d-flex">
+                                                @if (pd.CategoryId == 1)
+                                                {
+                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+                                                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <!-- Product Info -->
+                                        <div class="product-info mt-15 text-center">
+                                            <a>
+                                                @Html.ActionLink(pd.ProductName, "detail", new { id = pd.ProductId }, new { })
+                                            </a>
+                                            <h6 id="price">$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="col-12">
+                            <ul class="pagination left pull-left " id="btnul">
+                            </ul>
+                        </div>`)
+                }
+        };
+
+        //==========表單數字============================
         $(this).load(function () {
             $('.PackCount').each(async function (idx, val) {
                 const api = await fetch('@Url.Content("~/API/PackCount")'+"?id="+(idx+1))
@@ -517,27 +663,27 @@
 
         //頁面----------------------------------------------------------------------------------------
         // 每個頁面要顯示幾個項目
-        var perPage = 12;
-        // 總共有多少個項目
-        var numItems = $(".list-item").length;
-        $(".list-item").slice(perPage).hide();
+        function showbtn() {
+            var perPage = 12;
+            // 總共有多少個項目
+            var numItems = $(".list-item").length;
+            $(".list-item").slice(perPage).hide();
 
-        $('.pagination').pagination({
+            $('.pagination').pagination({
 
-            items: numItems,
-            itemsOnPage: perPage,
-            prevText: "&laquo;",
-            nextText: "&raquo;",
-            onPageClick: function (pageNumber) {
-                // 計算出 起始 以及結束
-                var from = perPage * (pageNumber - 1);
-                var to = from + perPage;
-                $(".list-item").hide().slice(from, to).show();
-
-            }
-
-
-        })
+                items: numItems,
+                itemsOnPage: perPage,
+                prevText: "&laquo;",
+                nextText: "&raquo;",
+                onPageClick: function (pageNumber) {
+                    // 計算出 起始 以及結束
+                    var from = perPage * (pageNumber - 1);
+                    var to = from + perPage;
+                    $(".list-item").hide().slice(from, to).show();
+                }
+            })
+        }
+        showbtn();
         //view----------------------------------------------------------------------------------------
         @*$("#showcard").load('@Url.Content("~/Shop/partialView")');*@
 
