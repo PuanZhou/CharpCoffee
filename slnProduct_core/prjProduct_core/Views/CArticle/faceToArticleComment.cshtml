@@ -103,7 +103,8 @@
                     "ArticleCommentParentId": cd,
                     "ArticleCommentDescription": txtArticleComment
                 }, function (data) {
-                    if (data === "login") {
+                        if (data === "login") {
+                        alert("留言前請先登入會員")
                         window.location.href = '@Url.Content("~/Home/Login")';
                     } else {
                         $("#divAComment").load('@Url.Content("~/CArticle/faceToArticleComment")', { "articleId": aid });
@@ -116,7 +117,8 @@
                     "ArticleCommentParentId": cd,
                     "ArticleCommentDescription": txtArticleComment
                 }, function (data) {
-                    if (data === "login") {
+                        if (data === "login") {
+                        alert("留言前請先登入會員")
                         window.location.href = '@Url.Content("~/Home/Login")';
                     } else {
                         $("#divAComment").load('@Url.Content("~/CArticle/faceToArticleComment")', { "articleId": aid });

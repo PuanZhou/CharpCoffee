@@ -73,6 +73,18 @@ namespace prjCSCoffee.Controllers
             }
             return View(datas);
         }
+        public IActionResult New()
+        {
+            var q1 = db.Articles.OrderByDescending(p => p.ArticleDate).Take(5).ToList();
+            List<Article> q2 = new List<Article>();
+            foreach (Article item in q1)
+            {
+                q2.Add(item);
+            }
+
+            return PartialView(q2);
+        }
+
 
         public IActionResult Hot()
         {
