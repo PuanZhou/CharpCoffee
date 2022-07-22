@@ -70,6 +70,7 @@
     z-index: 99;
     display:none;
 }
+
 .img15{
     top:8em;
 }
@@ -106,7 +107,50 @@
 .img26 {
     top: 46.5em;
 }
-
+.img27 {
+    position: fixed;
+    left: 3em;
+    z-index: 99;
+    color: rgba(256,256,256,0);
+    font-size:1.25em;
+    display: none;
+}
+.img28 {
+    top: 5.8em;
+}
+.img29 {
+    top: 8.2em;
+}
+.img30 {
+    top: 10.7em;
+}
+.img31 {
+    top: 13.15em;
+}
+.img32 {
+    top: 15.6em;
+}
+.img33 {
+    top: 18.05em;
+}
+.img34 {
+    top: 20.55em;
+}
+.img35 {
+    top: 23em;
+}
+.img36 {
+    top: 25.45em;
+}
+.img37 {
+    top: 27.9em;
+}
+.img38 {
+    top: 30.35em;
+}
+.img39 {
+    top: 32.8em;
+}
 
 
 .body1 {
@@ -127,5 +171,18 @@
     }
     .bgimg1{
         background-image:url(../Constellation/Constellation_background04.jpg);
+    }
+    .img27 {
+        display: block;
+    }
+}
+@media(max-width:995px){
+    .img27 {
+        display: none;
+    }
+}
+@media(max-width:630px) {
+    .img14 {
+        display: none;
     }
 }

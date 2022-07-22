@@ -302,6 +302,8 @@
         .single-product-area:hover .pd-img .product-meta {
             visibility: visible;
             opacity: 1;
+        .fa-bell {
+            color: #73BF00;
         }
     </style>
 </head>
@@ -370,7 +372,7 @@
                     <nav class="classy-navbar justify-content-between" id="alazeaNav">
 
                         <!-- Nav Brand -->
-                        <a href="index.html" class="nav-brand nvlogo"><img src="img/Home-img/Clogo.png" alt=""></a>
+                        <a href="/" class="nav-brand nvlogo"><img src="img/Home-img/Clogo.png" alt=""></a>
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -430,8 +432,9 @@
     <div>
         <!-- ##### Right-Banner ##### -->
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
-            <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /><span id="compare-count"></span></button>
+            <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /> <span class="badge badge-light" id="compare-count"></span></button>
             <button type="button" class="btn btn-light">購物車</button>
+            <button type="button" class="btn btn-light"><i class="fa-solid fa-bell"></i></button>
         </div>
         <!-- ##### AiBot ##### -->
         <img class="Aibot"  src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
@@ -546,7 +549,7 @@
         $(document).ready(function () {
             $.get('@Url.Content("~/Compare/ReportCompareCount")',
                 function (data) {
-                    $("#compare-count").html(`&nbsp&nbsp${data}`);
+                    $("#compare-count").html(`${data}`);
                 }
             );
         });

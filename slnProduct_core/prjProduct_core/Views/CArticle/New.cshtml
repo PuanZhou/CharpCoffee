@@ -1,0 +1,19 @@
+﻿@model List<Article>
+
+@{ 
+    foreach (var item in Model)
+    { <!-- 近期文章 -->
+<div class="single-latest-post d-flex align-items-center">
+    <div class="post-thumb">
+        <a href="@Url.Action($"faceToArticle", "CArticle", new { id = item.ArticleId })"><img style="object-fit:cover" src="~/articleImages/@item.ArticleImage" /></a>@*圖片&超連結*@
+    </div>
+    <div class="post-content">
+        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = item.ArticleId })" class="post-title">
+            <h6>@item.ArticleName</h6>@*超連結*@
+        </a>
+        <a href="#" class="post-date">@item.ArticleDate.ToString().Substring(0, 9)</a>
+    </div>
+    <br />
+    <br />
+    <br />
+</div> <!-- 近期文章結束 --> } }

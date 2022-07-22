@@ -49,25 +49,25 @@
                     <!-- 文章 -->
                     @{ foreach (var item in Model)
                         {
-            <div class="col-12 col-lg-6">
-                <div class="single-blog-post mb-50">
-                    <div class="post-thumbnail mb-30">
-                        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = item.ArticleId })"><img src="~/images/Frog001.jpg" alt=""></a>
-                    </div>
-                    <div class="post-content">
-                        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = item.ArticleId })" class="post-title">
-                            <h5>
-                                <input type="hidden" value="@item.ArticleId" name="ArticleId" />
-                                @item.ArticleName
-                            </h5>
-                        </a>
-                        <div class="post-meta">
-                            @item.ArticleDate.ToString().Substring(0, 9)
-                        </div>
-                        <p class="post-excerpt">@Html.Raw(item.ArticleDescription.Replace("<p>", "").Replace("&nbsp; ", "").Substring(0, 29))......</p>
-                    </div>
-                </div>
-            </div> } }
+                            <div class="col-12 col-lg-6">
+                                <div class="single-blog-post mb-50">
+                                    <div class="post-thumbnail mb-30">
+                                        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = item.ArticleId })"><img src="~/articleImages/@item.ArticleImage" alt=""></a>
+                                    </div>
+                                    <div class="post-content">
+                                        <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = item.ArticleId })" class="post-title">
+                                            <h5>
+                                                <input type="hidden" value="@item.ArticleId" name="ArticleId" />
+                                                @item.ArticleName
+                                            </h5>
+                                        </a>
+                                        <div class="post-meta">
+                                            @item.ArticleDate.ToString().Substring(0, 9)
+                                        </div>
+                                        <p class="post-excerpt">@Html.Raw(item.ArticleDescription.Replace("<p>", "").Replace("&nbsp; ", "").Substring(0, 29))......</p>
+                                    </div>
+                                </div>
+                            </div> } }
                     <div class="col-12 col-lg-8">
                         @Html.PagedListPager(Model, page => Url.Action("faceToArticle", new { page }))
                     </div>
@@ -90,22 +90,7 @@
                         <div class="widget-title">
                             <h4>近期文章</h4>
                         </div>
-
-
-                        @{ //CoffeeContext db = new CoffeeContext();
-                                        foreach (var it in Model.OrderByDescending(t => t.ArticleDate).Take(5))
-                                        { <!-- 近期文章 -->
-                                            <div class="single-latest-post d-flex align-items-center">
-                                                <div class="post-thumb">
-                                                    <a href="@Url.Action($"faceToArticle", "CArticle", new { id = it.ArticleId })"><img style="object-fit:cover" src="~/images/AboutMe001.png" /></a>@*圖片&超連結*@
-                                                </div>
-                                                <div class="post-content">
-                                                    <a href="@Url.Action($"faceToArticleDetail", "CArticle", new { id = it.ArticleId })" class="post-title">
-                                                        <h6>@it.ArticleName</h6>@*超連結*@
-                                                    </a>
-                                                    <a href="#" class="post-date">@it.ArticleDate.ToString().Substring(0, 9)</a>
-                                                </div>
-                                            </div> <!-- 近期文章結束 --> } }
+                        <div id="divNew"></div>
 
                     </div>
 
@@ -127,3 +112,8 @@
 <script src="js/plugins/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+@section Scripts{
+    <script>
+    $("#divNew").load('@Url.Content("~/CArticle/New")')
+    </script>
+}

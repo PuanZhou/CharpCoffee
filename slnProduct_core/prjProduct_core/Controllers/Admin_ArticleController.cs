@@ -119,6 +119,12 @@ namespace prjProduct_core.Controllers
                 if (signIn_User.ArticleOk)
                 {
                     Article art = _context.Articles.FirstOrDefault(a => a.ArticleId == id);
+                    IEnumerable<ArticleComment> ac = _context.ArticleComments.Where(ac => ac.ArticleId == id).ToList();
+                    foreach (var item in ac)
+                    {
+                        _context.ArticleComments.Remove(item);
+                    }
+
                     if (art != null)
                     {
                         _context.Articles.Remove(art);

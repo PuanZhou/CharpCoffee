@@ -1,0 +1,130 @@
+﻿<div class="form-row" style="width:50%;margin:auto auto;">
+    <div class="form-group col-12 mb-4">
+        <input type="password" class="form-control" id="txtPW" name="txtPW" placeholder="請輸入現在密碼">
+        <small id="nowPWwarn" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group col-12 mb-4">
+        <input type="password" class="form-control" id="txtNewPW" name="txtNewPW" min="0" placeholder="請輸入新密碼需含大小寫英數字元，且長度不得小於八" pattern="[0-9a-zA-Z]{8,50}" />
+        <small id="newPWwarn" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group col-12 mb-4">
+        <input type="password" class="form-control" id="txtPWcheck" name="txtPWcheck" min="0" placeholder="確認密碼" />
+        <small id="newPWchwarn" class="form-text text-muted"></small>
+    </div>
+    <div class="checkout-btn mt-30" style="margin:auto auto;">
+        <input type="button" class="btn alazea-btn btn-lg mt-15" id="PWChange" value="修改">
+    </div>
+</div>
+
+<script>
+    let nowPW = $("#txtPW");
+    let nowWarn = $("#nowPWwarn");
+
+    let newPW = $("#txtNewPW");
+    let newWarn = $("#newPWwarn");
+    let re = /^[0-9a-zA-Z].{8,50}$/;
+
+    let PWcheck = $("#txtPWcheck");
+    let newCHWarn = $("#newPWchwarn");
+
+    let NowisOK = false;
+    let NewisOK = false;
+    let NewChisOK = false;
+
+    function Emptywarn(ele) {
+        ele.html(`<i class="fa-solid fa-circle-xmark" style="color:red" >不得為空</i>`);
+    }
+    function Errorwarn(ele,errmsg) {
+        ele.html(`<i class="fa-solid fa-circle-xmark" style="color:red" >${errmsg}有誤</i>`);
+    }
+    function OKwarn(ele) {
+        ele.html(`<i class="fa-solid fa-circle-check style="color:#73BF00"></i>`).css("color", "#73BF00");
+    }
+    //判斷是否空白&現在的密碼是否一致
+    nowPW.blur(function () {
+        if (nowPW.val() == "") {
+            Emptywarn(nowWarn);
+            NowisOK = false;
+        }
+        else {
+            $.post('@Url.Content("~/MemberFactory/CheckNowPW")', { "txtPW": nowPW.val() },
+                function (data) {
+                    if (data == "True") {
+                        OKwarn(nowWarn);
+                        NowisOK = true;
+                    }
+                    else if (data == "False") {
+                        Errorwarn(nowWarn, "密碼");
+                        NowisOK = false;
+                    }
+                    else {
+                        window.location.href = '@Url.Content("~/MemberFactory/CheckNowPW")';
+                    }
+                }
+            )
+        }
+    });
+
+    //判斷新密碼是否符合正則
+    newPW.blur(function () {
+        if (newPW.val() == "") {
+            Emptywarn(newWarn);
+            NewisOK = false;
+        }
+        else {
+            if (re.test(newPW.val())) {
+                OKwarn(newWarn);
+                NewisOK = true;
+            }
+            else {
+                Errorwarn(newWarn, "格式");
+                NewisOK = false;
+            }
+        }
+    });
+
+    PWcheck.blur(function () {
+        if (PWcheck.val() == "") {
+            Emptywarn(newCHWarn);
+            NewChisOK = false;
+        }
+        else {
+            if (PWcheck.val() === newPW.val()) {
+                OKwarn(newCHWarn);
+                NewChisOK = true;
+            }
+            else {
+                Errorwarn(newCHWarn, "密碼不符，");
+                NewChisOK = false;
+            }
+        }
+    })
+
+    $("#PWChange").click(function () {
+        if (NowisOK && NewisOK && NewChisOK) {
+            $.post('@Url.Content("~/MemberFactory/ChangeNewPW")', { "txtNewPW": newPW.val() },
+                function (data) {
+                    if (data === "OK") {
+                        nowPW.val("");
+                        newPW.val("");
+                        PWcheck.val("");
+                        $.bootstrapGrowl("修改成功", {
+                            ele: "body",
+                            type: "success",
+                            offset: { from: "top", amount: 300 },
+                            align: "center",
+                            width: "auto",
+                            delay: 3000,
+                            allow_dismiss: true,
+                            stackup_spacing: 10,
+                        });
+                    }
+                    else {
+                        window.location.href = '@Url.Content("~/MemberFactory/ChangeNewPW")';
+                    }
+                })
+        }
+    })
+
+</script>
+

@@ -29,6 +29,22 @@
 <a href="faceToConstellation#ConId+11"><img src="~/Constellation/Constellation11.png" class="img14 img25"></a>
 <a href="faceToConstellation#ConId+12"><img src="~/Constellation/Constellation12.png" class="img14 img26"></a>
 
+
+<p class="img28 img27">03/21~04/20</p>
+<p class="img29 img27">04/21~05/20</p>
+<p class="img30 img27">05/21~06/21</p>
+<p class="img31 img27">06/22~07/22</p>
+<p class="img32 img27">07/23~08/22</p>
+<p class="img33 img27">08/23~09/22</p>
+<p class="img34 img27">09/23~10/22</p>
+<p class="img35 img27">10/23~11/21</p>
+<p class="img36 img27">11/22~12/21</p>
+<p class="img37 img27">12/22~01/19</p>
+<p class="img38 img27">01/20~02/18</p>
+<p class="img39 img27">02/19~03/20</p>
+
+
+
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
 
@@ -69,7 +85,7 @@
 
             @{ foreach (var item in Model)
                 {
-    <div class="col-12 col-lg-3"></div>
+                    <div class="col-12 col-lg-3"></div>
                     <div class="col-12 col-lg-6">
                         <div class="single-blog-post mb-50">
                             <div class="post-content" id="ConId+@item.ConstellationId">
@@ -98,7 +114,7 @@
                             </div>
                         </div>
                     </div>
-                                    <div class="col-12 col-lg-3"></div> } }
+                    <div class="col-12 col-lg-3"></div> } }
 
 
         </div>
@@ -121,5 +137,79 @@
 @section Scripts{
     <script>
         $("body").addClass("body1")
+
+        $(".img15").mouseenter(function () {
+            $(".img28").attr("style","color:rgba(256,256,256,1)")
+        })
+        $(".img15").mouseleave(function () {
+            $(".img28").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img16").mouseenter(function () {
+            $(".img29").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img16").mouseleave(function () {
+            $(".img29").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img17").mouseenter(function () {
+            $(".img30").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img17").mouseleave(function () {
+            $(".img30").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img18").mouseenter(function () {
+            $(".img31").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img18").mouseleave(function () {
+            $(".img31").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img19").mouseenter(function () {
+            $(".img32").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img19").mouseleave(function () {
+            $(".img32").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img20").mouseenter(function () {
+            $(".img33").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img20").mouseleave(function () {
+            $(".img33").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img21").mouseenter(function () {
+            $(".img34").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img21").mouseleave(function () {
+            $(".img34").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img22").mouseenter(function () {
+            $(".img35").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img22").mouseleave(function () {
+            $(".img35").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img23").mouseenter(function () {
+            $(".img36").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img23").mouseleave(function () {
+            $(".img36").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img24").mouseenter(function () {
+            $(".img37").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img24").mouseleave(function () {
+            $(".img37").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img25").mouseenter(function () {
+            $(".img38").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img25").mouseleave(function () {
+            $(".img38").attr("style", "color:rgba(256,256,256,0)")
+        })
+        $(".img26").mouseenter(function () {
+            $(".img39").attr("style", "color:rgba(256,256,256,1)")
+        })
+        $(".img26").mouseleave(function () {
+            $(".img39").attr("style", "color:rgba(256,256,256,0)")
+        })
+
     </script>
 }
