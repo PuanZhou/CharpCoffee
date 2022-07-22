@@ -431,7 +431,7 @@
         <!-- ##### Right-Banner ##### -->
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
             <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /><span id="compare-count"></span></button>
-            <button type="button" class="btn btn-light">購物車</button>
+            <button id="cart" type="button" class="btn btn-light" title="購物車"><img src="~/img/Icon/carts.png" /><span id="cart-count"></span></button>
         </div>
         <!-- ##### AiBot ##### -->
         <img class="Aibot"  src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
@@ -464,7 +464,7 @@
     <script>new WOW().init();</script>
     <script type="text/javascript" src="~/js/jquery.simplePagination.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <script>
+<script>
         //====================語音控制==========================
 
         var recognition = new window.webkitSpeechRecognition;
@@ -511,9 +511,11 @@
         //===================購物車物品數量計算=====================
         async function CountCart() {
             let countCart = document.querySelector("#countCart");
+            let imgcart = document.querySelector("#cart-count");
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
             countCart.innerHTML = result;
+            imgcart.innerHTML = `&nbsp&nbsp${result}`;
         }
         CountCart();
 
@@ -550,6 +552,13 @@
                 }
             );
         });
-    </script>
+
+          //=================前往購物車====================
+        $("#cart").click(function () {
+            $('.bootstrap-growl').remove();
+             window.location.href = '@Url.Content("~/shopping/shoppingcar")';
+        });
+
+</script>
 </body>
 </html>

@@ -196,6 +196,91 @@
 
 </section>
 
+
+<!-- ##### Contact Area Start ##### -->
+<div style=" width: 100%; height: 100px; text-align: center; line-height: 100px; padding:30px">
+    <h3>咖啡產地分布圖</h3>
+</div>
+
+<section class="contact-area" style="padding:50px">
+    <div id="map" style="width:80%; height:600px; margin:0 auto;"></div>
+</section>
+<!-- ##### Contact Area End ##### -->
+<!-- ##### 地圖ㄉJS Start##### -->
+<script>
+    var map;
+    var markers = [];
+    var infowindow = [];
+    //var infowindow = new google.maps.InfoWindow(InfoWindowOptions);
+    var position = [
+        { label: '衣索比亞', lat: 9.034671441775707, lng: 38.74716846124983, id:1 },
+        { label: '肯亞', lat: 0.526042035384196, lng: 37.8909545257353, id:2 },
+        { label: '盧安達', lat: -1.9902282012788983, lng: 29.924181914576675, id:3 },
+        { label: '巴西', lat: -8.528980091331425, lng: -56.166996687606925, id:4 },
+        { label: '祕魯', lat: -10.429628355789154, lng: -75.76232038334949, id:5 },
+        { label: '巴拿馬', lat: 8.48124234342209, lng: -79.98252247833689, id:8},
+        { label: '瓜地馬拉', lat: 15.753679812750386, lng: -90.39199778390648, id:9 },
+        { label: '薩爾瓦多', lat: 13.689644486259871, lng: -89.23805969935881, id:10 },
+        { label: '宏都拉斯', lat: 14.852419077366957, lng: -87.16850567143192, id:11 },
+        { label: '哥倫比亞', lat: 3.5357276051435123, lng: -72.44776398232561, id:12 },
+        { label: '哥斯大黎加', lat: 10.34609512322321, lng: -84.21894978511192, id:13 },
+        { label: '印尼', lat: -4.51331352198436, lng: 122.46638883146497, id:14 },
+        { label: '巴布亞新幾內亞', lat: -6.531433915355246, lng: 144.38625214550385, id:15 },
+        { label: '台灣', lat: 23.45960622483294, lng: 121.10292634490128 , id:16},
+        { label: '尼加拉瓜', lat: 12.934313978830096, lng: -84.88933197732533, id:17 },
+        { label: '日本', lat: 36.45750367962861, lng: 138.3425164228975, id:18},
+    ];
+
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 2,
+            center: {
+                lat: 25.0336962,
+                lng: 121.5643673
+            }
+        });
+
+        for (var i = 0; i < position.length; i++) {
+            addMarker(i);
+        }
+    }
+
+    function addMarker(e) {
+        markers[e] = new google.maps.Marker({
+            position: {
+                lat: position[e].lat,
+                lng: position[e].lng
+            },
+            map: map,
+            icon: { url: 'http://maps.google.com/mapfiles/ms/micons/orange-dot.png' }
+        });
+
+        let url =`@Url.Content("~/shop/view/")`;
+        let parms = `?countryid=${position[e].id}`;
+        var contentString = `<a href="${url+parms}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">點我前往${position[e].label}的商品頁</a>`;
+
+        infowindow[e] = new google.maps.InfoWindow({
+            content: contentString,
+            position: {
+                lat: position[e].lat,
+                lng: position[e].lng
+            }
+        });
+
+        markers[e].addListener('click', function () {
+            infowindow[e].open(map, markers[e]);
+        });
+    }
+
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGpyWf0sKrCz1tKARvQDXEtpuRZQQ5JhI&libraries=places&callback=initMap"
+        async defer></script>
+
+
+<!-- ##### 地圖ㄉJS End##### -->
 <!-- ##### All Javascript Files ##### -->
 <!-- jQuery-2.2.4 js -->
 <script src="js/jquery/jquery-2.2.4.min.js"></script>

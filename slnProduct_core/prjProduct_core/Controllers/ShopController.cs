@@ -22,7 +22,7 @@ namespace prjProduct_core.Controllers
         }
 
 
-        public async Task<IActionResult> view(string search)
+        public async Task<IActionResult> view(string search, int? countryid)
         {
             if (string.IsNullOrEmpty(search))
             {
@@ -42,6 +42,7 @@ namespace prjProduct_core.Controllers
                     Star = p.Star,
                     MainPhotoPath=p.MainPhotoPath
                 });
+                ViewBag.countryid = countryid;
                 //左側推薦商品欄位
                 Random rng = new Random();
                 var bestSales = db.Products.Select(p => p).OrderBy(p => p.Stock).Take(20).ToList();
@@ -53,30 +54,64 @@ namespace prjProduct_core.Controllers
             }
             else
             {
-                var q = db.Products.Where(p => p.ProductName.Contains(search)).Select(p => new CProductViewModel()
+                if (countryid != null)
                 {
-                    ProductId = p.ProductId,
-                    ProductName = p.ProductName,
-                    CategoryId = p.CategoryId,
-                    Category = p.Category,
-                    Country = p.Country,
-                    Coffee = p.Coffee,
-                    Price = p.Price,
-                    Description = p.Description,
-                    Stock = p.Stock,
-                    TakeDown = p.TakeDown,
-                    ClickCount = p.ClickCount,
-                    Star = p.Star,
-                    MainPhotoPath = p.MainPhotoPath
-                });
-                //左側推薦商品欄位
-                Random rng = new Random();
-                var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
+                    ViewBag.countryid = countryid;
+                    var q = db.Products.Where(p => p.CountryId == countryid).Select(p => new CProductViewModel()
+                    {
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        CategoryId = p.CategoryId,
+                        Category = p.Category,
+                        Country = p.Country,
+                        Coffee = p.Coffee,
+                        Price = p.Price,
+                        Description = p.Description,
+                        Stock = p.Stock,
+                        TakeDown = p.TakeDown,
+                        ClickCount = p.ClickCount,
+                        Star = p.Star,
+                        MainPhotoPath = p.MainPhotoPath
+                    });
+                    //左側推薦商品欄位
+                    Random rng = new Random();
+                    var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
 
-                var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
+                    var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
 
-                ViewBag.Recommend = recommend;
-                return View(await q.AsNoTracking().ToListAsync());
+                    ViewBag.Recommend = recommend;
+                    return View(await q.AsNoTracking().ToListAsync());
+
+                }
+                else
+                {
+                    ViewBag.countryid = countryid;
+                    var q = db.Products.Where(p => p.ProductName.Contains(search)).Select(p => new CProductViewModel()
+                    {
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        CategoryId = p.CategoryId,
+                        Category = p.Category,
+                        Country = p.Country,
+                        Coffee = p.Coffee,
+                        Price = p.Price,
+                        Description = p.Description,
+                        Stock = p.Stock,
+                        TakeDown = p.TakeDown,
+                        ClickCount = p.ClickCount,
+                        Star = p.Star,
+                        MainPhotoPath = p.MainPhotoPath
+                    });
+                    //左側推薦商品欄位
+                    Random rng = new Random();
+                    var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
+
+                    var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
+
+                    ViewBag.Recommend = recommend;
+                    return View(await q.AsNoTracking().ToListAsync());
+                }
+                
             }
         }
 

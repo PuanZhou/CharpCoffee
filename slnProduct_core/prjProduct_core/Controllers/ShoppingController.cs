@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -24,21 +26,21 @@ namespace prjCSCoffee.Controllers
         {
             db = conetxt;
         }
-        int UserId = 3;         
+        int UserId = 3;
         public IActionResult ShoppingCar()
         {
-            //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
-            //{
-                //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
 
                 var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId)
                   .Select(t => new CShoppingCarDetailsViewModel
                   {
                       ProductsId = t.ProductsId,
                       Quantity = t.Quantity,
-                      ProPrice = t.Price,
+                      Price = t.Price,
                       product = t.Products,
-                      ProStock = t.Products.Stock
+                      ProStock = t.Products.Stock                      
                   });
                 if (datas.ToList().Count == 0)
                 {
@@ -50,9 +52,9 @@ namespace prjCSCoffee.Controllers
                        Fcouponid = c.CouponId,
                        Fcouponname = c.Coupon.CouponName,
                        Fcouponmoney = c.Coupon.Money,
-                       Fcouponstart=c.Coupon.CouponStartDate,
-                       Fcouponend=c.Coupon.CouponDeadline,
-                       Fcondition=c.Coupon.Condition,
+                       Fcouponstart = c.Coupon.CouponStartDate,
+                       Fcouponend = c.Coupon.CouponDeadline,
+                       Fcondition = c.Coupon.Condition,
                        fcoupon = c.Coupon
                    }).ToList();
 
@@ -62,7 +64,7 @@ namespace prjCSCoffee.Controllers
                     CShoppingCartItem t = new CShoppingCartItem();
                     t.productId = (int)item.ProductsId;
                     t.count = (int)item.Quantity;
-                    t.price = (decimal)item.ProPrice;
+                    t.price = (decimal)item.Price;
                     t.product = item.product;
                     t.stock = (int)item.ProStock;
 
@@ -82,22 +84,21 @@ namespace prjCSCoffee.Controllers
                     list.Add(t);
                 }
                 return View(list);
-            //}
-            //else
-            //{
-            //    return RedirectToAction("Login", "Home");
-            //}
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
 
-           
-        }     
-              
+        }
+
         public IActionResult ShoppingCarEmpty()
         {   //如果購物車為空的話，跳這邊
             return View();
         }
 
         public IActionResult UseCoupon(int? id)
-        {           
+        {
             var money = db.Coupons.Where(t => t.CouponId == id).Select(t => t.Money);
             string jsonCart = "";
             List<CDeliveryViewModel> list = new List<CDeliveryViewModel>();
@@ -120,11 +121,11 @@ namespace prjCSCoffee.Controllers
             return View();
         }
 
-        public IActionResult AddtoCart(int? id ,int quantity)
-        {//TODO 修2 加了數量ㄉ格子、detail的div記得加上
-            //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
-            //{
-                //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+        public IActionResult AddtoCart(int? id, int quantity)
+        {
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
 
                 //表示該產品是購物車狀態
                 var currentCar = db.ShoppingCarDetails
@@ -148,29 +149,61 @@ namespace prjCSCoffee.Controllers
                     currentCar.Quantity += quantity;
                 }
                 db.SaveChanges();
-                return RedirectToAction("ShoppingCar");
-            //}
-            //else
-            //{
-            //    return RedirectToAction("Login", "Home");
-            //}
-           
+                return Content("add", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
         }
+
+        public IActionResult SaleAddtoCart(int? id, int quantity)
+        {
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+                var currentCar = db.ShoppingCarDetails
+                    .Where(m => m.ProductsId == id && m.MemberId == UserId)
+                    .FirstOrDefault();
+                if (currentCar == null)
+                {
+                    var product = db.Products.Where(m => m.ProductId == id).FirstOrDefault();
+                    ShoppingCarDetail carDetail = new ShoppingCarDetail();
+                    carDetail.MemberId = UserId;
+                    carDetail.ProductsId = product.ProductId;
+                    carDetail.Price = product.Price*0.8m;
+                    carDetail.Quantity = quantity;
+                    db.ShoppingCarDetails.Add(carDetail);
+                }
+                else
+                {
+                    currentCar.Quantity += quantity;
+                }
+                db.SaveChanges();
+                return RedirectToAction("ShoppingCar");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+        }
+
         public IActionResult Delete(int? id)
         {
-            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
 
             var prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId == UserId && t.ProductsId == id);
-            
-                db.ShoppingCarDetails.Remove(prod);
-                db.SaveChanges();        
-           
+
+            db.ShoppingCarDetails.Remove(prod);
+            db.SaveChanges();
             return RedirectToAction("ShoppingCar");
         }
         public IActionResult Plus(int? id)
         {
-            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
-            ShoppingCarDetail prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId==UserId && t.ProductsId == id);
+            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            ShoppingCarDetail prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId == UserId && t.ProductsId == id);
 
             if (prod != null)
             {
@@ -181,7 +214,7 @@ namespace prjCSCoffee.Controllers
         }
         public IActionResult Reduce(int? id)
         {
-            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
 
             ShoppingCarDetail prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId == UserId && t.ProductsId == id);
 
@@ -195,7 +228,7 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult Car2()
         {
-            ////UserId = HomeController.loginmem.MemberId;                  
+            UserId = HomeController.loginmem.MemberId;
 
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
             {
@@ -212,7 +245,7 @@ namespace prjCSCoffee.Controllers
             var add = db.Members.FirstOrDefault(m => m.MemberId == UserId).MemberAddress;
             ViewBag.memAddress = add;
             return View();
-        }      
+        }
 
         [HttpPost]
         public IActionResult Car2(CDeliveryViewModel vModel)
@@ -227,8 +260,6 @@ namespace prjCSCoffee.Controllers
                 list = JsonSerializer.Deserialize<List<CShoppingCartItem>>(jsonCart);
             }
 
-
-
             int discountmoney = 0;
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
             {
@@ -239,7 +270,7 @@ namespace prjCSCoffee.Controllers
                     discountmoney = item1.discountmoney;
                 }
             }
-            var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => new {fPrice=t.Price*t.Quantity});
+            var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => new { fPrice = t.Price * t.Quantity });
             int total = 0;
             int fee = 0;
             foreach (var item1 in datas)
@@ -252,7 +283,6 @@ namespace prjCSCoffee.Controllers
                 fee = 100;
                 total = total + fee;
             }
-
 
             CShoppingCartItem item = new CShoppingCartItem()
             {
@@ -271,11 +301,9 @@ namespace prjCSCoffee.Controllers
             return RedirectToAction("Car3");
         }
 
-
         public IActionResult Car3()
         {
-
-            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
             ViewBag.discountmoney = 0;
             int discountmoney = 0;
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
@@ -285,7 +313,7 @@ namespace prjCSCoffee.Controllers
                 foreach (var item in list3)
                 {
                     discountmoney = item.discountmoney;
-                    ViewBag.discountmoney= item.discountmoney;
+                    ViewBag.discountmoney = item.discountmoney;
                 }
             }
 
@@ -304,8 +332,8 @@ namespace prjCSCoffee.Controllers
             tradeNo = tradeNo.Substring(tradeNo.Length - 12, 12);
             ViewBag.tradeNo = tradeNo;
             string timenow = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-            ViewBag.timenow = timenow;           
-           
+            ViewBag.timenow = timenow;
+
             int total = 0;
             string ItemName = "";
             foreach (var item in datas)
@@ -380,12 +408,12 @@ namespace prjCSCoffee.Controllers
             }
             else
                 return RedirectToAction("view", "shop");
-        } 
+        }
         [HttpPost]
         public IActionResult Car3(CShoppingCartItem vModel)
         {
-            //UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
-            
+            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_付款資訊))
             {
                 string jsonCart = HttpContext.Session.GetString(CDictionary.SK_付款資訊);
@@ -397,10 +425,9 @@ namespace prjCSCoffee.Controllers
                     vModel.Address = item.Address;
                     vModel.Payment = item.Payment;
                     vModel.Discount = item.Discount;
-                    vModel.Fee = item.Fee;
                 }
             }
-            //產生Order明細
+            #region 產生Order明細
             Order order = new Order();
             order.MemberId = UserId;
             order.OrderDate = DateTime.Now;
@@ -408,15 +435,16 @@ namespace prjCSCoffee.Controllers
             order.PaymentId = vModel.Payment;
             order.OrderAddress = vModel.Address;
             order.OrderReceiver = vModel.Receiver;
-            order.OrderPhone = vModel.Phone;         
-            if (vModel.Discount != 0) order.CouponId = vModel.Discount; 
+            order.OrderPhone = vModel.Phone;
+            if (vModel.Discount != 0) order.CouponId = vModel.Discount;
             order.Fee = vModel.Fee;
             order.TradeNo = vModel.MerchantTradeNo;
             db.Orders.Add(order);
-            //db.SaveChanges();
+            db.SaveChanges();
+            #endregion
 
             System.Threading.Thread.Sleep(1000);
-            //產生OrderDetail 明細
+            #region 產生OrderDetail 明細
             var neworder = db.Orders.OrderByDescending(p => p.OrderId).Take(1).FirstOrDefault();
             var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId);
             foreach (var item in datas)
@@ -426,9 +454,95 @@ namespace prjCSCoffee.Controllers
                 detail.ProductId = (int)item.ProductsId;
                 detail.Quantity = (int)item.Quantity;
                 db.OrderDetails.Add(detail);
-            }            
+            }
+            #endregion          
 
-            //刪除product庫存
+            //#region 發信給會員
+
+            //// 收件人信箱
+            //string userEmail = "jaslin881928@gmail.com";                    
+
+            //#region 信件內容
+            //string mailtable = "";
+            //string mailreceiver = "";           
+            //var memname = db.Members.FirstOrDefault(m => m.MemberId == UserId).MemberName;
+            //mailreceiver = mailreceiver += $"<ul class=\"list - group\" style=\"text - align:left; \">" +
+            //    $"<li>會員名稱:{memname}</li>" +
+            //    $"<li>訂單編號: {vModel.MerchantTradeNo}</li>" +
+            //    $"<li>訂單成立日期: {DateTime.Now.ToString()}</li></ul><br />";
+
+            //mailtable += $"<table style=\"border: 2px solid black; width: 100 %; border - collapse:collapse; \" cellpadding=\"10\" border='1'>" +
+            //    $"<thead><tr>" +
+            //    $"<th scope=\"col\">序號</th>" +
+            //    $"<th scope=\"col\">產品名稱</th>" +
+            //    $"<th scope=\"col\">單價</th>" +
+            //    $"<th scope=\"col\">數量</th>" +
+            //    $"<th scope=\"col\">總價</th>" +
+            //    $"</tr></thead><tbody>";
+
+
+            //int count = 0;
+            //int total = 0;
+            //int discountmoney = 0;
+            //if (vModel.Discount != 0)
+            //{
+            //    discountmoney = (int)db.Coupons.FirstOrDefault(p => p.CouponId == vModel.Discount).Money;
+            //}
+
+            //foreach (var item in datas)
+            //{
+            //    count++;
+            //    int subtotal = (int)item.Price * (int)item.Quantity;
+            //    total += subtotal;
+            //    mailtable += $"<tr><th>{count}</th>" +
+            //                        $"<td>{item.Products.ProductName}</td>" +
+            //                        $"<td>{(int)item.Price}</td>" +
+            //                        $"<td>{item.Quantity}</td>" +
+            //                        $"<td>{subtotal}</td></tr>";
+            //}
+            //total = total + vModel.Fee - discountmoney;
+            //mailtable += $"<tr><td colspan=\"5\" align=\"left\">折扣金額: -NT{discountmoney}元</td></tr>" +
+            //            $"<tr><td colspan=\"5\" align=\"left\">運費: NT{vModel.Fee}元</td></tr>" +
+            //            $"<tr><td colspan=\"5\" align=\"left\">總金額: NT${total}元</td></tr>" +
+            //            $"</tbody></table>";
+
+            //string mailContent = $"<div style=\"border: 2px solid black; width: 600px; padding: 0 30px 30px 30px; \">" +
+            //    $"<div style=\"text - align:center; color: brown; \"><br />" +
+            //    $"<h3>***本通知信為系統自動發送，請勿直接回覆。***</h3>" +
+            //    $"</div><hr /><div style=\"text - align:center; \">" +
+            //    $"<h4>您好，感謝您訂購 CSharpCoffee 商品，下表為您本次交易之明細。</h4>" +
+            //    $"{mailreceiver}{mailtable}</div>" +
+            //    $"<div style=\"text - align:center; color: gray; padding:50px; \"><br />" +
+            //    $"<h7>※如有訂單相關問題，請洽客服處理，謝謝。</h7></div></div>";
+
+            //#endregion
+
+            //// 寄件人信箱+驗證碼
+            //string GoogleMailUserID = "dateha.jp@gmail.com";
+            //string GoogleMailUserPwd = "lpviyzzmupcnrrqp";
+
+            //// 使用Google Mail Server 發信
+            //string SmtpServer = "smtp.gmail.com";
+            //int SmtpPort = 587;
+            //MailMessage mms = new MailMessage();
+            //mms.From = new MailAddress(GoogleMailUserID);
+            //mms.Subject = "[CSharpCoffee]訂單已成立通知";      
+            //mms.Body = mailContent;
+            //mms.IsBodyHtml = true;  //讀不讀得懂html語法
+            //mms.SubjectEncoding = Encoding.UTF8;    //標題編碼()
+            //mms.BodyEncoding = Encoding.UTF8;
+            //mms.To.Add(new MailAddress(userEmail)); //收件人
+            //using (SmtpClient client = new SmtpClient(SmtpServer, SmtpPort))
+            //{
+            //    client.EnableSsl = true;
+            //    client.Credentials = new NetworkCredential(GoogleMailUserID, GoogleMailUserPwd); // 寄信帳號
+            //    client.Send(mms); // 寄出郵件
+            //}
+
+            //#endregion
+
+            #region 所有要刪除的地方
+            #region 刪除product庫存
             var data3 = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => new {
                 tProductid = t.ProductsId,
                 tQuantity = t.Quantity
@@ -437,7 +551,8 @@ namespace prjCSCoffee.Controllers
             {
                 Product prod = db.Products.FirstOrDefault(p => p.ProductId == item.tProductid);
                 prod.Stock -= item.tQuantity;
-            }           
+            }
+            #endregion
 
             //刪除coupon
             if (vModel.Discount != 0)
@@ -445,62 +560,59 @@ namespace prjCSCoffee.Controllers
                 var delcoupon = db.CouponDetails.FirstOrDefault(m => m.MemberId == UserId && m.CouponId == vModel.Discount);
                 db.CouponDetails.Remove(delcoupon);
             }
-                        
+
             //刪除ShoppingCarDetail明細
             var data2 = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => t.ProductsId).ToList();
             foreach (var item in data2)
             {
-                //Delete(item);
+                Delete(item);
             }
-            //db.SaveChanges();
-
+            db.SaveChanges();
+            #endregion
 
             HttpContext.Session.Remove(CDictionary.SK_付款資訊);
-            HttpContext.Session.Remove(CDictionary.SK_使用的折價卷);    
+            HttpContext.Session.Remove(CDictionary.SK_使用的折價卷);
 
             return RedirectToAction("view", "shop");
         }
 
         public IActionResult RelatedpartialView(int? id)
         {
-            ////UserId = HomeController.loginmem.MemberId;                  
+            UserId = HomeController.loginmem.MemberId;
             Random rng = new Random(Guid.NewGuid().GetHashCode());
-            List<CRelatedViewModel> list = new List<CRelatedViewModel>();
-            
-            var data = db.Products.AsEnumerable().OrderByDescending(p => p.Stock).Select(p => new CRelatedViewModel()
+            List<CShoppingCarDetailsViewModel> list = new List<CShoppingCarDetailsViewModel>();
+
+            var data = db.Products.AsEnumerable().OrderByDescending(p => p.Stock).Select(p => new CShoppingCarDetailsViewModel()
             {
-                ProductId = p.ProductId,
-                CoffeeName = p.ProductName,
-                Price = (int)p.Price
+                ProductsId = p.ProductId,
+                ProName = p.ProductName,
+                Price = (int)p.Price,
+                ProStock=p.Stock
             }).Take(20).OrderByDescending(x => rng.Next());
 
             var data1 = db.ShoppingCarDetails.Where(m => m.MemberId == UserId).Select(p => p.ProductsId).ToList();
 
             foreach (var item in data)
             {
-                foreach(var item1 in data1)
+                foreach (var item1 in data1)
                 {
-                    if (item.ProductId != item1)
+                    if (item.ProductsId != item1)
                     {
                         list.Add(item);
                         break;
                     }
                 }
-                if (list.Count == 3) break;              
-            }                     
+                if (list.Count == 3) break;
+            }
 
             return PartialView(list);
-        }               
-      
+
+        }
+
     }
 }
 
-
-
-
-//TODO 1 買家取貨地圖
-//TODO 2 懸浮購物車
-//TODO 3 優惠眷倒數計時、起訖日
-//TODO 4 地圖關於我們連結
-
-
+//TODO 1 加入購物車方法(特價ㄉ) 
+//TODO 2 金流
+//TODO 3 刪除ㄉ感覺怪
+//TODO 4 刪除 拖拉移

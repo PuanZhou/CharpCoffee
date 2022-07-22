@@ -23,7 +23,7 @@
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
         <h2>購物車</h2>
     </div>
 
@@ -100,21 +100,36 @@
                                             </div>
                                         </td>
                                         <td>
-                                            @*<p id="txtprice">NT$@item.price</p>*@
                                             <p id="txtprice">NT$@price</p>
                                         </td>
                                         <td>
-                                            @*<p id="txtcount">NT$@item.小計</p>*@
                                             <p id="txtcount">NT$@小計</p>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Delete", "Shopping", new { id = item.productId })" onclick="return confirm('確定要刪除嗎?')"><i class="icon_close"></i></a>
+                                            <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                                            <i class="icon_close" id="btndelete"></i>
                                         </td>
                                     </tr>
                                 }
                             }
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ##### 刪除產品 ##### -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">確定要刪除此產品</h5>                        
+                    </div>                   
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+                        <button type="button" class="btn btn-primary" id="deletepro">是</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -175,12 +190,59 @@
 {
     <script>
         //購物車數量計算(layout上的圖示)=======================================================
-        async function CountCart() {
+        @*async function CountCart() {
             let countCart = document.querySelector("#countCart");
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
             countCart.innerHTML = `(${result})`;
+        }*@
+
+
+          async function CountCart() {
+            let countCart = document.querySelector("#countCart");
+            let imgcart = document.querySelector("#cart-count");
+            const response = await fetch('@Url.Content("~/api/CountCart")');
+            const result = await response.text();
+            countCart.innerHTML = result;
+            imgcart.innerHTML = `&nbsp&nbsp${result}`;
         }
+
+
+        //刪除購物車=============================================
+        let proid = 0;  //記要刪除ㄉ產品ID
+        var deltr;
+        $("tbody").on("click", "#btndelete", DELE);
+        function DELE() {            
+            $("#exampleModalCenter").modal("show");
+            proid = $(this).parent().find("#productId").val();
+            deltr = $(this).closest("tr");
+        }
+
+        async function CDelete(id) {
+            const response = await fetch("@Url.Content("~/shopping/Delete")" + `?id=${id}`);
+            CountCart();
+        }
+
+        $("#deletepro").click(function () {
+            $('#exampleModalCenter').modal('hide');
+            CDelete(proid);
+            deltr.remove();
+            if ($("tbody>tr").length == 0) {
+                window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
+            }
+            
+            $.bootstrapGrowl("刪除成功", {
+                ele: "body",
+                type: "success",
+                offset: { from: "bottom", amount: 50 },
+                align: "right",
+                width: "auto",
+                delay: 3000,
+                allow_dismiss: true,
+                stackup_spacing: 10
+            });
+            計算購物明細();
+        });
 
         //修改購物車數量=======================================================
         $("tbody").on("click", "#plus", PLUS);
@@ -259,8 +321,8 @@
              CountCart();
         }
 
-        //使用折價卷=======================================================    
-        $("#couponlist").on("click", "#pay", function () {   
+        //使用折價卷=======================================================
+        $("#couponlist").on("click", "#pay", function () {
             let discount = parseInt($(this).parent().parent().find("#moeny").val());
             let condition = parseInt($(this).parent().parent().find("#moenycondition").val());
             let subtotal = 0;
@@ -286,6 +348,16 @@
                     $("#labTotal").text("NT$ " + total);
 
                     CDiscount(id);
+                    $.bootstrapGrowl("使用成功", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
                     @* $.ajax({
                         url: '@Url.Content("~/shopping/UseCoupon")',
                         type: 'GET',
@@ -294,19 +366,37 @@
                     }) *@
                 }
                 else {
-                    window.alert("折價卷使用失敗，折價金額不可小於目前小計(未包含運費)");
+                    $.bootstrapGrowl("折價卷使用失敗，折價金額不可小於目前小計(未包含運費)", {
+                        ele: "body",
+                        type: "warning",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
                 }
             }
 
             else {
-                window.alert("未達可使用該折價卷金額NT$"+condition+"元");
+                $.bootstrapGrowl("未達可使用該折價卷金額NT$" + condition + "元", {
+                    ele: "body",
+                    type: "warning",
+                    offset: { from: "bottom", amount: 50 },
+                    align: "right",
+                    width: "auto",
+                    delay: 3000,
+                    allow_dismiss: true,
+                    stackup_spacing: 10
+                });
             }
 
         })
 
          async function CDiscount(id) {
              const response = await fetch("@Url.Content("~/shopping/UseCoupon")" + `?id=${id}`);
-        }
+         }
 
         //加購商品=======================================================
          $.get('@Url.Content("~/shopping/RelatedpartialView")',
@@ -314,7 +404,8 @@
                     if (data != "null") {
                          $(".related-products-area").load('@Url.Content("~/shopping/RelatedpartialView")')
                     }
-                })
+             })
+
 
 
     </script>

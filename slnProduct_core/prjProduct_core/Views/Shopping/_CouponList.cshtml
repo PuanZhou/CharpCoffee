@@ -72,7 +72,7 @@
 
         .coupon_btn .clockimg > img {
             position: absolute;
-            right: 75px;
+            right: 90px;
             top: -43px;
             width: 30px;
             height: 30px;
@@ -82,7 +82,7 @@
             position: absolute;
             right: 6px;
             top: -33px;
-            width: 70px;
+            width: 85px;
             height: 30px;
             background-color: #FFAAD5;
         }
@@ -156,43 +156,4 @@
 
 }
 
-
-
-
-
-
-
-@*@model prjCSCoffee.Models.CShoppingCartItem
-
-
-    @for (int i = 0; i < Model.couponall.Count; i++)
-    {
-        int money = (int)@Model.couponall[i].Money;
-        //DateTime tstart = @Model.couponall[i].CouponStartDate;
-        //DateTime tend = @Model.couponall[i].CouponDeadline;
-        //DateTime over = tend - tstart;
-
-        DateTime start = @Model.couponall[i].CouponStartDate;
-
-        DateTime end = @Model.couponall[i].CouponDeadline;
-
-        TimeSpan ts = end.Subtract(start); //兩時間天數相減
-
-        double dayCount = ts.Days; //相距天數
-
-
-        <div class="card" style="width: 25rem; border-radius:10px; margin:5px;">
-            <div class="card-body">
-                <span class="card-title"> @Model.couponall[i].CouponName</span>
-                <img src = "~/img/Icon/clock.gif" style="height:50px; width:50px;" />
-                <p>折抵NT$ @money 元</p>
-                <a href = "#" class="btn alazea-btn w-25" id="pay" style="border-radius:10px;">使用</a>
-                <input type = "hidden" id="moeny" value="@money" />
-                <input type = "hidden" id="moenyid" value="@Model.couponall[i].CouponId" />
-                <input type = "hidden" id="moenycondition" value="@Model.couponall[i].Condition" />
-            </div>
-        </div>
-
-
-    }*@
 

@@ -9,7 +9,6 @@ namespace prjCSCoffee.ViewModel
 {
     public class CShoppingCarDetailsViewModel
     {
-
         public CShoppingCarDetailsViewModel()
         {
             _detail = new ShoppingCarDetail();
@@ -41,21 +40,31 @@ namespace prjCSCoffee.ViewModel
             get { return _detail.Quantity; }
             set { _detail.Quantity = value; }
         }
-
-
-    
+        public decimal? Price
+        {
+            get { return _detail.Price; }
+            set { _detail.Price = value; }
+        }
       
+
+
         private Product _prod;
         public Product product
         {
             get { return _prod; }
             set { _prod = value; }
         }
-        public decimal? ProPrice
+        //public decimal? ProPrice
+        //{
+        //    get { return _prod.Price; }
+        //    set { _prod.Price = value; }
+        //}
+        public string ProName
         {
-            get { return _prod.Price; }
-            set { _prod.Price = value; }
+            get { return _prod.ProductName; }
+            set { _prod.ProductName = value; }
         }
+
         public int? ProStock
         {
             get { return _prod.Stock; }
