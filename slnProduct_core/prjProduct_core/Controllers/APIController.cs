@@ -49,7 +49,7 @@ namespace prjProduct_core.Controllers
                 return Content($"{q.Count()}", "text/plain", System.Text.Encoding.UTF8);
             }
         }
-        public IActionResult RackCount(int id)
+        public IActionResult PackCount(int id)
         {
             if (id == 0)
             {
