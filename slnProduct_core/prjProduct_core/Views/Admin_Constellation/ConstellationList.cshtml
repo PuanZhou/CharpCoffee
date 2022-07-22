@@ -1,0 +1,51 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CAdmin_ConstellationViewModel>
+
+@{
+    ViewData["Title"] = "EditConstellation";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<h1 class="h1" style="margin-top:0.5em">星座</h1>
+<table class="table" style="width:100%">
+    <thead>
+        <tr>
+            <th class="col-md-1">
+                <br />
+                編號
+            </th>
+            <th class="col-md-2">
+                星座
+            </th>
+            <th class="col-md-2">
+                推廣商品
+            </th>
+            <th class="col-md-2"></th>
+        </tr>
+    </thead>
+    <tbody style="border-top: 0.125rem solid currentColor">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConstellationId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConstellationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConstellationProductId)
+                </td>
+                <td>
+                    @Html.ActionLink("更換", "EditConstellation", new { id = item.ConstellationId }, new { Class = "btn btn-sm btn-secondary" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+        let constellation = document.querySelector("#constellation");
+        constellation.classList.add("active")
+    </script>
+}
+

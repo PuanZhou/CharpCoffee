@@ -9,6 +9,7 @@ namespace prjProduct_core.Models
     {
         public Member()
         {
+            ArticleComments = new HashSet<ArticleComment>();
             Comments = new HashSet<Comment>();
             CouponDetails = new HashSet<CouponDetail>();
             MyLikes = new HashSet<MyLike>();
@@ -27,6 +28,7 @@ namespace prjProduct_core.Models
         public bool BlackList { get; set; }
 
         public virtual ShoppingCar ShoppingCar { get; set; }
+        public virtual ICollection<ArticleComment> ArticleComments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<CouponDetail> CouponDetails { get; set; }
         public virtual ICollection<MyLike> MyLikes { get; set; }

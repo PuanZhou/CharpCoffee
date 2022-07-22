@@ -11,7 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace prjProduct_core.Controllers
-{
+{    
     public class APIController : Controller
     {
         private readonly CoffeeContext db;

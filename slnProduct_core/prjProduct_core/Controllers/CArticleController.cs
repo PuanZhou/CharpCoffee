@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
+using prjProduct_core.Controllers;
 
 namespace prjCSCoffee.Controllers
 {
@@ -100,34 +101,51 @@ namespace prjCSCoffee.Controllers
             return PartialView(q3);
         }
 
-        //內域(用戶不可見-管理用)
-        //public IActionResult List (CKeywordViewModel vModel)
-        //{
-        //    CoffeeContext db = new CoffeeContext();
-        //    IEnumerable<Article> datas = null;
-        //    if (string.IsNullOrEmpty(vModel.txtKeyword))
-        //    {
-        //        datas = from c in db.Articles
-        //                select c;
-        //    }
-        //    else
-        //    {
-        //        datas = db.Articles.Where(t => t.ArticleName.Contains(vModel.txtKeyword));
-        //    }
-        //    return View(datas);
-        //}
+        public IActionResult faceToArticleComment(int articleId)
+        {
+            var data = db.ArticleComments.Where(a => a.ArticleId == articleId).OrderByDescending(ac => ac.ArticleCommentId).Select(nac => new CArticleCommentViewModel()
+            {
+                ArticleCommentId = nac.ArticleCommentId,
+                MemberId = nac.MemberId,
+                ArticleId = nac.ArticleId,
+                ArticleCommentParentId = nac.ArticleCommentParentId,
+                ArticleCommentDescription = nac.ArticleCommentDescription,
+                ArticleCommentStar = nac.ArticleCommentStar,
+                MemberName = nac.Member.MemberName
+            }).ToList();
 
-        //public IActionResult CreatArticle()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult CreatArticle(Article art)
-        //{
-        //    CoffeeContext db = new CoffeeContext();
-        //    db.Articles.Add(art);
-        //    db.SaveChanges();
-        //    return RedirectToAction("List");
-        //}
+            return PartialView(data);
+        }
+
+        //新增回覆
+        public IActionResult AddArticleComment(ArticleComment ac)
+        {
+            if (HomeController.loginmem == null)
+            {
+                return Content("login", "text/plain", System.Text.Encoding.UTF8);
+            }
+            db.ArticleComments.Add(ac);
+            db.SaveChanges();
+            return Content("謝謝您的評論。", "text/plain", System.Text.Encoding.UTF8);
+        }
+
+        public IActionResult CheckArticleCommentMemberId()
+        {
+            if (HomeController.loginmem != null)
+            {
+                return Content($"{HomeController.loginmem.MemberId}", "text/plain", System.Text.Encoding.UTF8);
+            }
+            return Content("NoMember", "text/plain", System.Text.Encoding.UTF8);
+        }
+
+        //計算回覆量
+        public IActionResult ArticleCommentsCount(int articleId)
+        {
+            var acs = db.ArticleComments.Where(x => x.ArticleId == articleId);
+            int acCount = acs.Where(a => a.ArticleCommentParentId == 0).Count();
+            int acChridrenCount = acs.Where(c => c.ArticleCommentParentId != 0).Count();
+            int[] result = { acCount, acChridrenCount };
+            return Json(result);
+        }
     }
 }
