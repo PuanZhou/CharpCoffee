@@ -305,6 +305,7 @@
         .fa-bell {
             color: #73BF00;
         }
+
     </style>
 </head>
 <body>
@@ -471,6 +472,7 @@
         //====================語音控制==========================
 
         var recognition = new window.webkitSpeechRecognition;
+        recognition.interimResults = true;
         var text = $("#search");
         var instructions = $("#instructions");
         var content = '';
@@ -490,12 +492,13 @@
         recognition.onresult = function (e) {
             var current = e.resultIndex;
             var transcript = e.results[current][0].transcript;
+
             if (content == '') {
-                content += transcript;
+                content = transcript;
             }
             else {
                 content = '';
-                content += transcript;
+                content = transcript;
             }
             text.val(content);
         }
@@ -504,7 +507,7 @@
                 content += '';
             }
             recognition.start();
-            setTimeout(() => { recognition.isFinal = true }, 3000)
+            setTimeout(() => { recognition.end(); }, 3000)
 
         })
         text.on('input', function () {
