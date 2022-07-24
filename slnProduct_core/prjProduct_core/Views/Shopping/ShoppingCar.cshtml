@@ -42,7 +42,6 @@
     </div>
 </div>
 <!-- ##### Breadcrumb Area End ##### -->
-
 <!-- ##### Cart Area Start ##### -->
 <div class="cart-area section-padding-0-100 clearfix">
     <div class="container">
@@ -55,6 +54,8 @@
                         <div class="progress-bar" role="progressbar" style="width: 33%; font-size: 15px; background-color: #BEBEBE " aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">付款方式</div>
                         <div class="progress-bar" role="progressbar" style="width: 34%; font-size: 15px; background-color: #BEBEBE " aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">最後確認</div>
                     </div>
+                    @*<div class="drop" id="dropZone" style="width:1300px; height:200px; background-color:lightblue;"></div>*@
+
 
                     <table class="table table-hover">
                         <thead id="table1">
@@ -85,11 +86,23 @@
                                     if (Subtotal >= 1200) { Fee = 0; Total = Subtotal; }
                                     else if (Subtotal < 1200) { Fee = 100; Total = Subtotal + Fee; }
 
-                                    <tr>
+                                    <tr draggable="true" class="ddd">
                                         <td>
-                                            <input type="hidden" value="@item.productId" name="productId" id="productId" />
-                                            @item.productId
-                                            @item.product.ProductName
+                                            @{
+                                                if (price != item.product.Price)
+                                                {
+                                                    <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                                                    @*@item.productId*@
+                                                    @item.product.ProductName
+                                                    <p id="salepro" style="color:#FF7575;">&lt;促銷商品&gt;</p>
+                                                }
+                                                else
+                                                {
+                                                    <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                                                    @*@item.productId*@
+                                                    @item.product.ProductName
+                                                }
+                                            }
                                         </td>
                                         <td>
                                             <div class="quantity">
@@ -100,7 +113,18 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <p id="txtprice">NT$@price</p>
+                                            @{
+                                                if (price != item.product.Price)
+                                                {
+                                                    <p style="text-decoration:line-through;">NT$@(Convert.ToInt32(item.product.Price).ToString("0"))</p>
+                                                    <p id="txtprice" style="color:#FF7575;">NT$@price</p>
+                                                }
+                                                else
+                                                {
+                                                    <p id="txtprice">NT$@price</p>
+                                                }
+                                            }
+
                                         </td>
                                         <td>
                                             <p id="txtcount">NT$@小計</p>
@@ -124,8 +148,8 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">確定要刪除此產品</h5>                        
-                    </div>                   
+                        <h5 class="modal-title" id="exampleModalCenterTitle">確定要刪除此產品</h5>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
                         <button type="button" class="btn btn-primary" id="deletepro">是</button>
@@ -182,23 +206,16 @@
     </div>
 </div>
 <!-- ##### Cart Area End ##### -->
-
 <!-- ##### Related Product Area Start ##### -->
 <div class="related-products-area"></div>
 
+
+
 @section Scripts
-{
+{ 
     <script>
-        //購物車數量計算(layout上的圖示)=======================================================
-        @*async function CountCart() {
-            let countCart = document.querySelector("#countCart");
-            const response = await fetch('@Url.Content("~/api/CountCart")');
-            const result = await response.text();
-            countCart.innerHTML = `(${result})`;
-        }*@
-
-
-          async function CountCart() {
+        //購物車數量計算(layout上的圖示)==========================
+        async function CountCart() {
             let countCart = document.querySelector("#countCart");
             let imgcart = document.querySelector("#cart-count");
             const response = await fetch('@Url.Content("~/api/CountCart")');
@@ -207,30 +224,31 @@
             imgcart.innerHTML = `&nbsp&nbsp${result}`;
         }
 
-
         //刪除購物車=============================================
         let proid = 0;  //記要刪除ㄉ產品ID
         var deltr;
+        let proprice;
         $("tbody").on("click", "#btndelete", DELE);
-        function DELE() {            
+        function DELE() {
             $("#exampleModalCenter").modal("show");
             proid = $(this).parent().find("#productId").val();
             deltr = $(this).closest("tr");
+            proprice = $(this).parent().prev().prev().find("#txtprice").text().trim().substring(3);
+            console.log(proprice)
         }
 
-        async function CDelete(id) {
-            const response = await fetch("@Url.Content("~/shopping/Delete")" + `?id=${id}`);
+        async function CDelete(id,proprice) {
+            const response = await fetch("@Url.Content("~/shopping/Delete")" + `?id=${id}&price=${proprice}`);
             CountCart();
         }
 
         $("#deletepro").click(function () {
             $('#exampleModalCenter').modal('hide');
-            CDelete(proid);
+            CDelete(proid,proprice);
             deltr.remove();
             if ($("tbody>tr").length == 0) {
                 window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
             }
-            
             $.bootstrapGrowl("刪除成功", {
                 ele: "body",
                 type: "success",
@@ -242,7 +260,41 @@
                 stackup_spacing: 10
             });
             計算購物明細();
+            proid = 0;
+            deltr = null;
+            proprice = 0;
         });
+
+        //拖拉刪除購物車========================================     
+
+        //$("tbody").on("dragover", ".ddd", drop);
+        //function drop() {
+
+        //    console.log("Dd")
+        //}
+       
+
+        //===========================================================
+        $("tbody>tr").draggable({ helper: 'clone', opacity: 0.40 });
+
+        $(".drop").droppable({
+            accept: "*",
+            //activeClass: 'myactive',
+            //hoverClass: 'myhover',
+            tolerance: 'pointer',
+            drop: function (ev, ui) {
+                $("#exampleModalCenter").modal("show");
+                proid = ui.draggable.find("#productId").val();
+                deltr = ui.draggable;
+                proprice = ui.draggable.find("#txtprice").text().trim().substring(3);
+                
+                console.log(proid)
+                console.log(proprice)
+                deltr.css("background-color", "yellow")            
+            }
+        });
+
+
 
         //修改購物車數量=======================================================
         $("tbody").on("click", "#plus", PLUS);
@@ -250,9 +302,21 @@
             let id = $(this).parent().parent().prev().find("#productId").val();
             let qty = parseInt($(this).parent().find(".qty-text").val()) + 1;
             let stock = $(this).parent().find("#stock").val();
+            let proprice = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
+            //console.log(proprice)
             if (qty > stock) {
                 qty -= 1;
-                window.alert("已達可訂購最高數量");
+                $.bootstrapGrowl("已達可訂購最高數量", {
+                    ele: "body",
+                    type: "primary",
+                    offset: { from: "bottom", amount: 50 },
+                    align: "right",
+                    width: "auto",
+                    delay: 3000,
+                    allow_dismiss: true,
+                    stackup_spacing: 10
+                });
+
             }
             else {
                 let price = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
@@ -261,7 +325,7 @@
                 $(this).parent().parent().next().next().find("#txtcount").text(小計);
 
                 計算購物明細();
-                CAdd(id);
+                CAdd(id,proprice);
 
             }
         }
@@ -270,6 +334,7 @@
         function REDUCE() {
             let id = $(this).parent().parent().prev().find("#productId").val();
             let qty = parseInt($(this).parent().find(".qty-text").val()) - 1;
+            let proprice = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
             if (qty < 1) qty = 1;
             else {
                 let price = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
@@ -278,7 +343,7 @@
                 $(this).parent().parent().next().next().find("#txtcount").text(小計);
 
                 計算購物明細();
-                CReduce(id);
+                CReduce(id, proprice);
 
             }
         }
@@ -311,14 +376,13 @@
             }
         }
 
-        async function CAdd(id) {
-            const response = await fetch("@Url.Content("~/shopping/plus")" + `?id=${id}`);
+        async function CAdd(id,proprice) {
+            const response = await fetch("@Url.Content("~/shopping/plus")" + `?id=${id}&price=${proprice}`);
             CountCart();
         }
-        async function CReduce(id) {
-             const response = await fetch("@Url.Content("~/shopping/Reduce")" + `?id=${id}`);
-             /*const data = await response.Int32Array();*/
-             CountCart();
+        async function CReduce(id, proprice) {
+            const response = await fetch("@Url.Content("~/shopping/Reduce")" + `?id=${id}&price=${proprice}`);
+            CountCart();
         }
 
         //使用折價卷=======================================================
@@ -399,13 +463,13 @@
          }
 
         //加購商品=======================================================
-         $.get('@Url.Content("~/shopping/RelatedpartialView")',
+         @*$.get('@Url.Content("~/shopping/RelatedpartialView")',
                 function (data) {
                     if (data != "null") {
                          $(".related-products-area").load('@Url.Content("~/shopping/RelatedpartialView")')
                     }
-             })
-
+            })*@
+         $(".related-products-area").load('@Url.Content("~/shopping/RelatedpartialView")')
 
 
     </script>

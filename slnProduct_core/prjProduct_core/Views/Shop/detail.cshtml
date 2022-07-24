@@ -115,11 +115,12 @@
                             <form class="cart clearfix d-flex align-items-center">
                                 <div class="quantity">
                                     <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (qty <= 1) return; else { if (!isNaN(qty)) effect.value--; };  return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                    <input type="text" class="qty-text" id="qty" step="1" min="1" max="10" name="quantity" value="1">
+                                    <input type="text" class="qty-text" id="qty" step="1" min="1" max="10" name="quantity" value="1" disabled>
                                     <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (qty >=@Model.Stock) overstock(); else { if (!isNaN(qty)) effect.value++; };  return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                 </div>
                                 <input type="hidden" value="@Model.ProductId" name="id" id="proid" />
                                 <input type="button" name="addtocart" value="Add to cart" id="btnsubmit" class="btn alazea-btn ml-15" />
+                                <input type="hidden" value="@Model.Price" id="proprice" />
                             </form>
                             <!-- Wishlist & Compare -->
                             <div class="wishlist-compare d-flex flex-wrap align-items-center">
@@ -322,7 +323,8 @@
         $("#btnsubmit").click(function () {
             let proid = $(this).parent().find("#proid").val();
             let qty = $(this).parent().find("#qty").val();
-            $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": qty },
+            let proprice = parseInt($(this).parent().find("#proprice").val());
+            $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": qty, "price" : proprice },
                 function (data) {
                     if (data === "add") {
                         $.bootstrapGrowl("成功加入購物車", {

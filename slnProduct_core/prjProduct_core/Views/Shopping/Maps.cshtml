@@ -173,51 +173,127 @@
 @section Scripts
 {
     <script>
-        let total = 0;
-        $("tbody").on("click", "#plus", function () {
-            let id = $(this).parent().prev().find("#productId").val();
-            let qty = parseInt($(this).parent().find(".txtQty").val()) + 1;
-            let price = $(this).parent().next().find("#txtprice").text().substring(3);
-            let 小計 = ("NT$") + (qty * price);
-            $(this).parent().find(".txtQty").val(qty);
-            $(this).parent().next().next().find("#txtcount").text(小計);
-            //計算總金額=======================================================
-            let total = 0;
-            $("p").filter("#txtcount").each(function () {
-                total += parseInt($(this).text().substring(3));
-            })
-            $("#labTotal").text("總金額 : NT$ " + total + " 元");
+       //刪除購物車=============================================
+        let proid = 0;  //記要刪除ㄉ產品ID
+        var deltr;
+        $("tbody").on("click", "#btndelete", DELE);
+        function DELE() {
+            $("#exampleModalCenter").modal("show");
+            proid = $(this).parent().find("#productId").val();
+            deltr = $(this).closest("tr");
+        }
 
-            $.ajax({
-                url: '@Url.Content("~/shopping/plus")',
-                type: 'GET',
-                data: { "id": id },
-                dataType: Int32Array
-            })
-        })
+        async function CDelete(id) {
+            const response = await fetch("@Url.Content("~/shopping/Delete")" + `?id=${id}`);
+            CountCart();
+        }
 
-        $("tbody").on("click", "#reduce", function () {
-            let id = $(this).parent().prev().find("#productId").val();
-            let qty = parseInt($(this).parent().find(".txtQty").val()) - 1;
+        $("#deletepro").click(function () {
+            $('#exampleModalCenter').modal('hide');
+            CDelete(proid);
+            deltr.remove();
+            if ($("tbody>tr").length == 0) {
+                window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
+            }
+
+            $.bootstrapGrowl("刪除成功", {
+                ele: "body",
+                type: "success",
+                offset: { from: "bottom", amount: 50 },
+                align: "right",
+                width: "auto",
+                delay: 3000,
+                allow_dismiss: true,
+                stackup_spacing: 10
+            });
+            計算購物明細();
+        });
+
+        //修改購物車數量=======================================================
+        $("tbody").on("click", "#plus", PLUS);
+        function PLUS() {
+            let id = $(this).parent().parent().prev().find("#productId").val();
+            let qty = parseInt($(this).parent().find(".qty-text").val()) + 1;
+            let stock = $(this).parent().find("#stock").val();
+            if (qty > stock) {
+                qty -= 1;
+                $.bootstrapGrowl("已達可訂購最高數量", {
+                    ele: "body",
+                    type: "primary",
+                    offset: { from: "bottom", amount: 50 },
+                    align: "right",
+                    width: "auto",
+                    delay: 3000,
+                    allow_dismiss: true,
+                    stackup_spacing: 10
+                });
+
+            }
+            else {
+                let price = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
+                let 小計 = ("NT$") + (qty * price);
+                $(this).parent().find(".qty-text").val(qty);
+                $(this).parent().parent().next().next().find("#txtcount").text(小計);
+
+                計算購物明細();
+                CAdd(id);
+
+            }
+        }
+
+        $("tbody").on("click", "#reduce", REDUCE);
+        function REDUCE() {
+            let id = $(this).parent().parent().prev().find("#productId").val();
+            let qty = parseInt($(this).parent().find(".qty-text").val()) - 1;
             if (qty < 1) qty = 1;
-            let price = $(this).parent().next().find("#txtprice").text().substring(3);
-            let 小計 = ("NT$") + (qty * price);
-            $(this).parent().find(".txtQty").val(qty);
-            $(this).parent().next().next().find("#txtcount").text(小計);
+            else {
+                let price = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
+                let 小計 = ("NT$") + (qty * price);
+                $(this).parent().find(".qty-text").val(qty);
+                $(this).parent().parent().next().next().find("#txtcount").text(小計);
+
+                計算購物明細();
+                CReduce(id);
+
+            }
+        }
+
+        function 計算購物明細() {
             //計算總金額=======================================================
+            let discount = 0;
+            let subtotal = 0;
+            let fee = 0;
             let total = 0;
             $("p").filter("#txtcount").each(function () {
-                total += parseInt($(this).text().substring(3));
+                subtotal += parseInt($(this).text().trim().substring(3));
             })
-            $("#labTotal").text("總金額 : NT$ " + total + " 元");
+            //判斷運費===========================================================
+            if (subtotal < 1200) {
+                fee = 100;
+                total = subtotal + fee;
+                $("#labSubtotal").text("NT$ " + subtotal);
+                $("#labDiscount").text("-NT$ " + discount);
+                $("#labFee").text("NT$ " + fee);
+                $("#labTotal").text("NT$ " + total);
+            }
+            else if (subtotal >= 1200) {
+                fee = 0;
+                total = subtotal + fee;
+                $("#labSubtotal").text("NT$ " + subtotal);
+                $("#labDiscount").text("-NT$ " + discount);
+                $("#labFee").text("NT$ " + fee);
+                $("#labTotal").text("NT$ " + total);
+            }
+        }
 
-             $.ajax({
-                url: '@Url.Content("~/shopping/Reduce")',
-                type: 'GET',
-                data: { "id": id },
-                dataType: Int32Array
-             })
-        })
+        async function CAdd(id) {
+            const response = await fetch("@Url.Content("~/shopping/plus")" + `?id=${id}`);
+            CountCart();
+        }
+        async function CReduce(id) {
+             const response = await fetch("@Url.Content("~/shopping/Reduce")" + `?id=${id}`);
+             CountCart();
+        }
 
     </script>
 

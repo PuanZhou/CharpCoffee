@@ -45,7 +45,7 @@ namespace prjCSCoffee.ViewModel
             get { return _detail.Price; }
             set { _detail.Price = value; }
         }
-      
+
 
 
         private Product _prod;
@@ -54,11 +54,7 @@ namespace prjCSCoffee.ViewModel
             get { return _prod; }
             set { _prod = value; }
         }
-        //public decimal? ProPrice
-        //{
-        //    get { return _prod.Price; }
-        //    set { _prod.Price = value; }
-        //}
+
         public string ProName
         {
             get { return _prod.ProductName; }

@@ -49,7 +49,8 @@
         let proname = $(this).parent().find("#proname").val();
         let proprice = $(this).parent().find("#proprice").val();
         let prostock = $(this).parent().find("#prostock").val();
-        $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": 1 },
+   
+        $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": 1, "price" : proprice },
             function (data) {
                 if (data === "add") {
                     $.bootstrapGrowl("成功加入購物車", {
@@ -63,10 +64,18 @@
                         stackup_spacing: 10
                     });
                     CountCart();
-                /*    $(`tbody:contains('${proname}')`).*/
-
-                   
-                    Addtr(proid, proname, proprice, prostock);
+                    let haspro = $(`tbody:contains('${proname}')`).length;
+                    if (haspro != 0) {
+                        let hasname = $(`td:contains('${proname}')`);
+                        let qty = parseInt(hasname.next().find("#txtQty").val()) + 1;
+                        hasname.next().find("#txtQty").val(qty);
+                        let price = hasname.next().next().find("#txtprice").text().trim().substring(3);
+                        let 小計 = ("NT$") + (qty * price);
+                        hasname.next().next().next().find("#txtcount").text(小計);
+                    }
+                    else {
+                        Addtr(proid, proname, proprice, prostock);
+                    }
                     計算購物明細();
 
                 }
@@ -87,7 +96,11 @@
     }
 
     function Addtr(proid, proname, proprice, prostock) {
-        let content = `<tr><td><input type="hidden" value="${proid}" name="productId" id="productId" />${proname}</td>
+        let content = `<tr>
+                            <td>
+                                <input type="hidden" value="${proid}" name="productId" id="productId" />
+                                ${proname}
+                            </td>
                             <td>
                                 <div class="quantity">
                                     <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
@@ -106,10 +119,11 @@
                                 <input type="hidden" value="${proid}" name="productId" id="productId" />
                                 <i class="icon_close" id="btndelete"></i>
                             </td>
-                        </tr>`;
+                    </tr>`;
         $("tbody").append(content);
 
     }
+
     function 計算購物明細() {
         //計算總金額=======================================================
         let discount = 0;
@@ -136,5 +150,6 @@
             $("#labFee").text("NT$ " + fee);
             $("#labTotal").text("NT$ " + total);
         }
-    }
+    }  
+
 </script>

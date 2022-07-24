@@ -142,13 +142,17 @@
                                 @if (pd.CategoryId == 1)
                                 {
                                     <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
-                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                    <input type="hidden" value="@((Convert.ToInt32( pd.Price)*0.8).ToString("0"))" id="proprice" />
                                     <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
                                 }
                                 else
                                 {
                                     <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
-                                    <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
+                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                    <input type="hidden" value="@((Convert.ToInt32( pd.Price)*0.8).ToString("0"))" id="proprice" />
                                 }
                             </div>
                         </div>
@@ -448,3 +452,46 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
+
+@section Scripts
+{
+
+    <script>
+    //=================加入購物車========================
+    $(".add-to-cart-btn").click(function () {
+        let proid = $(this).parent().find("#proid").val();
+        let proprice = $(this).parent().find("#proprice").val();
+        $.get('@Url.Content("~/shopping/SaleAddtoCart")', { "id": proid, "quantity": 1, "price": proprice },
+            function (data) {
+                if (data === "add") {
+                    $.bootstrapGrowl("成功加入購物車", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                    CountCart();
+                }
+                else {
+                        window.location.href = '@Url.Content("~/Home/Login")';
+                }
+            }
+        );
+    })
+
+    async function CountCart() {
+            let countCart = document.querySelector("#countCart");
+            let imgcart = document.querySelector("#cart-count");
+            const response = await fetch('@Url.Content("~/api/CountCart")');
+            const result = await response.text();
+            countCart.innerHTML = result;
+            imgcart.innerHTML = `&nbsp&nbsp${result}`;
+    }
+
+    </script>
+
+}

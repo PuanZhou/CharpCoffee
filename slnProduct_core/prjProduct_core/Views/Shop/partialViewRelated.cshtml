@@ -24,6 +24,7 @@
                             <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
                             <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                             <input type="hidden" value="@item.ProductId" id="proid" />
+                            <input type="hidden" value="@item.Price" id="proprice" />
                             <a style="cursor:pointer" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@item.ProductId</span></a>
                         </div>
                     </div>
@@ -99,7 +100,8 @@
      //=================加入購物車========================
     $(".add-to-cart-btn").click(function () {
         let proid = $(this).parent().find("#proid").val();
-        $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": 1 },
+        let proprice = parseInt($(this).parent().find("#proprice").val());
+        $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": 1, "price" : proprice },
             function (data) {
                 if (data === "add") {
                     $.bootstrapGrowl("成功加入購物車", {

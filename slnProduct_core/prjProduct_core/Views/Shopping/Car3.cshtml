@@ -106,17 +106,38 @@
                                 int 小計 = (int)item.小計;
                                 int Discount = @ViewBag.discountmoney;
                                 if (Subtotal >= 1200) { Fee = 0; Total = Subtotal - Discount; }
-                                else if (Subtotal < 1200) { Fee = 100; Total = Subtotal - Discount + Fee; }                               
+                                else if (Subtotal < 1200) { Fee = 100; Total = Subtotal - Discount + Fee; }
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.productId)
-                                        @item.product.ProductName
+                                        @{
+                                            if (price != item.product.Price)
+                                            {
+                                                @item.product.ProductName
+                                                <p id="salepro" style="color:#FF7575;">&lt;促銷商品&gt;</p>
+                                            }
+                                            else
+                                            {
+                                                @item.product.ProductName
+                                            }
+                                        }
+
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.count)
                                     </td>
                                     <td>
-                                        <p id="txtprice">NT$@price</p>
+                                        @{
+                                            if (price != item.product.Price)
+                                            {
+                                                <p style="text-decoration:line-through;">NT$@(Convert.ToInt32(item.product.Price).ToString("0"))</p>
+                                                <p id="txtprice" style="color:#FF7575;">NT$@price</p>
+                                            }
+                                            else
+                                            {
+                                                <p id="txtprice">NT$@price</p>
+                                            }
+                                        }
+
                                     </td>
                                     <td>
                                         <p id="txtcount">NT$@小計</p>

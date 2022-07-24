@@ -13,7 +13,7 @@
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center"  style="background-image: url(../img/Home-img/02.jpg);">
         <h2>購物車</h2>
     </div>
 
@@ -64,7 +64,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
+                                <td colspan="4" align="center">
                                     目前尚無商品，快去加入購物車吧!
                                 </td>
                             </tr>
@@ -124,7 +124,17 @@
 {
     <script>
         $("#btnsubmit").click(function () {
-            window.alert("目前購物車為空，無法結帳");
+            $.bootstrapGrowl("目前購物車為空，無法結帳", {
+                ele: "body",
+                type: "danger",
+                offset: { from: "bottom", amount: 50 },
+                align: "right",
+                width: "auto",
+                delay: 3000,
+                allow_dismiss: true,
+                stackup_spacing: 10
+            });
+           
         })
 
     </script>
