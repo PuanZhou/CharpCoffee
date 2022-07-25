@@ -25,12 +25,12 @@
                 <span asp-validation-for="ProductName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category.CategoriesName" class="control-label"></label>
+                <label asp-for="Category.CategoriesName" class="control-label">類別</label>
                 @Html.DropDownListFor(model => model.CategoryId, ViewBag.CateListItem as SelectList, new { @class = "form-control animate__animated" })
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Country.CountryName" class="control-label"></label>
+                <label asp-for="Country.CountryName" class="control-label">國家</label>
                 @Html.DropDownListFor(model => model.CountryId, ViewBag.CtryListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
@@ -71,17 +71,17 @@
         <div class="col-4">
             <h4 style="text-decoration:underline">咖啡類詳細資料</h4>
             <div class="form-group">
-                <label asp-for="Coffee.Package.PackageName" class="control-label"></label>
+                <label asp-for="Coffee.Package.PackageName" class="control-label">包裝法</label>
                 @Html.DropDownListFor(model => model.PackageId, ViewBag.PkgListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="PackageId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Coffee.Roasting.RoastingName" class="control-label"></label>
+                <label asp-for="Coffee.Roasting.RoastingName" class="control-label">烘培法</label>
                 @Html.DropDownListFor(model => model.RoastingId, ViewBag.RoastListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="RoastingId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Coffee.Process.ProcessName" class="control-label"></label>
+                <label asp-for="Coffee.Process.ProcessName" class="control-label">處理法</label>
                 @Html.DropDownListFor(model => model.ProcessId, ViewBag.PrcsListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="ProcessId" class="text-danger"></span>
             </div>
@@ -89,7 +89,7 @@
             <br />
             <div class="form-group form-check form-switch">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RainForest" /> @Html.DisplayNameFor(model => model.RainForest)
+                    <input class="form-check-input" asp-for="RainForest" /> 是否加入雨林聯盟
                 </label>
             </div>
             <br />
@@ -362,6 +362,7 @@
          //====================== 拖曳刪除圖片 =======================
         $("#DeletePhotos").on("dragover", function (e) {
             e.preventDefault();
+            e.dataTransfer.setData("Text/html", e.target.id);
             return false;
         });
     

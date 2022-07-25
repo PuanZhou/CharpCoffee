@@ -447,17 +447,17 @@
     <!-- 自定義 Js -->
     <script src="~/js/SignInOut.js"></script>
 
-
-
-    @await RenderSectionAsync("Scripts", required: false)
-<script>
+    <script>
     stockWarning();
          async function stockWarning() {
         const response = await fetch('@Url.Content("~/Admin_Api/StockLessThanTen")'),
               datas = await response.text();
              $("#stockWarning").text(datas);
         };
-</script>
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
 
 </body>
 
