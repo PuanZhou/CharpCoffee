@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using prjProduct_core.Models;
+using prjProduct_core.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -25,17 +26,40 @@ namespace prjProduct_core.Controllers
 
         //================查購物車===================
         [HttpGet("{id}")]
-        public IQueryable<Product> Get(int id)
+        public string Get(int id)
         {
-            return db.ShoppingCarDetails.Where(m => m.MemberId == id).Select(x => x.Products);
+              var result = db.ShoppingCarDetails.Where(m => m.MemberId == id).Select(x => new CAppCartVM()
+              {
+                  ShoppingCarDetialsId = x.ShoppingCarDetialsId,
+                  MemberId = x.MemberId,
+                  ProductsId=(int)x.ProductsId,
+                  ProductName=x.Products.ProductName,
+                  Price=(int)x.Price,
+                  Quantity=(int)x.Quantity,
+                  Description=x.Products.Description,
+                  Stock=(int)x.Products.Stock,
+                  //MainPhotoPath=x.Products.MainPhotoPath,
+                  MainPhotoPath= "4f127afc-4031-4b15-89e4-e39a8f66b57c.jpg",
+              });
+            return JsonSerializer.Serialize(result);
         }
 
-        //================查購物車內某商品數量===================
-        [HttpGet("{mId}/{pId}")]
-        public int Get(int mId,int pId)
-        {
-            return db.ShoppingCarDetails.Where(m => m.MemberId == mId && m.ProductsId == pId)
-                .Sum(x => (int)x.Quantity);
-        }
+        //// POST api/<WApiController>
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        //{
+        //}
+
+        //// PUT api/<WApiController>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
+
+        //// DELETE api/<WApiController>/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
     }
 }
