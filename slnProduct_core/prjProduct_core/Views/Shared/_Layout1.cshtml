@@ -123,6 +123,9 @@
                             </span>
                             <span class="sidebar-text">產品管理</span>
                         </span>
+                        <span>
+                            <span class="badge badge-sm bg-secondary ms-1 text-gray-800" id="stockWarning"></span>
+                        </span>
                     </a>
                 </li>
                 <li class="nav-item" id="member">
@@ -447,6 +450,14 @@
 
 
     @await RenderSectionAsync("Scripts", required: false)
+<script>
+    stockWarning();
+         async function stockWarning() {
+        const response = await fetch('@Url.Content("~/Admin_Api/StockLessThanTen")'),
+              datas = await response.text();
+             $("#stockWarning").text(datas);
+        };
+</script>
 
 </body>
 

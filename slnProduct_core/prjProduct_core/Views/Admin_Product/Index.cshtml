@@ -154,7 +154,9 @@
     </table>
 </div>
 @section Scripts{
-    <script>
+    <script> 
+        stockWarning();
+        //==================================================================================================
         let pro = document.querySelector("#product");
 
         pro.classList.add("active");
@@ -259,7 +261,7 @@
             });
         });
 
-        // 單筆上架 
+        // 單筆上架
         $(".launch").each(function () {
             $(this).click(function () {
                 var id = $(this).attr("value");
