@@ -66,6 +66,10 @@ namespace prjCSCoffee.ViewModel
             get { return _prod.Stock; }
             set { _prod.Stock = value; }
         }
-
+        public string ProPhotoPath
+        {
+            get { return _prod.MainPhotoPath; }
+            set { _prod.MainPhotoPath = value; }
+        }
     }
 }

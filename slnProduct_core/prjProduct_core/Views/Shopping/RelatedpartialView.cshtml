@@ -26,6 +26,7 @@
                             <input type="hidden" value="@item.ProName" id="proname" />
                             <input type="hidden" value="@item.Price" id="proprice" />
                             <input type="hidden" value="@item.ProStock" id="prostock" />
+                            <input type="hidden" value="@item.ProPhotoPath" id="proPhotoPath" />
 
                         </div>
                     </div>
@@ -49,7 +50,8 @@
         let proname = $(this).parent().find("#proname").val();
         let proprice = $(this).parent().find("#proprice").val();
         let prostock = $(this).parent().find("#prostock").val();
-   
+        let proPhotoPath = $(this).parent().find("#proPhotoPath").val();         
+        
         $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": 1, "price" : proprice },
             function (data) {
                 if (data === "add") {
@@ -74,7 +76,12 @@
                         hasname.next().next().next().find("#txtcount").text(小計);
                     }
                     else {
-                        Addtr(proid, proname, proprice, prostock);
+                        if (proPhotoPath == "") {
+                            Addtremptyimg(proid, proname, proprice, prostock)
+                        }
+                        else {
+                            Addtr(proid, proname, proprice, prostock, proPhotoPath);
+                        }                            
                     }
                     計算購物明細();
 
@@ -95,31 +102,68 @@
             imgcart.innerHTML = `&nbsp&nbsp${result}`;
     }
 
-    function Addtr(proid, proname, proprice, prostock) {
-        let content = `<tr>
-                            <td>
+    function Addtremptyimg(proid, proname, proprice, prostock) {
+
+        let content = ` <tr draggable="true" class="ddd" >
+                            <td class="col-md-6">
+                                <img class="picbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">                           
                                 <input type="hidden" value="${proid}" name="productId" id="productId" />
                                 ${proname}
                             </td>
-                            <td>
-                                <div class="quantity">
+                            <td class="col-md-1.2"  style="text-align:center">
+                                <div class="quantity" style="margin:0 auto;">
                                     <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
                                     <input type="text" class="qty-text" id="txtQty" step="1" min="1" name="txtQty" value="1" readonly>
                                     <span class="qty-plus" id="plus" name="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                     <input type="hidden" id="stock" name="stock" value="${prostock}" />
                                 </div>
                             </td>
-                            <td>
+                            <td class="col-md-1"  style="text-align:center">
                                 <p id="txtprice">NT$${proprice}</p>
                             </td>
-                            <td>
+                            <td class="col-md-1.8"  style="text-align:center">
                                 <p id="txtcount">NT$${proprice}</p>
                             </td>
-                            <td>
+                            <td class="col-md-2"  style="text-align:center">
                                 <input type="hidden" value="${proid}" name="productId" id="productId" />
                                 <i class="icon_close" id="btndelete"></i>
                             </td>
-                    </tr>`;
+                        </tr>`;
+
+
+        $("tbody").append(content);
+
+    }
+
+    function Addtr(proid, proname, proprice, prostock, proPhotoPath) {
+
+        let content = ` <tr draggable="true" class="ddd" >
+                            <td class="col-md-6">                              
+                                <img class="picbox" src="~/images/${proPhotoPath}">                                
+                                <input type="hidden" value="${proid}" name="productId" id="productId" />
+                                ${proname}
+                            </td>
+                            <td class="col-md-1.2"  style="text-align:center">
+                                <div class="quantity" style="margin:0 auto;">
+                                    <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                    <input type="text" class="qty-text" id="txtQty" step="1" min="1" name="txtQty" value="1" readonly>
+                                    <span class="qty-plus" id="plus" name="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    <input type="hidden" id="stock" name="stock" value="${prostock}" />
+                                </div>
+                            </td>
+                            <td class="col-md-1"  style="text-align:center">
+                                <p id="txtprice">NT$${proprice}</p>
+                            </td>
+                            <td class="col-md-1.8"  style="text-align:center">
+                                <p id="txtcount">NT$${proprice}</p>
+                            </td>
+                            <td class="col-md-2"  style="text-align:center">
+                                <input type="hidden" value="${proid}" name="productId" id="productId" />
+                                <i class="icon_close" id="btndelete"></i>
+                            </td>
+                        </tr>`;
+
+
         $("tbody").append(content);
 
     }
@@ -150,6 +194,6 @@
             $("#labFee").text("NT$ " + fee);
             $("#labTotal").text("NT$ " + total);
         }
-    }  
+    }
 
 </script>

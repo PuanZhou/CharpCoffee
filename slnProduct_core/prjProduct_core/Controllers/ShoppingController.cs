@@ -40,7 +40,8 @@ namespace prjCSCoffee.Controllers
                       Quantity = t.Quantity,
                       Price = t.Price,
                       product = t.Products,
-                      ProStock = t.Products.Stock
+                      ProStock = t.Products.Stock,
+                      ProPhotoPath=t.Products.MainPhotoPath
                   });
                 if (datas.ToList().Count == 0)
                 {
@@ -67,6 +68,7 @@ namespace prjCSCoffee.Controllers
                     t.price = (decimal)item.Price;
                     t.product = item.product;
                     t.stock = (int)item.ProStock;
+                    t.mainPhotoPath = item.ProPhotoPath;
 
                     List<Coupon> cc = new List<Coupon>();
                     foreach (var item1 in data2)
@@ -425,6 +427,7 @@ namespace prjCSCoffee.Controllers
                     vModel.Address = item.Address;
                     vModel.Payment = item.Payment;
                     vModel.Discount = item.Discount;
+                    vModel.Fee = item.Fee;
                 }
             }
             #region 產生Order明細
@@ -635,4 +638,5 @@ namespace prjCSCoffee.Controllers
 
 
 //TODO 1 金流    
-//TODO 2 刪除 拖拉移
+//TODO 2 刪除 拖拉移(差動態產生的抓不到)
+//TODO 3 推薦商品的產品圖片抓不到   

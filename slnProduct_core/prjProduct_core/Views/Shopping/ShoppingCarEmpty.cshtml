@@ -9,11 +9,34 @@
     int Discount = 0;
 }
 
+@section Style
+{
+    <style>
+        .size span {
+            font-size: 20px;
+        }
+
+        .alert p {
+            margin: 0;
+            font-size: 20px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .alert img {
+            padding-bottom: 8px;
+            padding-right: 8px;
+        }
+
+    </style>
+}
+
+
 
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center"  style="background-image: url(../img/Home-img/02.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
         <h2>購物車</h2>
     </div>
 
@@ -75,6 +98,10 @@
             </div>
         </div>
 
+        <div class="alert alert-warning" role="alert" style="height:50px; padding:0; margin-top:30px;">
+            <p><img src="~/img/Icon/free-shipping.png" />   單筆消費滿NT$1,200元，即可享受免運費優惠；如單筆消費金額未滿NT$1,200元則需支付NT$100元運費。</p>
+        </div>
+
         <div class="row">
             <!-- Coupon Discount -->
             <div class="col-12 col-lg-6" id="couponlist">
@@ -112,9 +139,9 @@
                 </div>
             </div>
         </div>
-        </div>
-
     </div>
+
+</div>
 </div>
 <!-- ##### Cart Area End ##### -->
 
@@ -134,7 +161,7 @@
                 allow_dismiss: true,
                 stackup_spacing: 10
             });
-           
+
         })
 
     </script>
