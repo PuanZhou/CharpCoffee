@@ -24,6 +24,8 @@ namespace prjCSCoffee.Models
         public decimal 小計 { get { return this.price * this.count; } }
 
         public int stock { get; set; }
+
+        public string mainPhotoPath { get; set; }
         public Product product { get; set; }
 
 

@@ -112,13 +112,15 @@
                         </div>
                         <div class="cart--area d-flex flex-wrap align-items-center">
                             <!-- Add to Cart Form -->
-                            <form class="cart clearfix d-flex align-items-center" method="post">
-                                @*<div class="quantity">
-                                        <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (!isNaN(qty)) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                        <input type="text" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
-                                        <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                    </div>*@
-                                <a href="@Url.Action("AddtoCart","Shopping", new { id = Model.ProductId})" style="cursor:pointer" class="btn alazea-btn ml-15"><span hidden id="addtocart">@Model.ProductId</span>Add to cart</a>
+                            <form class="cart clearfix d-flex align-items-center">
+                                <div class="quantity">
+                                    <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (qty <= 1) return; else { if (!isNaN(qty)) effect.value--; };  return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                    <input type="text" class="qty-text" id="qty" step="1" min="1" max="10" name="quantity" value="1" disabled>
+                                    <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (qty >=@Model.Stock) overstock(); else { if (!isNaN(qty)) effect.value++; };  return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="hidden" value="@Model.ProductId" name="id" id="proid" />
+                                <input type="button" name="addtocart" value="Add to cart" id="btnsubmit" class="btn alazea-btn ml-15" />
+                                <input type="hidden" value="@((Convert.ToInt32( Model.Price)*0.8).ToString("0"))" id="proprice" />
                             </form>
                             <!-- Wishlist & Compare -->
                             <div class="wishlist-compare d-flex flex-wrap align-items-center">
@@ -316,6 +318,53 @@
                     }
                 });
         })
+
+        //=================加入購物車========================
+        $("#btnsubmit").click(function () {
+            let proid = $(this).parent().find("#proid").val();
+            let qty = $(this).parent().find("#qty").val();
+            let proprice = parseInt($(this).parent().find("#proprice").val());
+            $.get('@Url.Content("~/shopping/SaleAddtoCart")', { "id": proid, "quantity": qty, "price" : proprice },
+                function (data) {
+                    if (data === "add") {
+                        $.bootstrapGrowl("成功加入購物車", {
+                            ele: "body",
+                            type: "success",
+                            offset: { from: "bottom", amount: 50 },
+                            align: "right",
+                            width: "auto",
+                            delay: 3000,
+                            allow_dismiss: true,
+                            stackup_spacing: 10
+                        });
+                        CountCart();
+                    }
+                    else {
+                         window.location.href = '@Url.Content("~/Home/Login")';
+                    }
+                }
+            );
+        })
+        async function CountCart() {
+            let countCart = document.querySelector("#countCart");
+            const response = await fetch('@Url.Content("~/api/CountCart")');
+            const result = await response.text();
+            countCart.innerHTML = `(${result})`;
+        }
+
+        //==================判斷加入購物車數量上限==================
+        function overstock() {
+            $.bootstrapGrowl("已達可加入購物車上限", {
+                ele: "body",
+                type: "warning",
+                offset: { from: "bottom", amount: 50 },
+                align: "right",
+                width: "auto",
+                delay: 3000,
+                allow_dismiss: true,
+                stackup_spacing: 10
+            });
+        }
 
     </script>
 }

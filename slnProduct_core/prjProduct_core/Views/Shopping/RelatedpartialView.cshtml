@@ -1,5 +1,5 @@
-﻿@model IEnumerable<prjProduct_core.ViewModel.CRelatedViewModel>
-
+﻿@*@model IEnumerable<prjProduct_core.ViewModel.CRelatedViewModel>*@
+@model IEnumerable<prjCSCoffee.ViewModel.CShoppingCarDetailsViewModel>
 <div class="container wow fadeInUp" data-wow-delay="100ms">
     <div class="row">
         <div class="col-12">
@@ -19,15 +19,21 @@
                 <div class="single-product-area mb-100">
                     <!-- Product Image -->
                     <div class="product-img">
-                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/img/Home-img/03.jpg" alt=""></a>
-                        <div class="product-meta" >
-                            <a href="@Url.Action("AddtoCart","Shopping", new { id = item.ProductId, quantity=1})" style="cursor:pointer; margin:0 auto;" class="add-to-cart-btn" onclick="return alert('已成功加入購物車')"><span hidden id="addtocart">@item.ProductId</span>加入購物車</a>
+                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductsId"><img src="~/img/Home-img/03.jpg" alt=""></a>
+                        <div class="product-meta">
+                            <a style="cursor:pointer; margin:0 auto;" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                            <input type="hidden" value="@item.ProductsId" id="proid" />
+                            <input type="hidden" value="@item.ProName" id="proname" />
+                            <input type="hidden" value="@item.Price" id="proprice" />
+                            <input type="hidden" value="@item.ProStock" id="prostock" />
+                            <input type="hidden" value="@item.ProPhotoPath" id="proPhotoPath" />
+
                         </div>
                     </div>
                     <!-- Product Info -->
                     <div class="product-info mt-15 text-center">
-                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductId">
-                            <p>@item.CoffeeName</p>
+                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductsId">
+                            <p>@item.ProName</p>
                         </a>
                         <h6>NT$@item.Price</h6>
                     </div>
@@ -36,3 +42,158 @@
         }
     </div>
 </div>
+
+<script>
+    //=================加入購物車========================
+    $(".add-to-cart-btn").click(function () {
+        let proid = $(this).parent().find("#proid").val();
+        let proname = $(this).parent().find("#proname").val();
+        let proprice = $(this).parent().find("#proprice").val();
+        let prostock = $(this).parent().find("#prostock").val();
+        let proPhotoPath = $(this).parent().find("#proPhotoPath").val();         
+        
+        $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": 1, "price" : proprice },
+            function (data) {
+                if (data === "add") {
+                    $.bootstrapGrowl("成功加入購物車", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10
+                    });
+                    CountCart();
+                    let haspro = $(`tbody:contains('${proname}')`).length;
+                    if (haspro != 0) {
+                        let hasname = $(`td:contains('${proname}')`);
+                        let qty = parseInt(hasname.next().find("#txtQty").val()) + 1;
+                        hasname.next().find("#txtQty").val(qty);
+                        let price = hasname.next().next().find("#txtprice").text().trim().substring(3);
+                        let 小計 = ("NT$") + (qty * price);
+                        hasname.next().next().next().find("#txtcount").text(小計);
+                    }
+                    else {
+                        if (proPhotoPath == "") {
+                            Addtremptyimg(proid, proname, proprice, prostock)
+                        }
+                        else {
+                            Addtr(proid, proname, proprice, prostock, proPhotoPath);
+                        }                            
+                    }
+                    計算購物明細();
+
+                }
+                else {
+                        window.location.href = '@Url.Content("~/Home/Login")';
+                }
+            }
+        );
+    })
+
+    async function CountCart() {
+            let countCart = document.querySelector("#countCart");
+            let imgcart = document.querySelector("#cart-count");
+            const response = await fetch('@Url.Content("~/api/CountCart")');
+            const result = await response.text();
+            countCart.innerHTML = result;
+            imgcart.innerHTML = `&nbsp&nbsp${result}`;
+    }
+
+    function Addtremptyimg(proid, proname, proprice, prostock) {
+
+        let content = ` <tr draggable="true" class="ddd" >
+                            <td class="col-md-6">
+                                <img class="picbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">                           
+                                <input type="hidden" value="${proid}" name="productId" id="productId" />
+                                ${proname}
+                            </td>
+                            <td class="col-md-1.2"  style="text-align:center">
+                                <div class="quantity" style="margin:0 auto;">
+                                    <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                    <input type="text" class="qty-text" id="txtQty" step="1" min="1" name="txtQty" value="1" readonly>
+                                    <span class="qty-plus" id="plus" name="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    <input type="hidden" id="stock" name="stock" value="${prostock}" />
+                                </div>
+                            </td>
+                            <td class="col-md-1"  style="text-align:center">
+                                <p id="txtprice">NT$${proprice}</p>
+                            </td>
+                            <td class="col-md-1.8"  style="text-align:center">
+                                <p id="txtcount">NT$${proprice}</p>
+                            </td>
+                            <td class="col-md-2"  style="text-align:center">
+                                <input type="hidden" value="${proid}" name="productId" id="productId" />
+                                <i class="icon_close" id="btndelete"></i>
+                            </td>
+                        </tr>`;
+
+
+        $("tbody").append(content);
+
+    }
+
+    function Addtr(proid, proname, proprice, prostock, proPhotoPath) {
+
+        let content = ` <tr draggable="true" class="ddd" >
+                            <td class="col-md-6">                              
+                                <img class="picbox" src="~/images/${proPhotoPath}">                                
+                                <input type="hidden" value="${proid}" name="productId" id="productId" />
+                                ${proname}
+                            </td>
+                            <td class="col-md-1.2"  style="text-align:center">
+                                <div class="quantity" style="margin:0 auto;">
+                                    <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                    <input type="text" class="qty-text" id="txtQty" step="1" min="1" name="txtQty" value="1" readonly>
+                                    <span class="qty-plus" id="plus" name="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    <input type="hidden" id="stock" name="stock" value="${prostock}" />
+                                </div>
+                            </td>
+                            <td class="col-md-1"  style="text-align:center">
+                                <p id="txtprice">NT$${proprice}</p>
+                            </td>
+                            <td class="col-md-1.8"  style="text-align:center">
+                                <p id="txtcount">NT$${proprice}</p>
+                            </td>
+                            <td class="col-md-2"  style="text-align:center">
+                                <input type="hidden" value="${proid}" name="productId" id="productId" />
+                                <i class="icon_close" id="btndelete"></i>
+                            </td>
+                        </tr>`;
+
+
+        $("tbody").append(content);
+
+    }
+
+    function 計算購物明細() {
+        //計算總金額=======================================================
+        let discount = 0;
+        let subtotal = 0;
+        let fee = 0;
+        let total = 0;
+        $("p").filter("#txtcount").each(function () {
+            subtotal += parseInt($(this).text().trim().substring(3));
+        })
+        //判斷運費===========================================================
+        if (subtotal < 1200) {
+            fee = 100;
+            total = subtotal + fee;
+            $("#labSubtotal").text("NT$ " + subtotal);
+            $("#labDiscount").text("-NT$ " + discount);
+            $("#labFee").text("NT$ " + fee);
+            $("#labTotal").text("NT$ " + total);
+        }
+        else if (subtotal >= 1200) {
+            fee = 0;
+            total = subtotal + fee;
+            $("#labSubtotal").text("NT$ " + subtotal);
+            $("#labDiscount").text("-NT$ " + discount);
+            $("#labFee").text("NT$ " + fee);
+            $("#labTotal").text("NT$ " + total);
+        }
+    }
+
+</script>

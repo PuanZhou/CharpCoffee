@@ -11,6 +11,9 @@
 @section Style
 { 
     <style>
+        .picbox {
+            height: 60px;
+        }
         .size span
         {
             font-size:20px;
@@ -48,7 +51,7 @@
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
         <h2>購物明細確認</h2>
     </div>
 
@@ -82,16 +85,16 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>
+                                <th class="col-md-7">
                                     產品名稱
                                 </th>
-                                <th>
+                                <th class="col-md-1.5" style="text-align:center">
                                     @Html.DisplayNameFor(model => model.count)
                                 </th>
-                                <th>
+                                <th class="col-md-1.5" style="text-align:center">
                                     @Html.DisplayNameFor(model => model.price)
                                 </th>
-                                <th>
+                                <th class="col-md-2" style="text-align:center">
                                     @Html.DisplayNameFor(model => model.小計)
                                 </th>
 
@@ -105,20 +108,49 @@
                                 int price = (int)item.price;
                                 int 小計 = (int)item.小計;
                                 int Discount = @ViewBag.discountmoney;
-                                if (Subtotal >= 1200) { Fee = 0; Total = Subtotal - Discount; }
-                                else if (Subtotal < 1200) { Fee = 100; Total = Subtotal - Discount + Fee; }                               
+                                if ((Subtotal -Discount )>= 1200) { Fee = 0; Total = Subtotal -Discount + Fee; }
+                                else if ((Subtotal - Discount) < 1200) { Fee = 100; Total = Subtotal - Discount + Fee; }
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.productId)
-                                        @item.product.ProductName
+                                    <td class="col-md-7">
+                                        @if (item.mainPhotoPath == null)
+                                        {
+                                            <img class="picbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                                        }
+                                        else
+                                        {
+                                            <img class="picbox" src="~/images/@item.mainPhotoPath">
+                                        }
+                                        @{
+                                            if (price != item.product.Price)
+                                            {
+                                                @item.product.ProductName
+                                                <p id="salepro" style="color:#FF7575;">&lt;促銷商品&gt;</p>
+                                            }
+                                            else
+                                            {
+                                                @item.product.ProductName
+                                            }
+                                        }
+
                                     </td>
-                                    <td>
+                                    <td class="col-md-1.5" style="text-align:center">
                                         @Html.DisplayFor(modelItem => item.count)
                                     </td>
-                                    <td>
-                                        <p id="txtprice">NT$@price</p>
+                                    <td class="col-md-1.5" style="text-align:center">
+                                        @{
+                                            if (price != item.product.Price)
+                                            {
+                                                <p style="text-decoration:line-through;">NT$@(Convert.ToInt32(item.product.Price).ToString("0"))</p>
+                                                <p id="txtprice" style="color:#FF7575;">NT$@price</p>
+                                            }
+                                            else
+                                            {
+                                                <p id="txtprice">NT$@price</p>
+                                            }
+                                        }
+
                                     </td>
-                                    <td>
+                                    <td class="col-md-2" style="text-align:center">
                                         <p id="txtcount">NT$@小計</p>
                                     </td>
                                 </tr>
