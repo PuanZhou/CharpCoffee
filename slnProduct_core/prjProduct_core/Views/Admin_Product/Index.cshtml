@@ -14,13 +14,13 @@
                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
             </svg>
         </span>
-        <span class="input-group-text" id="topbar-addon" style="cursor:pointer" onclick="startButton(event)">
-            <i class="fa-solid fa-microphone"></i>
+        <span class="input-group-text" id="topbar-mic" style="cursor:pointer;width:3em" onclick="startButton(event)" >
+            <i class="fa-solid fa-microphone-slash"></i>
         </span>
         <input type="text" name="txtKeyword" class="form-control" id="topbarInputIconLeft" placeholder="搜尋" aria-label="Search" aria-describedby="topbar-addon">
     </div>
     <div>
-        <label style="margin-left:5em" id="infoBox"></label>
+        <label style="margin-left:5em;color:transparent" id="infoBox">...</label>
     </div>
 </form>
 
@@ -55,10 +55,10 @@
                     @Html.DisplayNameFor(model => model.ProductName)
                 </th>
                 <th class="col-md-0.5" style="text-align:center">
-                    @Html.DisplayNameFor(model => model.Category.CategoriesName)
+                    類別
                 </th>
                 <th class="col-md-1" style="text-align:center">
-                    @Html.DisplayNameFor(model => model.Country.CountryName)
+                    國家
                 </th>
                 <th class="col-md-1" style="text-align:center">
                     @Html.DisplayNameFor(model => model.Price)
@@ -154,7 +154,9 @@
     </table>
 </div>
 @section Scripts{
-    <script>
+    <script> 
+        stockWarning();
+        //==================================================================================================
         let pro = document.querySelector("#product");
 
         pro.classList.add("active");
@@ -192,11 +194,15 @@
             recognition.onstart = function () { // 開始辨識
                 recognizing = true; // 設定為辨識中
                 infoBox.text("辨識中...");  // 顯示訊息為「辨識中」...
+                infoBox.css("color", "var(--bs-body-color)");
+                $("#topbar-mic").html(' <i class="fa-solid fa-microphone"></i>');
             };
 
             recognition.onend = function () { // 辨識完成
                 recognizing = false; // 設定為「非辨識中」
-                infoBox.text(""); ; // 不顯示訊息
+                infoBox.text("..."); // 不顯示訊息
+                infoBox.css("color", "transparent");
+                $("#topbar-mic").html('<i class="fa-solid fa-microphone-slash"></i>');
             };
 
             recognition.onresult = function (event) { // 辨識有任何結果時
@@ -255,7 +261,7 @@
             });
         });
 
-        // 單筆上架 
+        // 單筆上架
         $(".launch").each(function () {
             $(this).click(function () {
                 var id = $(this).attr("value");

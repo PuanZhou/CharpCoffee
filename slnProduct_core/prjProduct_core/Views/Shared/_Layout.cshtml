@@ -302,10 +302,15 @@
         .single-product-area:hover .pd-img .product-meta {
             visibility: visible;
             opacity: 1;
+        }
+
         .fa-bell {
             color: #73BF00;
         }
 
+        #navbarPhone{
+            margin-right:30px;
+        }
     </style>
 </head>
 <body>
@@ -329,9 +334,10 @@
                             <!-- Top Header Content -->
                             <div class="top-header-meta">
                                 @*<a href="#" data-toggle="tooltip" data-placement="bottom" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: infodeercreative@gmail.com</span></a>
-                                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
+        <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
                                 <a href="#" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: cscoffee@msit141.com.tw</span></a>
-                                <a href="#" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Tel: 02-2222-2222</span></a>
+                                <a href="#" title="+1 234 122 122" id="navbarPhone"><i class="fa fa-phone" aria-hidden="true"></i> <span>Tel: 02-2222-2222</span></a>
+                                <a asp-controller="Admin_Dashboard" asp-action="Signin" title="Content Management System"><i class="fa-solid fa-cube"></i> <span>管理員後台系統</span></a>
                             </div>
 
                             <!-- Top Header Content -->
