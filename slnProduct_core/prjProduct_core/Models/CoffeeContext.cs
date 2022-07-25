@@ -43,15 +43,16 @@ namespace prjProduct_core.Models
         public virtual DbSet<Roasting> Roastings { get; set; }
         public virtual DbSet<ShoppingCar> ShoppingCars { get; set; }
         public virtual DbSet<ShoppingCarDetail> ShoppingCarDetails { get; set; }
+        public virtual DbSet<Survey> Surveys { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
-            }
-        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -371,6 +372,9 @@ namespace prjProduct_core.Models
 
             modelBuilder.Entity<Order>(entity =>
             {
+                entity.HasIndex(e => e.TradeNo, "IX_TradeNo")
+                    .IsUnique();
+
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
                 entity.Property(e => e.CouponId).HasColumnName("CouponID");
@@ -595,6 +599,24 @@ namespace prjProduct_core.Models
                     .WithMany(p => p.ShoppingCarDetails)
                     .HasForeignKey(d => d.ProductsId)
                     .HasConstraintName("FK_ShoppingCarDetail_Products");
+            });
+
+            modelBuilder.Entity<Survey>(entity =>
+            {
+                entity.ToTable("Survey");
+
+                entity.Property(e => e.SurveyId).HasColumnName("SurveyID");
+
+                entity.Property(e => e.TradeNo)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.TradeNoNavigation)
+                    .WithMany(p => p.Surveys)
+                    .HasPrincipalKey(p => p.TradeNo)
+                    .HasForeignKey(d => d.TradeNo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Survey_Orders");
             });
 
             OnModelCreatingPartial(modelBuilder);

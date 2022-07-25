@@ -11,6 +11,7 @@ namespace prjProduct_core.Models
         {
             Comments = new HashSet<Comment>();
             OrderDetails = new HashSet<OrderDetail>();
+            Surveys = new HashSet<Survey>();
         }
 
         public int OrderId { get; set; }
@@ -24,6 +25,7 @@ namespace prjProduct_core.Models
         public int? CouponId { get; set; }
         public decimal? Fee { get; set; }
         public string TradeNo { get; set; }
+        public bool SurveyCoupon { get; set; }
 
         public virtual Coupon Coupon { get; set; }
         public virtual Member Member { get; set; }
@@ -31,5 +33,6 @@ namespace prjProduct_core.Models
         public virtual Payment Payment { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<Survey> Surveys { get; set; }
     }
 }
