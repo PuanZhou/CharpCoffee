@@ -159,5 +159,23 @@ namespace prjCSCoffee.Controllers
             int[] result = { acCount, acChridrenCount };
             return Json(result);
         }
+
+        //連結指定商品
+        public IActionResult prodNamelike(string PdtName)
+        {
+            var result = db.Products.Any(m => m.ProductName.Replace(" ", "").Trim().Contains(PdtName) || m.ProductName.Trim().Contains(PdtName));
+            if (result == false)
+            {
+                return Content("false", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                string prod = db.Products.FirstOrDefault(m => m.ProductName.Replace(" ", "").Trim().Contains(PdtName) || m.ProductName.Trim().Contains(PdtName)).ProductId.ToString();
+                return Content(prod, "text/plain", System.Text.Encoding.UTF8);
+            }
+
+        }
+
+
     }
 }
