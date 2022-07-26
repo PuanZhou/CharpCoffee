@@ -160,10 +160,10 @@
                     <!-- Tabs -->
                     <ul class="nav nav-tabs" role="tablist" id="product-details-tab">
                         <li class="nav-item">
-                            <a href="#description" class="nav-link active" data-toggle="tab" role="tab">Description</a>
+                            <a href="#description" class="nav-link active" data-toggle="tab" role="tab">咖啡品質</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#addi-info" class="nav-link" data-toggle="tab" role="tab">Additional Information</a>
+                            <a href="#addi-info" class="nav-link" data-toggle="tab" role="tab">有關咖啡豆</a>
                         </li>
                         <li class="nav-item">
                             <a href="#reviews" class="nav-link" data-toggle="tab" role="tab">評價&回覆 <span class="text-muted"></span></a>
@@ -174,26 +174,18 @@
                         <div role="tabpanel" class="tab-pane fade show active" id="description">
                             <div class="description_area">
                                 <p></p>
-                                <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. In scelerisque augue at the moment mattis. Proin vitae arcu sit amet justo sollicitudin tincidunt sit amet ut velit.Proin placerat vel augue eget euismod. Phasellus cursus orci eu tellus vestibulum, vestibulum urna accumsan. Vestibulum ut ullamcorper sapien. Pellentesque molestie, est ac vestibulum eleifend, lorem ipsum mollis ipsum.</p>
+                                <p>
+                                    越來越多人選擇自己在家裡沖咖啡，不只為興趣，也為了更好的咖啡品質。如果你已經，或者正打算要這麼做，那麼第一件你必須要知道的事情就是：好咖啡，來自高品質的咖啡豆。
+                                    這道理就跟大部份的食物一樣。一條不新鮮的魚，用再怎樣華麗的方式料理，也一定不怎麼好吃，但一條新鮮的魚，加點薑清蒸就非常好吃。咖啡也是一樣，品質不好的咖啡豆，再好的沖泡技巧或器具也救不回來，註定只能煮出不好喝的咖啡。
+                                    那麼，什麼是高品質的咖啡豆呢？回想一下你過去曾喝過覺得好喝的咖啡，大概都有兩個特徵，第一是香氣迷人，第二是味道好。不同品種咖啡豆的味道都不一樣，個人喜好當然也見仁見智，但所謂高品質的咖啡豆，就是要能盡可能地保留咖啡的香氣和味道，在最後沖泡時完整散發出來。
+                                </p>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="addi-info">
                             <div class="additional_info_area">
                                 <p>
-                                    What should I do if I receive a damaged parcel?
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit impedit similique qui, itaque delectus labore.</span>
-                                </p>
-                                <p>
-                                    I have received my order but the wrong item was delivered to me.
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis quam voluptatum beatae harum tempore, ab?</span>
-                                </p>
-                                <p>
-                                    Product Receipt and Acceptance Confirmation Process
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum ducimus, temporibus soluta impedit minus rerum?</span>
-                                </p>
-                                <p>
-                                    How do I cancel my order?
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum eius eum, minima!</span>
+                                    咖啡豆是最能完整保存咖啡風味的形式，並確保咖啡的新鮮與原味。有些廠商會在同一包咖啡粉裡，摻雜不同來源的咖啡，消費者很難確保咖啡的來源。
+                                    雖然磨豆也是一大門學問，但相信我們，一旦開始自己磨豆之後，你就再也回不去咖啡粉的日子了。嘗試各種粉末粗細沖煮後帶來的不同風味，絕對是自沖咖啡的一大樂趣。
                                 </p>
                             </div>
                         </div>
@@ -272,10 +264,12 @@
                 "OrderId": 1,"ProductId":pId, "MemberId":1, "CommentParentId":0,
                 "CommentDescription": comStr, "Star": starNum
             }, function (data) {
-                $(".submit_a_review_area").hide();
-                $("#btnComment").hide();
                 alert(data);
-                $("#divComment").load('@Url.Content("~/home/_CommentBoard")',{ "productId": pId });
+                if (data != "您被禁言" && data != "尚未登入") {
+                    $(".submit_a_review_area").hide();
+                    $("#btnComment").hide();
+                    $("#divComment").load('@Url.Content("~/home/_CommentBoard")',{ "productId": pId });
+                }
             })
         })
         //=====================計算評論與回覆的數量並顯示=====================

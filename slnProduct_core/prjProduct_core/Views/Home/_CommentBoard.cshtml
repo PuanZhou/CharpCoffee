@@ -83,10 +83,15 @@
         let prId = @(Model.Take(1).Select(x => x.ProductId).FirstOrDefault());
         let txtReply = $(`#t_${cpId}`).val();
         $.post('@Url.Content("~/api/AddComment")', {
-            "OrderId": 1, "ProductId": prId, "MemberId": 1, "CommentParentId": cpId,
+            "OrderId": @(Model.First().OrderId), "ProductId": prId, "MemberId": 1, "CommentParentId": cpId,
             "CommentDescription": txtReply, "Star": 0
-            }, function () {
-            $("#divComment").load('@Url.Content("~/home/_CommentBoard")', { "productId": prId });
+        }, function (data) {
+                if (data != "您被禁言" && data != "尚未登入") {
+                    $(".submit_a_review_area").hide();
+                    $("#btnComment").hide();
+                    $("#divComment").load('@Url.Content("~/home/_CommentBoard")', { "productId": prId });
+                }
+                else { alert(data);}
             })
         })
     //=====================顯示/隱藏回覆的輸入欄等=====================

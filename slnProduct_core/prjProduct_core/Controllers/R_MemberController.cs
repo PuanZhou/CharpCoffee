@@ -100,6 +100,7 @@ namespace prjProduct_core.Controllers
 
             return db.Orders.Select(x => x.OrderId).OrderBy(x=>x).LastOrDefault();
         }
+        //https://localhost:44370/api/R_Member/api/PostOrderDetail
         [Route("api/PostOrderDetail")]
         [HttpPost]
         public async Task<ActionResult<string>> PostOrderDetail(CAppCartVM c)
