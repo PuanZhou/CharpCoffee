@@ -3794,6 +3794,14 @@ table > :not(:first-child) {
     border-color: #9097a3;
 }
 
+.theadcss {
+    background-color: #F2F4F6;    
+    border-color:inherit;
+    border-style:solid;
+    border-width:0;    
+    border-radius:0.5rem !important;
+}
+
 .table-dark {
     --bs-table-bg: #1F2937;
     --bs-table-striped-bg: #2a3441;

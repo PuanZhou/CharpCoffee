@@ -61,14 +61,16 @@ namespace prjProduct_core.Controllers
                     }
                     else
                     {
-                        if (vModel.txtKeyword == "上架")
-                            datas = list.Where(p => p.TakeDown == false); // 關鍵字輸入上架回傳上架商品
-                        else if (vModel.txtKeyword == "下架")
-                            datas = list.Where(p => p.TakeDown == true); // 關鍵字輸入下架回傳下架商品
+                        if (vModel.txtKeyword == "上架") // 關鍵字輸入上架回傳上架商品
+                            datas = list.Where(p => p.TakeDown == false); 
+                        else if (vModel.txtKeyword == "下架") // 關鍵字輸入下架回傳下架商品
+                            datas = list.Where(p => p.TakeDown == true); 
                         else if (vModel.txtKeyword.StartsWith("#類別 ")) // 關鍵字輸入#類別 (半形空格)後打類別名稱，回傳搜尋結果
                             datas = list.Where(p => p.Category.CategoriesName.Contains(vModel.txtKeyword.Substring(4)));
                         else if (vModel.txtKeyword.StartsWith("#國家 ")) // 關鍵字輸入#國家 (半形空格)後打類別名稱，回傳搜尋結果
                             datas = list.Where(p => p.Country.CountryName.Contains(vModel.txtKeyword.Substring(4)));
+                        else if (vModel.txtKeyword.StartsWith("#庫存不足")) // 關鍵字輸入#庫存不足，回傳庫存數 < 10的產品
+                            datas = list.Where(p => p.Stock < 10);
                         else
                         {
                             datas = list.Where(p => p.ProductName.Contains(vModel.txtKeyword));  // 依輸入關鍵字查詢產品名                                               
