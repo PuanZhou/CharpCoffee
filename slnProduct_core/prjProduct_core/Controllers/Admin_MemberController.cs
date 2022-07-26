@@ -251,5 +251,16 @@ namespace prjProduct_core.Controllers
 
             return Json(data);
         }
+
+        public IActionResult Newspaper()
+        {
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Admin_Dashboard");
+        }
     }
+
+    
 }

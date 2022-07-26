@@ -92,7 +92,7 @@ namespace prjProduct_core.Controllers
         }
 
         public IActionResult Create()
-        {
+        {   //最新會員id再+1
             var cartID = db.Members.Select(m => m.MemberId).Max() + 1;
             ViewBag.CARTID = cartID;
             return View();
@@ -101,7 +101,7 @@ namespace prjProduct_core.Controllers
         public IActionResult Create(CMemberViewModel newmem)
         {
             if (ModelState.IsValid)
-            {
+            {  //新增會員
                 Member mem = new Member()
                 {
                     MemberName = newmem.MemberName,
@@ -113,8 +113,14 @@ namespace prjProduct_core.Controllers
                     ShoppingCarId = newmem.ShoppingCarId,
                     Newspaper = newmem.Newspaper
                 };
-
                 db.Members.Add(mem);
+                //新增該會員購物車
+                ShoppingCar sc = new ShoppingCar() { MemberId = newmem.ShoppingCarId };
+                db.ShoppingCars.Add(sc);
+                db.SaveChanges();
+                //發送周年慶優惠券
+                CouponDetail cd = new CouponDetail() { MemberId=newmem.ShoppingCarId, CouponId=1 };
+                db.CouponDetails.Add(cd);
                 db.SaveChanges();
 
                 return RedirectToAction("Login");
