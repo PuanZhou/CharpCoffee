@@ -196,6 +196,7 @@
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Price" id="proprice" />
                                                 }
+                                                
                                             </div>
                                             </div>
                                             <!-- Product Info -->
@@ -203,7 +204,7 @@
                                                 <a>
                                                     @Html.ActionLink(@pd.ProductName, "detail", new { id = pd.ProductId }, new { })
                                                 </a>
-                                                <h6 id="price">$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
+                                                <h6 id="price">NT$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -235,6 +236,7 @@
             padding: 12px 15px 12px 0;
             border-radius: 10px;
             width: 150px;
+            color:#707070
         }
         .coffc {
             margin-left: 5px;
@@ -484,6 +486,7 @@
 
 @section Scripts{
     <script>
+        
         //============排序============================
         let flag = true;
         function btnclick() {
@@ -561,7 +564,7 @@
                                             <a>
                                                 @Html.ActionLink(pd.ProductName, "detail", new { id = pd.ProductId }, new { })
                                             </a>
-                                            <h6 id="price">$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
+                                            <h6 id="price">NT$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -628,7 +631,7 @@
                                             <a>
                                                 @Html.ActionLink(pd.ProductName, "detail", new { id = pd.ProductId }, new { })
                                             </a>
-                                            <h6 id="price">$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
+                                            <h6 id="price">NT$@(Convert.ToInt32( pd.Price).ToString("0"))</h6>
                                         </div>
                                     </div>
                                 </div>

@@ -1,8 +1,9 @@
 ﻿@model prjProduct_core.ViewModel.CProductViewModel
+
 <style>
-    .picbox{
-        width:400px;
-        height:400px;
+    .picbox {
+        width: 400px;
+        height: 400px;
     }
 </style>
 <!-- ##### Breadcrumb Area Start ##### -->
@@ -110,6 +111,7 @@
                         <div class="short_overview">
                             <p>@Model.Description</p>
                         </div>
+                        <span>庫存量:   @Model.Stock</span>
                         <div class="cart--area d-flex flex-wrap align-items-center">
                             <!-- Add to Cart Form -->
                             <form class="cart clearfix d-flex align-items-center">
@@ -128,6 +130,7 @@
                                 <a style="cursor:pointer" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i><span hidden id="comid">@Model.ProductId</span></a>
                             </div>
                         </div>
+
                         @{
                             if (Model.CategoryId == 1)
                             {
@@ -137,6 +140,22 @@
                                     <p><span>烘培程度:</span>@Model.Coffee.Roasting.RoastingName</p>
                                     <p><span>處理方法:</span> <span>@Model.Coffee.Process.ProcessName</span></p>
                                     <p><span>包裝方式:</span> <span>@Model.Coffee.Package.PackageName</span></p>
+                                    <div class="ratings">
+                                        產品評價:
+                                        @{
+
+                                            double star = Math.Round((double)Model.Star, 1);
+                                            <span>@star</span>
+                                            if (star > 0)
+                                            {
+                                                for (int i = 0; i < Math.Floor(star); i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            }
+
+                                        }
+                                    </div>
                                 </div>
                             }
                             else
@@ -144,6 +163,24 @@
                                 <div class="products--meta">
                                     <p><span>產地:</span> <span>@Model.Country.CountryName</span></p>
                                     <p><span>產品種類:</span> <span>@Model.Category.CategoriesName</span></p>
+
+                                    <div class="ratings">
+                                        產品評價:
+
+                                        @{
+
+                                            double star = Math.Round((double)Model.Star, 1);
+                                            <span>@star</span>
+                                            if (star > 0)
+                                            {
+                                                for (int i = 0; i < Math.Floor(star); i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            }
+
+                                        }
+                                    </div>
                                 </div>
                             }
                         }
@@ -253,7 +290,7 @@
 <!-- ##### Related Product Area Start ##### -->
 <div class="related-products-area">
 </div>
-<input type="hidden" id="prostock" value="@Model.Stock"/>
+<input type="hidden" id="prostock" value="@Model.Stock" />
 
 @section Scripts{
     <script>
@@ -333,7 +370,7 @@
                             allow_dismiss: true,
                             stackup_spacing: 10,
                         });
-                    
+
                     } else {
                         window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
                     }
