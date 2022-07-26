@@ -167,26 +167,7 @@ namespace prjProduct_core.Controllers
             }
             return RedirectToAction("index");
         }
-
-        public IActionResult example()
-        {
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
-            {
-                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.OrderOk)
-                {
-
-                    return View();
-                }
-
-                return RedirectToAction("Index", "Admin_Dashboard");
-            }
-
-            Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
-        }
-
+          
 
     }
 }

@@ -440,7 +440,7 @@
         <!-- ##### Right-Banner ##### -->
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
             <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /> <span class="badge badge-light" id="compare-count"></span></button>
-            <button id="cart" type="button" class="btn btn-light" title="購物車"><img src="~/img/Icon/carts.png" /><span class="badge badge-light" id="cart-count"></span></button>
+            <button id="cart" type="button" class="btn btn-light" title="購物車"><img src="~/img/Icon/carts.png" /> <span class="badge badge-light" id="cart-count"></span></button>
             <button type="button" class="btn btn-light"><i class="fa-solid fa-bell"></i></button>
         </div>
         <!-- ##### AiBot ##### -->
@@ -523,11 +523,10 @@
         //===================購物車物品數量計算=====================
         async function CountCart() {
             let countCart = document.querySelector("#countCart");
-            let imgcart = document.querySelector("#cart-count");
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
             countCart.innerHTML = result;
-            imgcart.innerHTML = `&nbsp&nbsp${result}`;
+            $("#cart-count").html(`${result}`);
         }
         CountCart();
 

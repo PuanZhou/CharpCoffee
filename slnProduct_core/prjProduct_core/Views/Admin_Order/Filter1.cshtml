@@ -3,34 +3,34 @@
 <table class="table-hover">
     <thead>
         <tr>
-            <th>
-                序號
+            <th class="col-md-0.5">
+                序
             </th>
-            <th>
+            <th class="col-md-1.5">
                 @Html.DisplayNameFor(model => model.TradeNo)
             </th>
-            <th>
+            <th class="col-md-1" style="text-align:center">
                 @Html.DisplayNameFor(model => model.MemberId)
             </th>
-            <th>
+            <th class="col-md-2" style="text-align:center">
                 訂單日期
             </th>
-            <th>
+            <th class="col-md-1" style="text-align:center">
                 @Html.DisplayNameFor(model => model.PaymentId)
             </th>
-            <th>
+            <th class="col-md-1" style="text-align:center">
                 @Html.DisplayNameFor(model => model.OrderReceiver)
             </th>
-            <th>
+            <th class="col-md-1" style="text-align:center">
                 @Html.DisplayNameFor(model => model.OrderPhone)
             </th>
-            <th>
+            <th class="col-md-2" style="text-align:center">
                 @Html.DisplayNameFor(model => model.OrderAddress)
             </th>
-            <th>
+            <th class="col-md-1" style="text-align:center">
                 訂單明細
             </th>
-            <th>
+            <th class="col-md-1" style="text-align:center">
                 @Html.DisplayNameFor(model => model.OrderStateId)
             </th>
         </tr>
@@ -39,33 +39,33 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td class="col-md-0.5">
                     @Html.DisplayFor(modelItem => item.OrderId)
                     <input type="hidden" id="idorderid" value="@item.OrderId" />
                 </td>
-                <td>
+                <td class="col-md-1.5">
                     @Html.DisplayFor(modelItem => item.TradeNo)
                 </td>
-                <td>
+                <td class="col-md-1" style="text-align:center">
                     @Html.DisplayFor(modelItem => item.MemberId)
                 </td>
-                <td>
+                <td class="col-md-2" style="text-align:center">
                     @item.OrderDate.ToString("D")
                 </td>
-                <td>
+                <td class="col-md-1" style="text-align:center">
                     @item.Payment.Payment1
                 </td>
-                <td>
+                <td class="col-md-1" style="text-align:center">
                     @Html.DisplayFor(modelItem => item.OrderReceiver)
                 </td>
-                <td>
+                <td class="col-md-1" style="text-align:center">
                     @Html.DisplayFor(modelItem => item.OrderPhone)
                 </td>
-                <td>
+                <td class="col-md-2" style="text-align:center">
                     @Html.DisplayFor(modelItem => item.OrderAddress)
                 </td>
-                <td>
-                    <button type="button" id="btndetail" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <td class="col-md-1" style="text-align:center">
+                    <button type="button" id="btndetail" class="btn btn-primary orderdetail" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         訂單明細
                     </button>
 
@@ -106,7 +106,7 @@
                     </div>
 
                 </td>
-                <td>
+                <td class="col-md-1" style="text-align:center">
                     <div class="dropdown">
                         <input type="hidden" value=" @item.OrderState.OrderStateId" id="stateid" />
                         <button class="btn btn-secondary btnstate dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

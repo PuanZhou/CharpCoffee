@@ -333,7 +333,7 @@
                             allow_dismiss: true,
                             stackup_spacing: 10,
                         });
-                    
+
                     } else {
                         window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
                     }
@@ -370,8 +370,11 @@
             let countCart = document.querySelector("#countCart");
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
-            countCart.innerHTML = `(${result})`;
+            countCart.innerHTML = result;
+            $("#cart-count").html(`${result}`);
         }
+
+
 
         //==================判斷加入購物車數量上限==================
         function overstock() {

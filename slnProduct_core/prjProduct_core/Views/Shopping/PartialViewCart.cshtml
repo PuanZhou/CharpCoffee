@@ -1,0 +1,128 @@
+﻿@model IEnumerable<prjCSCoffee.Models.CShoppingCartItem>
+
+
+@{
+    ViewData["Title"] = "ShoppingCar";
+    int count = 0;
+    int Fee = 0;
+    int Subtotal = 0;
+    int Total = 0;
+
+}
+
+@section Style
+{
+    <style>
+        .picbox {
+            height: 60px;
+        }
+
+        .size span {
+            font-size: 20px;
+        }
+
+        .alert p {
+            margin: 0;
+            font-size: 20px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .alert img {
+            padding-bottom: 8px;
+            padding-right: 8px;
+        }
+
+        .drop {
+            position: fixed;
+            bottom: 10px;
+            left: 2rem;
+            z-index: 999;
+            width: 50px;
+            height: 50px;
+        }
+
+            .drop img {
+                height: 45px;
+            }
+
+            .drop:hover img {
+                /*border:solid 2px brown;*/
+                height: 55px;
+            }
+    </style>
+}
+
+
+@{
+    foreach (var item in Model)
+    {
+        count++;
+        Subtotal += (int)item.小計;
+        int price = (int)item.price;
+        int 小計 = (int)item.小計;
+        if (Subtotal >= 1200) { Fee = 0; Total = Subtotal; }
+        else if (Subtotal < 1200) { Fee = 100; Total = Subtotal + Fee; }
+
+        <tr draggable="true" id="@item.ShoppingCarDetialsId" class="droptr" ondragstart="dragstart(event)">
+            <td class="col-md-6">
+                @if (item.mainPhotoPath == null)
+                {
+                    <img class="picbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                }
+                else
+                {
+                    <img class="picbox" src="~/images/@item.mainPhotoPath">
+                }
+
+                @{
+                    if (price != item.product.Price)
+                    {
+                        <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                        @*@item.productId*@
+                        @item.product.ProductName
+                        <p id="salepro" style="color:#FF7575;">&lt;促銷商品&gt;</p>
+                    }
+                    else
+                    {
+                        <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                        @*@item.productId*@
+                        @item.product.ProductName
+                    }
+                }
+            </td>
+            <td class="col-md-1.2" style="text-align:center">
+                <div class="quantity" style="margin:0 auto;">
+                    <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                    <input type="text" class="qty-text" id="txtQty" step="1" min="1" name="txtQty" value="@item.count" readonly>
+                    <span class="qty-plus" id="plus" name="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                    <input type="hidden" id="stock" name="stock" value="@item.stock" />
+                </div>
+            </td>
+            <td class="col-md-1" style="text-align:center">
+                @{
+                    if (price != item.product.Price)
+                    {
+                        <p style="text-decoration:line-through;">NT$@(Convert.ToInt32(item.product.Price).ToString("0"))</p>
+                        <p id="txtprice" style="color:#FF7575;">NT$@price</p>
+                    }
+                    else
+                    {
+                        <p id="txtprice">NT$@price</p>
+                    }
+                }
+
+            </td>
+            <td class="col-md-1.8" style="text-align:center">
+                <p id="txtcount">NT$@小計</p>
+            </td>
+            <td class="col-md-2" style="text-align:center">
+                <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                <i class="icon_close" id="btndelete"></i>
+            </td>
+        </tr>
+    }
+}
+
+
+
