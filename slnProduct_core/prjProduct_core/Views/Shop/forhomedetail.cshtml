@@ -137,6 +137,22 @@
                                     <p><span>烘培程度:</span>@Model.Coffee.Roasting.RoastingName</p>
                                     <p><span>處理方法:</span> <span>@Model.Coffee.Process.ProcessName</span></p>
                                     <p><span>包裝方式:</span> <span>@Model.Coffee.Package.PackageName</span></p>
+                                    <div class="ratings">
+                                        產品評價:
+                                        @{
+
+                                            double star = Math.Round((double)Model.Star, 1);
+                                            <span>@star</span>
+                                            if (star > 0)
+                                            {
+                                                for (int i = 0; i < Math.Floor(star); i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            }
+
+                                        }
+                                    </div>
                                 </div>
                             }
                             else
@@ -144,6 +160,22 @@
                                 <div class="products--meta">
                                     <p><span>產地:</span> <span>@Model.Country.CountryName</span></p>
                                     <p><span>產品種類:</span> <span>@Model.Category.CategoriesName</span></p>
+                                    <div class="ratings">
+                                        產品評價:
+                                        @{
+
+                                            double star = Math.Round((double)Model.Star, 1);
+                                            <span>@star</span>
+                                            if (star > 0)
+                                            {
+                                                for (int i = 0; i < Math.Floor(star); i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            }
+
+                                        }
+                                    </div>
                                 </div>
                             }
                         }

@@ -149,7 +149,9 @@ namespace prjProduct_core.Controllers
         }
         public IActionResult forhomedetail(int? id)
         {
-
+            var q1 = db.Products.Find(id);
+            q1.ClickCount = q1.ClickCount + 1;
+            db.SaveChanges();
             var q = db.Products.Include(p => p.Coffee).ThenInclude(p => p.Roasting)
                 .Include(p => p.Coffee).ThenInclude(p => p.Process)
                 .Include(p => p.Coffee).ThenInclude(p => p.Package)
