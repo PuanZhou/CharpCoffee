@@ -15,7 +15,7 @@ namespace prjProduct_core.Controllers
     public class ShopController : Controller
     {
 
-        private readonly CoffeeContext db;
+        public readonly CoffeeContext db;
         public ShopController(CoffeeContext context)
         {
             db = context;
@@ -117,11 +117,14 @@ namespace prjProduct_core.Controllers
 
         public IActionResult detail(int? id)
         {
-
+            var q1 = db.Products.Find(id);
+            q1.ClickCount = q1.ClickCount + 1;
+            db.SaveChanges();
             var q = db.Products.Include(p => p.Coffee).ThenInclude(p => p.Roasting)
                 .Include(p => p.Coffee).ThenInclude(p => p.Process)
                 .Include(p => p.Coffee).ThenInclude(p => p.Package)
                 .Include(p => p.Photos)
+                .Include(p=>p.Comments)
                 .Where(p => p.ProductId == id).Select(p => new CProductViewModel()
                 {
                     ProductId = p.ProductId,
@@ -130,15 +133,19 @@ namespace prjProduct_core.Controllers
                     Category = p.Category,
                     Coffee = p.Coffee,
                     Country = p.Country,
+                    ClickCount=p.ClickCount+1,
                     Price = p.Price,
                     Description = p.Description,
                     Stock = p.Stock,
-                    TakeDown = p.TakeDown,
-                    Star = p.Star,
+                    TakeDown = p.TakeDown,                
+                    Star = p.Comments.ToList().Count==0?0:p.Comments.Sum(c=>c.Star) / p.Comments.Count,
                     MainPhotoPath = p.MainPhotoPath,
                     Photos=p.Photos.Select(p=>p.ImagePath).ToList()
                 }).ToList();
             return View(q[0]);
+
+            
+
         }
         public IActionResult forhomedetail(int? id)
         {

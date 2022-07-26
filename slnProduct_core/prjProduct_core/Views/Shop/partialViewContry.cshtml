@@ -91,7 +91,7 @@
                     <a asp-action="detail" asp-route-id="@pd.ProductId">
                         @pd.CoffeeName
                     </a>
-                    <h6>$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
+                    <h6>NT$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
                 </div>
             </div>
         </div>
@@ -180,7 +180,7 @@
                                             <a>
                                                 @Html.ActionLink(pd.Product.ProductName, "detail", new { id = pd.ProductId }, new { })
                                             </a>
-                                            <h6 id="price">$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
+                                            <h6 id="price">NT$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -247,7 +247,7 @@
                                             <a>
                                                 @Html.ActionLink(pd.Product.ProductName, "detail", new { id = pd.ProductId }, new { })
                                             </a>
-                                            <h6 id="price">$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
+                                            <h6 id="price">NT$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
                                         </div>
                                     </div>
                                 </div>
