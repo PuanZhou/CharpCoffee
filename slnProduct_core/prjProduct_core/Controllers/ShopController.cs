@@ -165,10 +165,11 @@ namespace prjProduct_core.Controllers
                     Coffee = p.Coffee,
                     Country = p.Country,
                     Price = p.Price,
+
                     Description = p.Description,
                     Stock = p.Stock,
                     TakeDown = p.TakeDown,
-                    Star = p.Star,
+                    Star = p.Comments.ToList().Count == 0 ? 0 : p.Comments.Sum(c => c.Star) / p.Comments.Count,
                     MainPhotoPath = p.MainPhotoPath,
                     Photos = p.Photos.Select(p => p.ImagePath).ToList()
                 }).ToList();
