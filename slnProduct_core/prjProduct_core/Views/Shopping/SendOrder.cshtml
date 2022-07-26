@@ -1,0 +1,45 @@
+﻿
+    <style>
+        .div1 {
+            height:1000px;
+            width:800px;
+        }
+       
+    </style>
+
+
+
+
+<div>    
+    @*<img src="~/img/Home-img/01.jpg" class="div1"/>*@
+    <h1>訂單生成中...</h1>
+    <input type="hidden" name="MerchantTradeNo" value="@ViewBag.tradeNo" />
+</div>
+
+
+@section Scripts
+{
+    <script>
+
+
+        @*function loadurl() {
+            setTimeout(()=> {
+            window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
+            }, 2000)
+        }
+
+        loadurl();*@
+
+    function loadurl() {
+           
+            window.location.href = '@Url.Content("~/shop/index")';
+          
+        }
+
+        loadurl();
+
+    </script>
+   
+
+
+}

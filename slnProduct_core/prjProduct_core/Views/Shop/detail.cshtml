@@ -406,8 +406,11 @@
             let countCart = document.querySelector("#countCart");
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
-            countCart.innerHTML = `(${result})`;
+            countCart.innerHTML = result;
+            $("#cart-count").html(`${result}`);
         }
+
+
 
         //==================判斷加入購物車數量上限==================
         function overstock() {

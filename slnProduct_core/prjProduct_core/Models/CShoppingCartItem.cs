@@ -26,6 +26,7 @@ namespace prjCSCoffee.Models
         public int stock { get; set; }
 
         public string mainPhotoPath { get; set; }
+        public int ShoppingCarDetialsId { get; set; }
         public Product product { get; set; }
 
 

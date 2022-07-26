@@ -84,7 +84,7 @@
                         <div class="progress-bar" role="progressbar" style="width: 34%; font-size: 15px; background-color: #BEBEBE " aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">最後確認</div>
                     </div>
 
-                    <div class="drop" id="dropZone">
+                    <div class="drop" id="dropZone" ondrop="drop(event)" ondragover="drag(event)" >
                         <img src="~/img/Icon/trash-can.png" />
                     </div>
 
@@ -106,7 +106,7 @@
                                 <th class="col-md-2" style="text-align:center"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="detailcart">
                             @{
                                 foreach (var item in Model)
                                 {
@@ -117,7 +117,7 @@
                                     if (Subtotal >= 1200) { Fee = 0; Total = Subtotal; }
                                     else if (Subtotal < 1200) { Fee = 100; Total = Subtotal + Fee; }
 
-                                    <tr draggable="true" class="ddd" >
+                                    <tr draggable="true" id="@item.ShoppingCarDetialsId" class="droptr" ondragstart="dragstart(event)">
                                         <td class="col-md-6">
                                             @if (item.mainPhotoPath == null)
                                             {
@@ -127,7 +127,7 @@
                                             {
                                                 <img class="picbox" src="~/images/@item.mainPhotoPath">
                                             }
-                                           
+
                                             @{
                                             if (price != item.product.Price)
                                             {
@@ -144,7 +144,7 @@
                                             }
                                             }
                                         </td>
-                                        <td class="col-md-1.2"  style="text-align:center">
+                                        <td class="col-md-1.2" style="text-align:center">
                                             <div class="quantity" style="margin:0 auto;">
                                                 <span class="qty-minus" id="reduce" name="reduce"><i class="fa fa-minus" aria-hidden="true"></i></span>
                                                 <input type="text" class="qty-text" id="txtQty" step="1" min="1" name="txtQty" value="@item.count" readonly>
@@ -152,7 +152,7 @@
                                                 <input type="hidden" id="stock" name="stock" value="@item.stock" />
                                             </div>
                                         </td>
-                                        <td class="col-md-1"  style="text-align:center">
+                                        <td class="col-md-1" style="text-align:center">
                                             @{
                                                 if (price != item.product.Price)
                                                 {
@@ -166,10 +166,10 @@
                                             }
 
                                         </td>
-                                        <td class="col-md-1.8"  style="text-align:center">
+                                        <td class="col-md-1.8" style="text-align:center">
                                             <p id="txtcount">NT$@小計</p>
                                         </td>
-                                        <td class="col-md-2"  style="text-align:center">
+                                        <td class="col-md-2" style="text-align:center">
                                             <input type="hidden" value="@item.productId" name="productId" id="productId" />
                                             <i class="icon_close" id="btndelete"></i>
                                         </td>
@@ -178,6 +178,7 @@
                             }
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
         </div>
@@ -260,20 +261,22 @@
 @section Scripts
 { 
     <script>
+        $("#detailcart").load('@Url.Content("~/shopping/PartialViewCart")');
+
         //購物車數量計算(layout上的圖示)==========================
         async function CountCart() {
             let countCart = document.querySelector("#countCart");
-            let imgcart = document.querySelector("#cart-count");
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
             countCart.innerHTML = result;
-            imgcart.innerHTML = `&nbsp&nbsp${result}`;
+            $("#cart-count").html(`${result}`);
         }
 
         //刪除購物車=============================================
         let proid = 0;  //記要刪除ㄉ產品ID
         var deltr;
         let proprice;
+        let detailid = 0;
         $("tbody").on("click", "#btndelete", DELE);
         function DELE() {
             $("#exampleModalCenter").modal("show");
@@ -283,15 +286,27 @@
             console.log(proprice)
         }
 
-        async function CDelete(id,proprice) {
+        async function CDelete(id,proprice) {   //給刪除鍵ㄉ
             const response = await fetch("@Url.Content("~/shopping/Delete")" + `?id=${id}&price=${proprice}`);
+            CountCart();
+        }
+        async function CDeletedrop(id) {    //給拖拉刪的
+            const response = await fetch("@Url.Content("~/shopping/Deletedrop")" + `?id=${id}`);
             CountCart();
         }
 
         $("#deletepro").click(function () {
             $('#exampleModalCenter').modal('hide');
-            CDelete(proid,proprice);
-            deltr.remove();
+            if (detailid != 0) {
+                CDeletedrop(detailid);
+                $("tbody").find(`#${detailid}`).remove();
+            }
+            else
+            {
+                CDelete(proid,proprice);
+                deltr.remove();
+            }
+
             if ($("tbody>tr").length == 0) {
                 window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
             }
@@ -309,38 +324,25 @@
             proid = 0;
             deltr = null;
             proprice = 0;
+            detailid = 0;
         });
 
-        //拖拉刪除購物車========================================     
+        //拖拉刪除購物車========================================
+        function dragstart(e) {
+            e.dataTransfer.setData("text/plain", e.target.id);
+        }
 
-        //$("tbody").on("dragover", ".ddd", drop);
-        //function drop() {
+        function drag(e) {
+            e.preventDefault();
+        }
 
-        //    console.log("Dd")
-        //}
-       
-
-        //===========================================================
-        $("tbody>tr").draggable({ helper: 'clone', opacity: 0.40 });
-
-        $(".drop").droppable({
-            accept: "*",
-            //activeClass: 'myactive',
-            //hoverClass: 'myhover',
-            tolerance: 'pointer',
-            drop: function (ev, ui) {
-                $("#exampleModalCenter").modal("show");
-                proid = ui.draggable.find("#productId").val();
-                deltr = ui.draggable;
-                proprice = ui.draggable.find("#txtprice").text().trim().substring(3);
-                
-                console.log(proid)
-                console.log(proprice)
-                //deltr.css("background-color", "yellow")            
-            }
-        });
-
-
+        function drop(e) {
+            e.preventDefault();
+            const data = e.dataTransfer.getData("text");    //傳shoppingcardetailid
+            detailid = data;
+            e.dataTransfer.clearData();
+            $("#exampleModalCenter").modal("show");
+        }
 
         //修改購物車數量=======================================================
         $("tbody").on("click", "#plus", PLUS);
@@ -509,12 +511,6 @@
          }
 
         //加購商品=======================================================
-         @*$.get('@Url.Content("~/shopping/RelatedpartialView")',
-                function (data) {
-                    if (data != "null") {
-                         $(".related-products-area").load('@Url.Content("~/shopping/RelatedpartialView")')
-                    }
-            })*@
          $(".related-products-area").load('@Url.Content("~/shopping/RelatedpartialView")')
 
 

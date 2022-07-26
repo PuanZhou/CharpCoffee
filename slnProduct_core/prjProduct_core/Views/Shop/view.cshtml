@@ -878,12 +878,11 @@
     })
 
     async function CountCart() {
-            let countCart = document.querySelector("#countCart");
-            let imgcart = document.querySelector("#cart-count");
-            const response = await fetch('@Url.Content("~/api/CountCart")');
-            const result = await response.text();
-            countCart.innerHTML = result;
-            imgcart.innerHTML = `&nbsp&nbsp${result}`;
+        let countCart = document.querySelector("#countCart");
+        const response = await fetch('@Url.Content("~/api/CountCart")');
+        const result = await response.text();
+        countCart.innerHTML = result;
+        $("#cart-count").html(`${result}`);
     }
     </script>
 }
