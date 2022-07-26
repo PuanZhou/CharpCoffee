@@ -38,8 +38,8 @@ namespace prjProduct_core.Controllers
                   Quantity=(int)x.Quantity,
                   Description=x.Products.Description,
                   Stock=(int)x.Products.Stock,
-                  //MainPhotoPath=x.Products.MainPhotoPath,
-                  MainPhotoPath= "4f127afc-4031-4b15-89e4-e39a8f66b57c.jpg",
+                  MainPhotoPath=x.Products.MainPhotoPath,
+                  //MainPhotoPath= "4f127afc-4031-4b15-89e4-e39a8f66b57c.jpg",
               });
             return JsonSerializer.Serialize(result);
         }

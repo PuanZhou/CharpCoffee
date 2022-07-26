@@ -39,8 +39,8 @@ namespace prjProduct_core.Controllers
                 ProductName = x.ProductName,
                 Price = (int)x.Price,
                 Description = x.Description,
-                MainPhotoPath="49562fbf-8247-436c-9fa2-32d626786eee.jpg",
-                //MainPhotoPath = x.MainPhotoPath,
+                //MainPhotoPath="49562fbf-8247-436c-9fa2-32d626786eee.jpg",
+                MainPhotoPath = x.MainPhotoPath,
                 Stock = (int)x.Stock,
             });
             
@@ -96,8 +96,8 @@ namespace prjProduct_core.Controllers
                 ProductName = x.ProductName,
                 Price=(int)x.Price,
                 Description=x.Description,
-                MainPhotoPath ="49562fbf-8247-436c-9fa2-32d626786eee.jpg",
-                //MainPhotoPath=x.MainPhotoPath,
+                //MainPhotoPath ="49562fbf-8247-436c-9fa2-32d626786eee.jpg",
+                MainPhotoPath=x.MainPhotoPath,
                 Stock =(int)x.Stock,
             });
             return JsonSerializer.Serialize(result);

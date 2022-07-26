@@ -82,7 +82,7 @@ namespace prjProduct_core.Controllers
         //==============購物(新增order)======================
         //https://prjcoffee.azurewebsites.net/api/R_Member
         [HttpPost]
-        public async Task<ActionResult<string>> Post(CAppOrderVM o)
+        public async Task<ActionResult<int>> Post(CAppOrderVM o)
         {
             Order order = new Order();
             string tradeNo = Guid.NewGuid().ToString();
@@ -98,7 +98,22 @@ namespace prjProduct_core.Controllers
             db.Orders.Add(order);
             await db.SaveChangesAsync();
 
-            return "成功";
+            return db.Orders.Select(x => x.OrderId).OrderBy(x=>x).LastOrDefault();
+        }
+        //https://localhost:44370/api/R_Member/api/PostOrderDetail
+        [Route("api/PostOrderDetail")]
+        [HttpPost]
+        public async Task<ActionResult<string>> PostOrderDetail(CAppCartVM c)
+        {
+            OrderDetail OD = new OrderDetail();
+            OD.OrderId = c.OrderId;
+            OD.ProductId = c.ProductsId;
+            OD.Quantity = c.Quantity;
+
+            db.OrderDetails.Add(OD);
+            await db.SaveChangesAsync();
+
+            return "OK";
         }
 
         //// POST api/<WApiController>

@@ -97,13 +97,38 @@ namespace prjProduct_core.Controllers
             int[] result = { countP, countC };
             return Json(result);
         }
+        //===============確認留言資格============
+        //public IActionResult CehckMember()
+        //{
+            
+        //    if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) == null)
+        //    {
+        //        return Content("尚未登入", "text/plain", System.Text.Encoding.UTF8);
+        //    }
+        //    else if (JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).BlackList)
+        //    {
+        //        return Content("您被禁言", "text/plain", System.Text.Encoding.UTF8);
+        //    }
+        //    else
+        //    {
+        //        return Content("可留言", "text/plain", System.Text.Encoding.UTF8);
+        //    }
+        //}
         //===============新增留言===============
         public IActionResult AddComment(Comment c)
         {
-            if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) != null)
+            if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) == null)
             {
-                //int mId=JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
-                //c.MemberId = mId;
+                return Content("尚未登入", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else if (JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).BlackList)
+            {
+                return Content("您被禁言", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                int mId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+                c.MemberId = mId;                
             }
             db.Comments.Add(c);
             db.SaveChanges();

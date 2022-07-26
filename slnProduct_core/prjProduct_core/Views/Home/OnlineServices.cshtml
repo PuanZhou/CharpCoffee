@@ -166,7 +166,7 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
             if(user==server){//3客服傳訊
                  $(`#m${sendTo}`).prepend(`<div class="clearfix mt-1">
                     <div class="shadow rounded p-1 pull-left bg-primary">
-                        <h6 class="text-white">${hm}</h6><h4 class="text-black">客服：${message}.To${sendTo}</h4>
+                        <h6 class="text-white">${hm}</h6><h4 class="text-black">客服：${message}</h4>
                     </div>
                  </div>`);
             }
@@ -178,7 +178,7 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
             $(`#u${user}`).attr("class","col-1 border border-1 neon-effect");
             $(`#m${user}`).prepend(`<div class="clearfix mt-1">
                 <div class="shadow rounded p-1 pull-right bg-light">
-                    <h6>${hm}</h6><h4 class="text-success">${user}：${message}.To${sendTo}</h4>
+                    <h6>${hm}</h6><h4 class="text-success">${user}：${message}</h4>
                 </div>
             </div>`);
             }
@@ -213,14 +213,14 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
     function SendMes(subject){
         $("#messagesList").prepend(`<div class="clearfix mt-1">
             <div class="shadow rounded p-1 pull-right bg-light">
-                <h6>${hm}</h6><h4 class="text-success">${subject}：${message}.To${sendTo}</h4>
+                <h6>${hm}</h6><h4 class="text-success">${subject}：${message}</h4>
             </div>
         </div>`);
     }//left side
     function ReceiveMes(subject){
         $("#messagesList").prepend(`<div class="clearfix mt-1">
             <div class="shadow rounded p-1 pull-left bg-primary">
-                <h6 class="text-white">${hm}</h6><h4 class="text-black">${subject}：${message}.To${sendTo}</h4>
+                <h6 class="text-white">${hm}</h6><h4 class="text-black">${subject}：${message}</h4>
             </div>
         </div>`);
     }
