@@ -35,5 +35,8 @@
 
         [JsonProperty("Stock")]
         public int Stock { get; set; }
+
+        [JsonProperty("OrderId")]
+        public int OrderId { get; set; }
     }
 }
