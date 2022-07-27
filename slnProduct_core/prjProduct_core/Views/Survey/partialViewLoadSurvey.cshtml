@@ -1,0 +1,84 @@
+﻿@model IEnumerable<prjProduct_core.Models.Survey>
+
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                序號
+                <br />
+                <input id="checkall" type="checkbox" name="Checkbox[]" />
+            </th>
+            <th>
+                訂單序號
+            </th>
+            <th>
+                問卷填寫日期
+            </th>
+            <th>
+                問卷填寫人姓名
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                        <input class="child-check" type="checkbox" name="Checkbox[]" value="@item.TradeNo" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TradeNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    <button id="delete" class="btn btn-danger" type="button">刪除問卷資料</button>
+</div>
+
+<script>
+    $("#checkall").click(function () {
+        if ($("#checkall").prop("checked")) {
+            $("input[name='Checkbox[]']").each(function () {
+                $(this).prop("checked", true);
+            })
+        } else {
+            $("input[name='Checkbox[]']").each(function () {
+                $(this).prop("checked", false);
+            })
+        }
+    });
+
+    $("#delete").click(function () {
+        let TradeNo = new String;
+        $(".child-check:checkbox:checked").each(function () {
+            let str = $(this).val();
+            TradeNo += str + "+";
+        });
+        $.get('@Url.Content("~/Survey/deleteSurvey")', { "TradeNo": TradeNo },
+            function (data) {
+                if (data === "success") {
+                    alert("問卷刪除成功");
+                    window.location.href=('@Url.Content("~/Survey/List")');
+                }
+                else {
+                    alert("沒有問卷可以刪除");
+                }
+            }
+        )
+    });
+</script>

@@ -175,7 +175,7 @@
                     </a>
                 </li>
                 <li class="nav-item" id="survey">
-                    <a class="nav-link d-flex justify-content-between">
+                    <a class="nav-link d-flex justify-content-between" asp-controller="Survey" asp-action="List">
                         <span>
                             <span class="sidebar-icon">
                                 <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
@@ -467,22 +467,6 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
-<script>
-    $('#survey').click(function () {
-        $.get('@Url.Content("~/Survey/List")',
-            function (data) {
-
-                if (data === "null") {
-                    console.log(data);
-                    alert("目前沒有新的問卷回復");
-                    window.location.href = '@Url.Content("~/Admin_Dashboard/Index")';
-                }
-                else {
-                    window.location.href = '@Url.Content("~/Survey/List")';
-                }
-        });
-    });
-</script>
 
 </body>
 

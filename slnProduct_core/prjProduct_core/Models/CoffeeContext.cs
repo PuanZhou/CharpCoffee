@@ -31,6 +31,7 @@ namespace prjProduct_core.Models
         public virtual DbSet<CouponDetail> CouponDetails { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MyLike> MyLikes { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderState> OrderStates { get; set; }
@@ -45,14 +46,14 @@ namespace prjProduct_core.Models
         public virtual DbSet<ShoppingCarDetail> ShoppingCarDetails { get; set; }
         public virtual DbSet<Survey> Surveys { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -370,11 +371,33 @@ namespace prjProduct_core.Models
                     .HasConstraintName("FK_MyLike_Products");
             });
 
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.ToTable("Notification");
+
+                entity.Property(e => e.NotifyTime).HasColumnType("date");
+
+                entity.Property(e => e.OrderStateId).HasColumnName("OrderStateID");
+
+                entity.Property(e => e.TradeNo)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notification_Members");
+
+                entity.HasOne(d => d.OrderState)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.OrderStateId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notification_OrderStates");
+            });
+
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.HasIndex(e => e.TradeNo, "IX_TradeNo")
-                    .IsUnique();
-
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
                 entity.Property(e => e.CouponId).HasColumnName("CouponID");
@@ -607,16 +630,17 @@ namespace prjProduct_core.Models
 
                 entity.Property(e => e.SurveyId).HasColumnName("SurveyID");
 
-                entity.Property(e => e.TradeNo)
+                entity.Property(e => e.Date)
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.HasOne(d => d.TradeNoNavigation)
-                    .WithMany(p => p.Surveys)
-                    .HasPrincipalKey(p => p.TradeNo)
-                    .HasForeignKey(d => d.TradeNo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Survey_Orders");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.TradeNo)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

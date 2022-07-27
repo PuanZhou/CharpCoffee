@@ -366,7 +366,7 @@ namespace prjCSCoffee.Controllers
             parameters["MerchantTradeNo"] = tradeNo;
             parameters["PaymentType"] = "aio";
             parameters["Redeem"] = "";
-            parameters["ReturnURL"] = "https://developers.opay.tw/AioMock/MerchantReturnUrl";
+            parameters["ReturnURL"] = $"{Request.Scheme}://{Request.Host}/";
             parameters["StoreID"] = "";
             parameters["TotalAmount"] = total.ToString();
             parameters["TradeDesc"] = "建立信用卡測試訂單";

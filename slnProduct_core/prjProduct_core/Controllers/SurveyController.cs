@@ -4,6 +4,7 @@ using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Microsoft.AspNetCore.Mvc;
 using prjProduct_core.Models;
+using prjProduct_core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,28 +37,87 @@ namespace prjProduct_core.Controllers
         {
             LoadGoogleSheet();
             var tradeno = db.Surveys.Select(x => x.TradeNo).ToList();
-            var survery = db.Orders.Where(p => tradeno.Contains(p.TradeNo) && p.OrderStateId == 3 && p.SurveyCoupon == false).ToList();
-            if (survery != null && survery.Count > 0)
+            var survey = (from a in db.Orders
+                           where tradeno.Contains(a.TradeNo) && a.OrderStateId == 3 && a.SurveyCoupon == false
+                           join s in db.Surveys
+                           on a.TradeNo equals s.TradeNo
+                           select new CSurveyViewModel()
+                           {
+                               TradeNo = a.TradeNo,
+                               MemberName = a.Member.MemberName,
+                               OrderDate = a.OrderDate.ToString(),
+                               SurveyName = s.Name,
+                               SurveyDate = s.Date
+                           }).ToList();
+
+            return View(survey);
+        }
+
+        public IActionResult SentCoupon(string TradeNo)
+        {
+            if (TradeNo != null)
             {
-                return View(survery);
+                TradeNo = TradeNo.Substring(0, TradeNo.Length - 1);
+                string[] newTradeNo = TradeNo.Split("+");
+
+                var survery = db.Orders.Where(p => newTradeNo.Contains(p.TradeNo) && p.OrderStateId == 3 && p.SurveyCoupon == false).ToList();
+                if (survery != null && survery.Count != 0)
+                {
+                    foreach (Order order in survery)
+                    {
+                        order.SurveyCoupon = true;
+                        CouponDetail couponDetail = new CouponDetail();
+                        couponDetail.MemberId = order.MemberId;
+                        couponDetail.CouponId = 3;
+                        db.CouponDetails.Add(couponDetail);
+                        db.SaveChanges();
+                    }
+                    return Content("success", "text/plain", Encoding.UTF8);
+                }
+                else
+                {
+                    return Content("error", "text/plain", Encoding.UTF8);
+                }
             }
             return Content("null", "text/plain", Encoding.UTF8);
         }
 
-        public IActionResult SentCoupon()
+        public IActionResult partialViewLoadSurvey()
         {
-            var tradeno = db.Surveys.Select(x => x.TradeNo).ToList();
-            var survery = db.Orders.Where(p => tradeno.Contains(p.TradeNo) && p.OrderStateId == 3 && p.SurveyCoupon == false).ToList();
-            foreach (Order order in survery)
+            var survey = db.Surveys.ToList();
+
+            return PartialView(survey);
+        }
+
+        public IActionResult deleteSurvey(string TradeNo)
+        {
+            if (TradeNo != null)
             {
-                order.SurveyCoupon = true;
-                CouponDetail couponDetail = new CouponDetail();
-                couponDetail.MemberId = order.MemberId;
-                couponDetail.CouponId = 3;
-                db.CouponDetails.Add(couponDetail);
-                db.SaveChanges();
-                return Content("Saved", "text/plain", Encoding.UTF8);
+                TradeNo = TradeNo.Substring(0, TradeNo.Length - 1);
+                string[] newTradeNo = TradeNo.Split("+");
+                
+                foreach(string No in newTradeNo)
+                {
+                    var survey = db.Surveys.FirstOrDefault(s => s.TradeNo == No);
+                    if (survey != null)
+                    {
+                        db.Surveys.Remove(survey);
+                        db.SaveChanges();
+                    }
+                }
+                return Content("success", "text/plain", Encoding.UTF8);
             }
+            return Content("null", "text/plain", Encoding.UTF8);
+        }
+
+        public IActionResult LoadSurveyAPI()
+        {
+            var survey = db.Surveys.ToList();
+            if (survey != null&&survey.Count>0)
+            {
+                return Content("true", "text/plain", Encoding.UTF8);
+            }
+
             return Content("null", "text/plain", Encoding.UTF8);
         }
 
@@ -87,9 +147,8 @@ namespace prjProduct_core.Controllers
                 ApplicationName = ApplicationName,
             });
 
-            var range = $"{sheet}!C2:C";
+            var range = $"{sheet}!A2:C";
             var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
-
             var response = request.Execute();
             var values = response.Values;
             if (values != null && values.Count > 0)
@@ -99,7 +158,9 @@ namespace prjProduct_core.Controllers
                     if (row.Count != 0)
                     {
                         Survey survey = new Survey();
-                        survey.TradeNo = row[0].ToString();
+                        survey.Date = row[0].ToString();
+                        survey.Name = row[1].ToString();
+                        survey.TradeNo = row[2].ToString();
                         db.Surveys.Add(survey);
                         db.SaveChanges();
                     }

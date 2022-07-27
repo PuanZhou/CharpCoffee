@@ -39,7 +39,7 @@
                                         <!-- Single Best Seller Products -->
                                         <div class="single-best-seller-product d-flex align-items-center">
                                             <div class="product-thumbnail">
-                                                <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/img/coffee-img/been2.jpg" alt=""></a>
+                                                <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/images/@item.MainPhotoPath" alt=""></a>
                                             </div>
                                             <div class="product-info">
                                                 <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId">@item.ProductName</a>
@@ -180,23 +180,23 @@
                                                         <a href="#">Hot</a>
                                                     </div>
                                                 }
-                                            <div class="product-meta d-flex">
-                                                @if (pd.CategoryId == 1)
-                                                {
-                                                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
-                                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
-                                                    <input type="hidden" value="@pd.ProductId" id="proid" />
-                                                    <input type="hidden" value="@pd.Price" id="proprice" />
-                                                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
-                                                }
-                                                else
-                                                {
-                                                    <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
-                                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
-                                                    <input type="hidden" value="@pd.ProductId" id="proid" />
-                                                    <input type="hidden" value="@pd.Price" id="proprice" />
-                                                }
-                                            </div>
+                                                <div class="product-meta d-flex">
+                                                    @if (pd.CategoryId == 1)
+                                                    {
+                                                        <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
+                                                        <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                                        <input type="hidden" value="@pd.ProductId" id="proid" />
+                                                        <input type="hidden" value="@pd.Price" id="proprice" />
+                                                        <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
+                                                        <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                                        <input type="hidden" value="@pd.ProductId" id="proid" />
+                                                        <input type="hidden" value="@pd.Price" id="proprice" />
+                                                    }
+                                                </div>
                                             </div>
                                             <!-- Product Info -->
                                             <div class="product-info mt-15 text-center">
@@ -236,6 +236,7 @@
             border-radius: 10px;
             width: 150px;
         }
+
         .coffc {
             margin-left: 5px;
             font-size: 5px;
@@ -758,7 +759,8 @@
         /*下拉式選單*/
 
     //=====================加入比較按鈕=====================
-    $(".compare-btn").click(function () {
+
+        $("#showcard").on("click",".compare-btn",function () {
         let comid = $(this.children).text();
         $('.bootstrap-growl').remove();
         $.get('@Url.Content("~/compare/AddCompare")', { "Id": comid },

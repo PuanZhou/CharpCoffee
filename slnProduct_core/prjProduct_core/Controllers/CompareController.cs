@@ -29,6 +29,7 @@ namespace prjProduct_core.Controllers
                 {
                     var prod = db.Products.Where(p => p.ProductId == Id).Select(p => new CCompareCoffeeViewModel()
                     {
+                        MainPhotoPath=p.MainPhotoPath,
                         ProductId = p.ProductId,//咖啡ID
                         ProductName = p.ProductName,
                         Continent = p.Country.Continent,//咖啡產地

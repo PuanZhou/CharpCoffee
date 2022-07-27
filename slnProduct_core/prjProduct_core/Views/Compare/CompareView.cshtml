@@ -39,7 +39,7 @@
         @foreach (var item in Model)
         {
             <div class="card col-12 col-md-6 col-lg-4" style="width: 18rem;">
-                <img src="~/img/Home-img/03.jpg" class="card-img-top" alt="...">
+                <img src="~/images/@item.MainPhotoPath" class="card-img-top pdpicbox">
                 <div class="card-body">
                     產品名稱:<h5 class="card-title">@item.ProductName</h5>
                     <p class="card-text">風味描述:@item.Description</p>

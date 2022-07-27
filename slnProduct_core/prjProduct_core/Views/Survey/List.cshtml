@@ -1,58 +1,102 @@
-﻿@model IEnumerable<prjProduct_core.Models.Order>
+﻿@model IEnumerable<prjProduct_core.ViewModel.CSurveyViewModel>
 
 @{
     ViewData["Title"] = "問卷優惠派發";
     Layout = "~/Views/Shared/_Layout1.cshtml";
 }
 
+
+
 <h1>問卷優惠派發</h1>
 
 <table class="table">
     <thead>
-        <tr> 
+        <tr>
+            <th>
+                訂單編號
+            </th>
             <th>
                 訂購日期
             </th>
             <th>
-                訂單編號
+                訂購人名稱
+            </th>
+            <th>
+                問卷填寫日期
+            </th>
+            <th>
+                問卷填寫人名稱
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>       
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td> 
-            <td>
-                @Html.DisplayFor(modelItem => item.TradeNo)
-            </td>    
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TradeNo) <span class="TradeNo" hidden="hidden">@item.TradeNo+</span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SurveyDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SurveyName)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
-<button id="sent" type="button" class="btn btn-success">發送優惠券</button>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    <button id="sent" class="btn btn-success me-md-2" type="button">發送優惠券</button>
+    <button id="load" class="btn btn-warning" type="button">讀取問卷資料</button>
+</div>
+
+<div id="load-survey">
+</div>
 
 
 @section Scripts
-{ 
+{
     <script>
-        $('#sent').click(function (e) {
-            $.get('@Url.Content("~/Survey/SentCoupon")',
+        $('#sent').click(function () {
+            let str = $(".TradeNo").text();
+            $.get('@Url.Content("~/Survey/SentCoupon")', {"TradeNo":str},
                 function (data) {
-                    if (data === "Saved") {
+                    if (data === "success") {
                         alert("已成功派發優惠券給會員");
                         window.location.href = '@Url.Content("~/Admin_Dashboard/Index")';
                     }
+                    else if (data === "error") {
+                        alert("優惠券派發期間出現錯誤");
+                    }
                     else {
-                        alert("派發期間發生錯誤");
+                        alert("目前無新的問卷");
                     }
 
                 }
-            ) 
+            )
         });
+        $('#load').click(function () {
+            $.get('@Url.Content("~/Survey/LoadSurveyAPI")',
+                function (data) {
+                    if (data === "true") {
+                        $("#load-survey").load('@Url.Content("~/Survey/partialViewLoadSurvey")');
+                    }
+                    else {
+                        alert("沒有訂單資料");
+                    }
+                }
+            )
+        })
     </script>
 
 }
