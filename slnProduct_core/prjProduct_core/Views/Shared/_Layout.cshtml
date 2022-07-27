@@ -488,7 +488,7 @@
         <!-- ##### Right-Banner ##### -->
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
             <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /> <span class="badge badge-light" id="compare-count"></span></button>
-            <button type="button" class="btn btn-light">購物車</button>
+            <button id="cart" type="button" class="btn btn-light" title="購物車"><img src="~/img/Icon/carts.png" /> <span class="badge badge-light" id="cart-count"></span></button>
         </div>
         <!-- ##### AiBot ##### -->
         <img class="Aibot" src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
@@ -649,13 +649,12 @@
         let timer = setInterval(timeAgo, 1000);
     });
 
-</script>
 
-          //=================前往購物車====================
-        $("#cart").click(function () {
-            $('.bootstrap-growl').remove();
-             window.location.href = '@Url.Content("~/shopping/shoppingcar")';
-        });
+    //=================前往購物車====================
+    $("#cart").click(function () {
+        $('.bootstrap-growl').remove();
+            window.location.href = '@Url.Content("~/shopping/shoppingcar")';
+    });
 
 </script>
 </body>
