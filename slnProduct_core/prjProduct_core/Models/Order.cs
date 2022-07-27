@@ -10,9 +10,7 @@ namespace prjProduct_core.Models
         public Order()
         {
             Comments = new HashSet<Comment>();
-            Notifications = new HashSet<Notification>();
             OrderDetails = new HashSet<OrderDetail>();
-            Surveys = new HashSet<Survey>();
         }
 
         public int OrderId { get; set; }
@@ -33,8 +31,6 @@ namespace prjProduct_core.Models
         public virtual OrderState OrderState { get; set; }
         public virtual Payment Payment { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<Survey> Surveys { get; set; }
     }
 }

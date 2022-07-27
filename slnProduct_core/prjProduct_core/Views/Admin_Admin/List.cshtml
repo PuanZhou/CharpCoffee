@@ -14,66 +14,63 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AdminId)
+                #
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
+                密碼
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductOk)
+                產品管理權限
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OrderOk)
+                訂單管理權限
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberOk)
+                會員管理權限
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArticleOk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AdminOk)
+                文章管理權限
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AdminId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Password)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductOk)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OrderOk)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberOk)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ArticleOk)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AdminOk)
-                </td>
-                <td>
+        @{
+            int count = 0;
 
-                    @Html.ActionLink("Edit", "Edit", "Admin_Admin", new { id = item.AdminId},new {@class= "btn btn-primary" })
-
-                </td>
-            </tr>
+            @foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        **********
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductOk)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderOk)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemberOk)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ArticleOk)
+                    </td>
+                    <td>
+                        @Html.ActionLink("編輯", "Edit", "Admin_Admin", new { id = item.AdminId }, new { @class = "btn btn-primary" })
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
@@ -82,6 +79,6 @@
         let admin = document.querySelector("#admin")
 
         admin.classList.add("active")
-        
+
     </script>
 }
