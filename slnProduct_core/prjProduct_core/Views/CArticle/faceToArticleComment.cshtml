@@ -57,7 +57,7 @@
                     {
                         <span class="font-bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@cavModel.MemberName &nbsp;：</span>
                     }
-                    <span style="background-color:linen; color:black;border-radius:20px">@cavModel.ArticleCommentDescription &nbsp;&nbsp;</span>
+                    <span style="background-color:linen; color:black;border-radius:20px" class="prodnamelike">@cavModel.ArticleCommentDescription &nbsp;&nbsp;</span>
                     <br/>
                     <span> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</span>
                 }
@@ -77,7 +77,7 @@
                     //新增回覆
             <div>
                 <span id="s_@cavModel.ArticleCommentId" hidden="hidden">回覆：</span>
-                <input id="ip_@cavModel.ArticleCommentId" type="text" name="txtArticleComment" style="width:80%" hidden="hidden" />
+                <input id="ip_@cavModel.ArticleCommentId" class="anwsering" type="text" name="txtArticleComment" style="width:80%" hidden="hidden" />
                 <button id="b_@cavModel.ArticleCommentId" class="btnNewAComment btn btn-sm btn-outline-info " hidden="hidden">送出回覆</button>
             </div>
                     //新增回覆
@@ -103,7 +103,8 @@
                     "ArticleCommentParentId": cd,
                     "ArticleCommentDescription": txtArticleComment
                 }, function (data) {
-                    if (data === "login") {
+                        if (data === "login") {
+                        alert("留言前請先登入會員")
                         window.location.href = '@Url.Content("~/Home/Login")';
                     } else {
                         $("#divAComment").load('@Url.Content("~/CArticle/faceToArticleComment")', { "articleId": aid });
@@ -116,7 +117,8 @@
                     "ArticleCommentParentId": cd,
                     "ArticleCommentDescription": txtArticleComment
                 }, function (data) {
-                    if (data === "login") {
+                        if (data === "login") {
+                        alert("留言前請先登入會員")
                         window.location.href = '@Url.Content("~/Home/Login")';
                     } else {
                         $("#divAComment").load('@Url.Content("~/CArticle/faceToArticleComment")', { "articleId": aid });
@@ -171,5 +173,31 @@
         }
 
     }
+
+    $(".anwsering").focus(function () {
+        $(".focus").removeAttr("class","focus")
+        event.target.setAttribute("class","focus")
+    })
+
+    $(".font-bold").click(function () {
+        $(".focus").val(`${event.target.innerText.trim()}`)
+    })
+
+    $(".prodnamelike").click(function () {
+        var PdtName = event.target.innerText.trim();
+        $.get('@Url.Content("~/CArticle/prodNamelike")', { "PdtName": PdtName }, function (data) {
+            if (data == "false") {
+                //console.log(data)
+                return;
+            }
+            else {
+                var n = data;
+                window.location.href = '@Url.Content("~/Shop/detail")' + `?id=${n}`;
+                //console.log(n)
+            }
+        })
+        //console.log(PdtName)
+    })
+
 
 </script>

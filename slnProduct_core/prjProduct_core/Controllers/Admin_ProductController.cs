@@ -39,7 +39,7 @@ namespace prjProduct_core.Controllers
                 if (signIn_User.ProductOk)
                 {
                     IEnumerable<CAdmin_ProductViewModel> datas = null;
-                    var list = _context.Products.Select(p => new CAdmin_ProductViewModel()
+                    var list = _context.Products.Include(p => p.Comments).Select(p => new CAdmin_ProductViewModel()
                     {
                         ProductId = p.ProductId,
                         ProductName = p.ProductName,
@@ -51,7 +51,7 @@ namespace prjProduct_core.Controllers
                         Stock = p.Stock,
                         ClickCount = p.ClickCount,
                         TakeDown = p.TakeDown,
-                        Star = p.Star,
+                        Star = p.Comments.Count == 0 ? 0 : Math.Round((double)(p.Comments.Sum(c => c.Star) / p.Comments.Count),1),
                         MainPhotoPath = p.MainPhotoPath
                     });
 
@@ -61,17 +61,68 @@ namespace prjProduct_core.Controllers
                     }
                     else
                     {
-                        if (vModel.txtKeyword == "上架")
-                            datas = list.Where(p => p.TakeDown == false); // 輸入上架回傳上架商品
-                        else if (vModel.txtKeyword == "下架")
-                            datas = list.Where(p => p.TakeDown == true); // 輸入下架回傳下架商品
-                        else if (vModel.txtKeyword.StartsWith("#類別 "))
+                        if (vModel.txtKeyword == "上架") // 關鍵字輸入上架回傳上架商品
+                            datas = list.Where(p => p.TakeDown == false); 
+                        else if (vModel.txtKeyword == "下架") // 關鍵字輸入下架回傳下架商品
+                            datas = list.Where(p => p.TakeDown == true); 
+                        else if (vModel.txtKeyword.StartsWith("#類別 ")) // 關鍵字輸入#類別 (半形空格)後打類別名稱，回傳搜尋結果
                             datas = list.Where(p => p.Category.CategoriesName.Contains(vModel.txtKeyword.Substring(4)));
-                        else if (vModel.txtKeyword.StartsWith("#國家 "))
+                        else if (vModel.txtKeyword.StartsWith("#國家 ")) // 關鍵字輸入#國家 (半形空格)後打類別名稱，回傳搜尋結果
                             datas = list.Where(p => p.Country.CountryName.Contains(vModel.txtKeyword.Substring(4)));
+                        else if (vModel.txtKeyword.StartsWith("#庫存不足")) // 關鍵字輸入#庫存不足，回傳庫存數 < 10的產品
+                            datas = list.Where(p => p.Stock < 10);
+                        else if (vModel.txtKeyword.StartsWith("#庫存"))
+                        {
+                            string[] key = vModel.txtKeyword.Split("存");
+                            if (key[1].StartsWith(">=")) // 庫存>=
+                            {
+                                int num;
+                                bool success = int.TryParse(key[1].Split(">=")[1], out num);
+                                if (success)
+                                    datas = list.Where(p => p.Stock >= num);
+                                else
+                                    datas = list;
+                            }
+                            else if (key[1].StartsWith("<=")) // 庫存<=
+                            {
+                                int num;
+                                bool success = int.TryParse(key[1].Split("<=")[1], out num);
+                                if (success)
+                                    datas = list.Where(p => p.Stock <= num);
+                                else
+                                    datas = list;
+                            }
+                            else if (key[1].StartsWith("=")) // 庫存=
+                            {
+                                int num;
+                                bool success = int.TryParse(key[1].Split("=")[1], out num);
+                                if (success)
+                                    datas = list.Where(p => p.Stock == num);
+                                else
+                                    datas = list;
+                            }
+                            else if (key[1].StartsWith(">")) // 庫存>
+                            {
+                                int num;
+                                bool success = int.TryParse(key[1].Split(">")[1], out num);
+                                if (success)
+                                    datas = list.Where(p => p.Stock > num);
+                                else
+                                    datas = list;
+                            }
+                            else if (key[1].StartsWith("<")) // 庫存<
+                            {
+                                int num;
+                                bool success = int.TryParse(key[1].Split("<")[1], out num);
+                                if (success)
+                                    datas = list.Where(p => p.Stock < num);
+                                else
+                                    datas = list;
+                            }
+                        }
                         else
                         {
-                            datas = list.Where(p => p.ProductName.Contains(vModel.txtKeyword));  // 依輸入關鍵字查詢類別, 國家, 產品名                                               
+                            datas = list.Where(p => p.ProductName.Contains(vModel.txtKeyword));  // 依輸入關鍵字查詢產品名                                               
 
                         }
                     }
@@ -252,7 +303,7 @@ namespace prjProduct_core.Controllers
                             Stock = p.Stock,
                             ClickCount = p.ClickCount,
                             TakeDown = p.TakeDown,
-                            Star = p.Star,
+                            Star = p.Comments.Count == 0 ? 0 : Math.Round((double)(p.Comments.Sum(c => c.Star) / p.Comments.Count), 1), 
                             MainPhotoPath = p.MainPhotoPath,
                             SubPhotosPath = p.Photos.Select(p => p.ImagePath).ToList()
                         })

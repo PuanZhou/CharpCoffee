@@ -1,5 +1,16 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.CCoffeeViewModel>
 <style>
+    .sortbtn {
+        top: 0;
+        left: 0;
+        cursor: pointer;
+        background: #fff;
+        border: none;
+        box-shadow: 10px 10px 20px rgba(0,0,0,0.05);
+        padding: 12px 15px 12px 0;
+        border-radius: 10px;
+        width: 150px;
+    }
     .pagination {
         position: relative;
         z-index: 1;
@@ -38,6 +49,9 @@
             color: #ffffff;
         }
 </style>
+<div class="col-12">
+    <input type="button" value="依價格排序" id="btnod" onclick="btnclick()"class="sortbtn" />
+</div>
 @{
     foreach (var pd in Model)
     {
@@ -63,18 +77,20 @@
                             <a href="#">Hot</a>
                         </div>
                     }
-                    <div class="product-meta d-flex">
-                        <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
-                        <a href="@Url.Action("AddtoCart","Shopping", new { id = @pd.ProductId})" style="cursor:pointer" class="add-to-cart-btn"><span hidden id="addtocart">@pd.ProductId</span>Add to cart</a>
-                        <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
-                    </div>
+                <div class="product-meta d-flex">
+                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                    <input type="hidden" value="@pd.Product.Price" id="proprice" />
+                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                </div>
                 </div>
                 <!-- Product Info -->
                 <div class="product-info mt-15 text-center">
                     <a asp-action="detail" asp-route-id="@pd.ProductId">
                         @pd.CoffeeName
                     </a>
-                    <h6>$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
+                    <h6>NT$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
                 </div>
             </div>
         </div>
@@ -85,6 +101,163 @@
     </div>
 }
 <script>
+    //============排序============================
+        let flag = true;
+        function btnclick() {
+
+             if (flag == true) {
+
+             @{var q1 = Model.OrderBy(p => p.Product.Price);}
+                showCard();
+                showbtn();
+                flag = false;
+            }
+            else {
+
+                @{var q2 = Model.OrderByDescending(p => p.Product.Price);}
+                showCard();
+                showbtn();
+                flag = true;
+            }
+        }
+        function showCard() {
+                let cardview = document.querySelector('#showcard')
+                if (flag == true) {
+                     $(cardview).empty().append(`@{
+                                <div class="col-12">
+                            <input type="button" value="依價格排序" id="btnod" onclick="btnclick()" class="sortbtn"/>
+                        </div>
+
+                            foreach (var pd in q1)
+                            {
+                                <!-- Single Product Area -->
+                                <div class="col-12 col-sm-6 col-lg-4 list-item" id="pdc">
+                                    <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
+                                        <!-- Product Image -->
+                                        <div class="pd-img">
+
+
+                                            <a asp-action="detail" asp-route-id="@pd.ProductId">
+                                                @if (pd.Product.MainPhotoPath == null)
+                                                {
+                                                    <img class="pdpicbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                                                }
+                                                else
+                                                {
+                                                    <img class="pdpicbox" src="~/images/@pd.Product.MainPhotoPath">
+                                                }
+                                            </a>
+                                            <!-- Product Tag -->
+                                            @if (pd.Product.ClickCount > 30)
+                                            {
+                                                <div class="product-tag">
+                                                    <a href="#">Hot</a>
+                                                </div>
+                                            }
+                                            <div class="product-meta d-flex">
+                                                @if (pd.Product.CategoryId == 1)
+                                                {
+                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                                    <input type="hidden" value="@pd.Product.Price" id="proprice" />
+                                                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                                    <input type="hidden" value="@pd.Product.Price" id="proprice" />
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <!-- Product Info -->
+                                        <div class="product-info mt-15 text-center">
+                                            <a>
+                                                @Html.ActionLink(pd.Product.ProductName, "detail", new { id = pd.ProductId }, new { })
+                                            </a>
+                                            <h6 id="price">NT$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="col-12">
+                            <ul class="pagination left pull-left " id="btnul">
+                            </ul>
+                        </div>`)
+                }
+                else {
+                     $(cardview).empty().append(`@{
+                           <div class="col-12">
+                            <input type="button" value="依價格排序" id="btnod" onclick="btnclick()"class="sortbtn" />
+                        </div>
+
+                            foreach (var pd in q2)
+                            {
+                                <!-- Single Product Area -->
+                                <div class="col-12 col-sm-6 col-lg-4 list-item" id="pdc">
+                                    <div class="single-product-area mb-50 single_portfolio_item home-design wow fadeIn" data-wow-delay="300ms">
+                                        <!-- Product Image -->
+                                        <div class="pd-img">
+
+
+                                            <a asp-action="detail" asp-route-id="@pd.ProductId">
+                                                @if (pd.Product.MainPhotoPath == null)
+                                                {
+                                                    <img class="pdpicbox" src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                                                }
+                                                else
+                                                {
+                                                    <img class="pdpicbox" src="~/images/@pd.Product.MainPhotoPath">
+                                                }
+                                            </a>
+                                            <!-- Product Tag -->
+                                            @if (pd.Product.ClickCount > 30)
+                                            {
+                                                <div class="product-tag">
+                                                    <a href="#">Hot</a>
+                                                </div>
+                                            }
+                                            <div class="product-meta d-flex">
+                                                @if (pd.Product.CategoryId == 1)
+                                                {
+                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                                    <input type="hidden" value="@pd.Product.Price" id="proprice" />
+                                                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                                    <input type="hidden" value="@pd.Product.Price" id="proprice" />
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <!-- Product Info -->
+                                        <div class="product-info mt-15 text-center">
+                                            <a>
+                                                @Html.ActionLink(pd.Product.ProductName, "detail", new { id = pd.ProductId }, new { })
+                                            </a>
+                                            <h6 id="price">NT$@(Convert.ToInt32( pd.Product.Price).ToString("0"))</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="col-12">
+                            <ul class="pagination left pull-left " id="btnul">
+                            </ul>
+                        </div>`)
+                }
+        };
+    //=======================================頁面分頁
     // 每個頁面要顯示幾個項目
     var perPage = 9;
     // 總共有多少個項目
@@ -172,4 +345,5 @@
             });
 
     });
+
 </script>

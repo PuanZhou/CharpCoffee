@@ -4,14 +4,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 
 <hr />
-    <h4 class="display-4">評論與回覆</h4>
+    <h4 class="display-4 comHC">評論與回覆</h4>
 <div>
+    <Button id="btnColl" class="btn btn-info">隱藏所有</Button>
     @{  //=====================印出所有評論(parent)=====================
         List<CCommentsViewModel> list1 = Model.Where(x => x.CommentParentId == 0).ToList();
         foreach (var item1 in list1)
         {
             LoadComments(item1, CountChildren(item1));
-            <hr />
+            <hr class="comHC"/>
         }
         //=====================找出子回覆及數量(done by CountChildren())============
         void findChildComments(CCommentsViewModel item1)
@@ -32,7 +33,7 @@
         //=====================印出評價或回覆=====================
         void LoadComments(CCommentsViewModel item, int count)
         {
-<div class="m-3 ml-4">
+    <div class="m-3 ml-4 comHC">
     @{ if (item.CommentId == @Model.FirstOrDefault().CommentId)
         {
             <small class="text-danger">New</small>
@@ -77,16 +78,34 @@
 </div>
 
 <script>
+    //=====================顯示/隱藏所有內容===============================
+    $("#btnColl").click(function () {
+        if ($(".comHC").attr("hidden") == "hidden") {
+            $(".comHC").removeAttr("hidden");
+            $("#btnColl").text("隱藏所有")
+        }
+        else {
+            $(".comHC").attr("hidden", "hidden");
+            $("#btnColl").text("展開所有")
+        }
+    })
+
+
     //=====================送出回覆，刷新該欄(callback)=====================
     $(".btnReply").click(function () {
         let cpId = $(event.target).attr("id").substr(2);
         let prId = @(Model.Take(1).Select(x => x.ProductId).FirstOrDefault());
         let txtReply = $(`#t_${cpId}`).val();
         $.post('@Url.Content("~/api/AddComment")', {
-            "OrderId": 1, "ProductId": prId, "MemberId": 1, "CommentParentId": cpId,
+            "OrderId": @(Model.First().OrderId), "ProductId": prId, "MemberId": 1, "CommentParentId": cpId,
             "CommentDescription": txtReply, "Star": 0
-            }, function () {
-            $("#divComment").load('@Url.Content("~/home/_CommentBoard")', { "productId": prId });
+        }, function (data) {
+                if (data != "您被禁言" && data != "尚未登入") {
+                    $(".submit_a_review_area").hide();
+                    $("#btnComment").hide();
+                    $("#divComment").load('@Url.Content("~/home/_CommentBoard")', { "productId": prId });
+                }
+                else { alert(data);}
             })
         })
     //=====================顯示/隱藏回覆的輸入欄等=====================

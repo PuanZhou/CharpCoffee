@@ -25,10 +25,16 @@ namespace prjCSCoffee.Controllers
         //    return View(datas);
         //}
 
+        private readonly CoffeeContext db;
+
+        public ConstellationController(CoffeeContext _db)
+        {
+
+            db = _db;
+        }
 
         public IActionResult faceToConstellation()
         {
-            CoffeeContext db = new CoffeeContext();
             IEnumerable<CConstellationViewModel> datas = null;
             var list = db.Constellations.Select(c => new CConstellationViewModel()
             {

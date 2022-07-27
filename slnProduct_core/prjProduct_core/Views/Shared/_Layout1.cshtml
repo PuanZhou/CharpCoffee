@@ -123,6 +123,9 @@
                             </span>
                             <span class="sidebar-text">產品管理</span>
                         </span>
+                        <span>
+                            <span class="badge badge-sm bg-secondary ms-1 text-gray-800" id="stockWarning"></span>
+                        </span>
                     </a>
                 </li>
                 <li class="nav-item" id="member">
@@ -320,6 +323,7 @@
                     <a class="nav-link d-flex align-items-center" asp-controller="Home" asp-action="Index">
                         <span class="sidebar-icon">
                             @*<img src="~/assets/img/themesberg.svg" height="20" width="28" alt="Themesberg Logo">*@
+                            <i class="fa-brands fa-shopify me-3"></i>
                         </span>
                         <span class="sidebar-text">前台網站</span>
                     </a>
@@ -443,9 +447,17 @@
     <!-- 自定義 Js -->
     <script src="~/js/SignInOut.js"></script>
 
-
+    <script>
+    stockWarning();
+         async function stockWarning() {
+        const response = await fetch('@Url.Content("~/Admin_Api/StockLessThanTen")'),
+              datas = await response.text();
+             $("#stockWarning").text(datas);
+        };
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 
 </body>
 

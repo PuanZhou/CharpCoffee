@@ -313,6 +313,10 @@
         .fa-bell {
             color: #73BF00;
         }
+        
+        #navbarPhone{
+            margin-right:30px;
+        }
     </style>
 </head>
 <body>
@@ -336,9 +340,10 @@
                             <!-- Top Header Content -->
                             <div class="top-header-meta">
                                 @*<a href="#" data-toggle="tooltip" data-placement="bottom" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: infodeercreative@gmail.com</span></a>
-                                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
+        <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
                                 <a href="#" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: cscoffee@msit141.com.tw</span></a>
-                                <a href="#" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Tel: 02-2222-2222</span></a>
+                                <a href="#" title="+1 234 122 122" id="navbarPhone"><i class="fa fa-phone" aria-hidden="true"></i> <span>Tel: 02-2222-2222</span></a>
+                                <a asp-controller="Admin_Dashboard" asp-action="Signin" title="Content Management System"><i class="fa-solid fa-cube"></i> <span>管理員後台系統</span></a>
                             </div>
 
                             <!-- Top Header Content -->
@@ -422,7 +427,7 @@
                     <nav class="classy-navbar justify-content-between" id="alazeaNav">
 
                         <!-- Nav Brand -->
-                        <a href="index.html" class="nav-brand nvlogo"><img src="img/Home-img/Clogo.png" alt=""></a>
+                        <a href="/" class="nav-brand nvlogo"><img src="img/Home-img/Clogo.png" alt=""></a>
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -520,6 +525,7 @@
         //====================語音控制==========================
 
         var recognition = new window.webkitSpeechRecognition;
+        recognition.interimResults = true;
         var text = $("#search");
         var instructions = $("#instructions");
         var content = '';
@@ -539,12 +545,13 @@
         recognition.onresult = function (e) {
             var current = e.resultIndex;
             var transcript = e.results[current][0].transcript;
+
             if (content == '') {
-                content += transcript;
+                content = transcript;
             }
             else {
                 content = '';
-                content += transcript;
+                content = transcript;
             }
             text.val(content);
         }
@@ -553,7 +560,7 @@
                 content += '';
             }
             recognition.start();
-            setTimeout(() => { recognition.isFinal = true }, 3000)
+            setTimeout(() => { recognition.end(); }, 3000)
 
         })
         text.on('input', function () {
@@ -566,6 +573,7 @@
             const response = await fetch('@Url.Content("~/api/CountCart")');
             const result = await response.text();
             countCart.innerHTML = result;
+            $("#cart-count").html(`${result}`);
         }
         CountCart();
 
@@ -640,6 +648,14 @@
     $(document).ready(() => {
         let timer = setInterval(timeAgo, 1000);
     });
+
+</script>
+
+          //=================前往購物車====================
+        $("#cart").click(function () {
+            $('.bootstrap-growl').remove();
+             window.location.href = '@Url.Content("~/shopping/shoppingcar")';
+        });
 
 </script>
 </body>

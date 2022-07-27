@@ -62,6 +62,7 @@ namespace prjProduct_core.Controllers
             var package = _context.Packages;
             return Json(package);
         }
+
         public IActionResult Process()
         {
             var process = _context.Processes;
@@ -304,6 +305,12 @@ namespace prjProduct_core.Controllers
                 return Content("Err", "text/plain", Encoding.UTF8);
             }
             
+        }
+
+        public IActionResult StockLessThanTen()
+        {
+            var count = _context.Products.Where(p => p.Stock < 10).ToList().Count;
+            return Content(count.ToString(), "text/plain", Encoding.UTF8);
         }
     }
 }

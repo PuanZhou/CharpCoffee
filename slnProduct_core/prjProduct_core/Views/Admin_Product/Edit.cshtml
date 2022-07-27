@@ -25,12 +25,12 @@
                 <span asp-validation-for="ProductName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category.CategoriesName" class="control-label"></label>
+                <label asp-for="Category.CategoriesName" class="control-label">類別</label>
                 @Html.DropDownListFor(model => model.CategoryId, ViewBag.CateListItem as SelectList, new { @class = "form-control animate__animated" })
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Country.CountryName" class="control-label"></label>                
+                <label asp-for="Country.CountryName" class="control-label">國家</label>
                 @Html.DropDownListFor(model => model.CountryId, ViewBag.CtryListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
@@ -71,17 +71,17 @@
         <div class="col-4">
             <h4 style="text-decoration:underline">咖啡類詳細資料</h4>
             <div class="form-group">
-                <label asp-for="Coffee.Package.PackageName" class="control-label"></label>
+                <label asp-for="Coffee.Package.PackageName" class="control-label">包裝法</label>
                 @Html.DropDownListFor(model => model.PackageId, ViewBag.PkgListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="PackageId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Coffee.Roasting.RoastingName" class="control-label"></label>
+                <label asp-for="Coffee.Roasting.RoastingName" class="control-label">烘培法</label>
                 @Html.DropDownListFor(model => model.RoastingId, ViewBag.RoastListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="RoastingId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Coffee.Process.ProcessName" class="control-label"></label>
+                <label asp-for="Coffee.Process.ProcessName" class="control-label">處理法</label>
                 @Html.DropDownListFor(model => model.ProcessId, ViewBag.PrcsListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="ProcessId" class="text-danger"></span>
             </div>
@@ -89,7 +89,7 @@
             <br />
             <div class="form-group form-check form-switch">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RainForest" /> @Html.DisplayNameFor(model => model.RainForest)
+                    <input class="form-check-input" asp-for="RainForest" /> 是否加入雨林聯盟
                 </label>
             </div>
             <br />
@@ -195,7 +195,7 @@
                 href="#theme-settings" role="button" aria-expanded="false" aria-controls="theme-settings"></button>
         <div class="col-12" id="DeletePhotos">
             <p>請將欲刪除圖片拖曳至此</p>
-            <div class="" style="border:4px dashed white;height:4em">               
+            <div class="" style="border:4px dashed white;height:4em">
             </div>
         </div>
     </div>
@@ -210,19 +210,37 @@
         </span>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="DeleteConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">提醒</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="GoDelete">確認</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Styles{
     <style>
         .mainImg {
             max-width: 70em;
-            max-height: 15em;            
+            max-height: 15em;
         }
     </style>
 }
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-       
+<script>
+
         var arrayBuffer = null;
         //========================= 預覽圖 =========================
         // 主產品預覽圖
@@ -238,30 +256,30 @@
                 analyzeImage();
             };
 
-            reader.readAsArrayBuffer(this.files[0]);            
+            reader.readAsArrayBuffer(this.files[0]);
         }, false);
         // 圖片智慧辨識
-        function analyzeImage() { 
-            var params = {                
-                "visualFeatures": "Categories,Description",                
+        function analyzeImage() {
+            var params = {
+                "visualFeatures": "Categories,Description",
                 "language": "en",
                 "model-version": "latest",
             };
 
             $.ajax({
                 url: "https://msit141-03-vision.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params),
-                beforeSend: function (xhrObj) {                    
+                beforeSend: function (xhrObj) {
                     xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
                     xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "c3b95ede298c455e80f20aa99e972245");
                 },
                 type: "POST",
-                processData: false,                
+                processData: false,
                 data: arrayBuffer
             })
                 .done(function (data) {
                     //alert(JSON.stringify(data));
                     let strings = JSON.stringify(data);
-                    
+
                     if (strings.includes("coffee maker")||strings.includes("metal")) {
                         $("#CategoryId")[0].selectedIndex = 1;
                         $("#CategoryId").css("backgroundColor", "#f6ebaf");
@@ -344,10 +362,10 @@
          //====================== 拖曳刪除圖片 =======================
         $("#DeletePhotos").on("dragover", function (e) {
             e.preventDefault();
-            console.log("aa")
+            e.dataTransfer.setData("Text/html", e.target.id);
             return false;
         });
-
+    
         $("#DeletePhotos").on("drop", function (e) {
             e.preventDefault();
             var yes = confirm("確定要刪除嗎?");
@@ -358,7 +376,23 @@
                 });
             };
         });
+
+    //var GoDelete = $("#GoDelete"),
+    //    deleteModal = $("#DeleteConfirmModal"),
+    //    aaa = null;
+
+    @* $("#DeletePhotos").on("drop", function (e) {
+        deleteModal.modal("show");
+        e.preventDefault();
+        document.querySelector("#GoDelete").addEventListener("click", test(e));
+    });
+
+    function test(e) {
+        e.originalEvent.dataTransfer.items[0].getAsString(async function (url) {
+            const response = await fetch('@Url.Content("~/Admin_Api/DeleteSubPhoto")' + `?url=${url}`);
+        });
+    };*@
          //====================== 拖曳刪除圖片 =======================
-    </script>
+</script>
 }
 

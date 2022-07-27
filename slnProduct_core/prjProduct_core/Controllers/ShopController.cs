@@ -15,14 +15,14 @@ namespace prjProduct_core.Controllers
     public class ShopController : Controller
     {
 
-        private readonly CoffeeContext db;
+        public readonly CoffeeContext db;
         public ShopController(CoffeeContext context)
         {
             db = context;
         }
 
 
-        public async Task<IActionResult> view(string search)
+        public async Task<IActionResult> view(string search, int? countryid)
         {
             if (string.IsNullOrEmpty(search))
             {
@@ -42,6 +42,7 @@ namespace prjProduct_core.Controllers
                     Star = p.Star,
                     MainPhotoPath=p.MainPhotoPath
                 });
+                ViewBag.countryid = countryid;
                 //左側推薦商品欄位
                 Random rng = new Random();
                 var bestSales = db.Products.Select(p => p).OrderBy(p => p.Stock).Take(20).ToList();
@@ -53,40 +54,77 @@ namespace prjProduct_core.Controllers
             }
             else
             {
-                var q = db.Products.Where(p => p.ProductName.Contains(search)).Select(p => new CProductViewModel()
+                if (countryid != null)
                 {
-                    ProductId = p.ProductId,
-                    ProductName = p.ProductName,
-                    CategoryId = p.CategoryId,
-                    Category = p.Category,
-                    Country = p.Country,
-                    Coffee = p.Coffee,
-                    Price = p.Price,
-                    Description = p.Description,
-                    Stock = p.Stock,
-                    TakeDown = p.TakeDown,
-                    ClickCount = p.ClickCount,
-                    Star = p.Star,
-                    MainPhotoPath = p.MainPhotoPath
-                });
-                //左側推薦商品欄位
-                Random rng = new Random();
-                var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
+                    ViewBag.countryid = countryid;
+                    var q = db.Products.Where(p => p.CountryId == countryid).Select(p => new CProductViewModel()
+                    {
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        CategoryId = p.CategoryId,
+                        Category = p.Category,
+                        Country = p.Country,
+                        Coffee = p.Coffee,
+                        Price = p.Price,
+                        Description = p.Description,
+                        Stock = p.Stock,
+                        TakeDown = p.TakeDown,
+                        ClickCount = p.ClickCount,
+                        Star = p.Star,
+                        MainPhotoPath = p.MainPhotoPath
+                    });
+                    //左側推薦商品欄位
+                    Random rng = new Random();
+                    var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
 
-                var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
+                    var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
 
-                ViewBag.Recommend = recommend;
-                return View(await q.AsNoTracking().ToListAsync());
+                    ViewBag.Recommend = recommend;
+                    return View(await q.AsNoTracking().ToListAsync());
+
+                }
+                else
+                {
+                    ViewBag.countryid = countryid;
+                    var q = db.Products.Where(p => p.ProductName.Contains(search)).Select(p => new CProductViewModel()
+                    {
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        CategoryId = p.CategoryId,
+                        Category = p.Category,
+                        Country = p.Country,
+                        Coffee = p.Coffee,
+                        Price = p.Price,
+                        Description = p.Description,
+                        Stock = p.Stock,
+                        TakeDown = p.TakeDown,
+                        ClickCount = p.ClickCount,
+                        Star = p.Star,
+                        MainPhotoPath = p.MainPhotoPath
+                    });
+                    //左側推薦商品欄位
+                    Random rng = new Random();
+                    var lowSales = db.Products.Select(p => p).OrderByDescending(p => p.Stock).Take(20).ToList();
+
+                    var recommend = lowSales.OrderBy(p => rng.Next()).Take(3).ToList();
+
+                    ViewBag.Recommend = recommend;
+                    return View(await q.AsNoTracking().ToListAsync());
+                }
+                
             }
         }
 
         public IActionResult detail(int? id)
         {
-
+            var q1 = db.Products.Find(id);
+            q1.ClickCount = q1.ClickCount + 1;
+            db.SaveChanges();
             var q = db.Products.Include(p => p.Coffee).ThenInclude(p => p.Roasting)
                 .Include(p => p.Coffee).ThenInclude(p => p.Process)
                 .Include(p => p.Coffee).ThenInclude(p => p.Package)
                 .Include(p => p.Photos)
+                .Include(p=>p.Comments)
                 .Where(p => p.ProductId == id).Select(p => new CProductViewModel()
                 {
                     ProductId = p.ProductId,
@@ -95,19 +133,25 @@ namespace prjProduct_core.Controllers
                     Category = p.Category,
                     Coffee = p.Coffee,
                     Country = p.Country,
+                    ClickCount=p.ClickCount+1,
                     Price = p.Price,
                     Description = p.Description,
                     Stock = p.Stock,
-                    TakeDown = p.TakeDown,
-                    Star = p.Star,
+                    TakeDown = p.TakeDown,                
+                    Star = p.Comments.ToList().Count==0?0:p.Comments.Sum(c=>c.Star) / p.Comments.Count,
                     MainPhotoPath = p.MainPhotoPath,
                     Photos=p.Photos.Select(p=>p.ImagePath).ToList()
                 }).ToList();
             return View(q[0]);
+
+            
+
         }
         public IActionResult forhomedetail(int? id)
         {
-
+            var q1 = db.Products.Find(id);
+            q1.ClickCount = q1.ClickCount + 1;
+            db.SaveChanges();
             var q = db.Products.Include(p => p.Coffee).ThenInclude(p => p.Roasting)
                 .Include(p => p.Coffee).ThenInclude(p => p.Process)
                 .Include(p => p.Coffee).ThenInclude(p => p.Package)
@@ -121,10 +165,11 @@ namespace prjProduct_core.Controllers
                     Coffee = p.Coffee,
                     Country = p.Country,
                     Price = p.Price,
+
                     Description = p.Description,
                     Stock = p.Stock,
                     TakeDown = p.TakeDown,
-                    Star = p.Star,
+                    Star = p.Comments.ToList().Count == 0 ? 0 : p.Comments.Sum(c => c.Star) / p.Comments.Count,
                     MainPhotoPath = p.MainPhotoPath,
                     Photos = p.Photos.Select(p => p.ImagePath).ToList()
                 }).ToList();

@@ -1,8 +1,9 @@
 ﻿@model prjProduct_core.ViewModel.CProductViewModel
+
 <style>
-    .picbox{
-        width:400px;
-        height:400px;
+    .picbox {
+        width: 400px;
+        height: 400px;
     }
 </style>
 <!-- ##### Breadcrumb Area Start ##### -->
@@ -110,15 +111,18 @@
                         <div class="short_overview">
                             <p>@Model.Description</p>
                         </div>
+                        <span>庫存量:   @Model.Stock</span>
                         <div class="cart--area d-flex flex-wrap align-items-center">
                             <!-- Add to Cart Form -->
-                            <form class="cart clearfix d-flex align-items-center" method="post">
-                                @*<div class="quantity">
-                            <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (!isNaN(qty)) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                            <input type="text" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
-                            <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                        </div>*@
-                                <a href="@Url.Action("AddtoCart","Shopping", new { id = Model.ProductId})" style="cursor:pointer" class="btn alazea-btn ml-15"><span hidden id="addtocart">@Model.ProductId</span>Add to cart</a>
+                            <form class="cart clearfix d-flex align-items-center">
+                                <div class="quantity">
+                                    <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (qty <= 1) return; else { if (!isNaN(qty)) effect.value--; };  return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                    <input type="text" class="qty-text" id="qty" step="1" min="1" max="10" name="quantity" value="1" disabled>
+                                    <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if (qty >=@Model.Stock) overstock(); else { if (!isNaN(qty)) effect.value++; };  return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="hidden" value="@Model.ProductId" name="id" id="proid" />
+                                <input type="button" name="addtocart" value="Add to cart" id="btnsubmit" class="btn alazea-btn ml-15" />
+                                <input type="hidden" value="@Model.Price" id="proprice" />
                             </form>
                             <!-- Wishlist & Compare -->
                             <div class="wishlist-compare d-flex flex-wrap align-items-center">
@@ -126,6 +130,7 @@
                                 <a style="cursor:pointer" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i><span hidden id="comid">@Model.ProductId</span></a>
                             </div>
                         </div>
+
                         @{
                             if (Model.CategoryId == 1)
                             {
@@ -135,6 +140,22 @@
                                     <p><span>烘培程度:</span>@Model.Coffee.Roasting.RoastingName</p>
                                     <p><span>處理方法:</span> <span>@Model.Coffee.Process.ProcessName</span></p>
                                     <p><span>包裝方式:</span> <span>@Model.Coffee.Package.PackageName</span></p>
+                                    <div class="ratings">
+                                        產品評價:
+                                        @{
+
+                                            double star = Math.Round((double)Model.Star, 1);
+                                            <span>@star</span>
+                                            if (star > 0)
+                                            {
+                                                for (int i = 0; i < Math.Floor(star); i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            }
+
+                                        }
+                                    </div>
                                 </div>
                             }
                             else
@@ -142,6 +163,29 @@
                                 <div class="products--meta">
                                     <p><span>產地:</span> <span>@Model.Country.CountryName</span></p>
                                     <p><span>產品種類:</span> <span>@Model.Category.CategoriesName</span></p>
+
+                                    <div class="ratings">
+                                        產品評價:
+
+                                        @{
+
+                                            double star = Math.Round((double)Model.Star, 1);
+
+                                            if (star > 0)
+                                            {
+                                                <span>@star</span>
+                                                for (int i = 0; i < Math.Floor(star); i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>尚未有人評價此產品</span>
+                                            }
+
+                                        }
+                                    </div>
                                 </div>
                             }
                         }
@@ -158,10 +202,10 @@
                     <!-- Tabs -->
                     <ul class="nav nav-tabs" role="tablist" id="product-details-tab">
                         <li class="nav-item">
-                            <a href="#description" class="nav-link active" data-toggle="tab" role="tab">Description</a>
+                            <a href="#description" class="nav-link active" data-toggle="tab" role="tab">咖啡品質</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#addi-info" class="nav-link" data-toggle="tab" role="tab">Additional Information</a>
+                            <a href="#addi-info" class="nav-link" data-toggle="tab" role="tab">有關咖啡豆</a>
                         </li>
                         <li class="nav-item">
                             <a href="#reviews" class="nav-link" data-toggle="tab" role="tab">評價&回覆 <span class="text-muted"></span></a>
@@ -172,26 +216,18 @@
                         <div role="tabpanel" class="tab-pane fade show active" id="description">
                             <div class="description_area">
                                 <p></p>
-                                <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. In scelerisque augue at the moment mattis. Proin vitae arcu sit amet justo sollicitudin tincidunt sit amet ut velit.Proin placerat vel augue eget euismod. Phasellus cursus orci eu tellus vestibulum, vestibulum urna accumsan. Vestibulum ut ullamcorper sapien. Pellentesque molestie, est ac vestibulum eleifend, lorem ipsum mollis ipsum.</p>
+                                <p>
+                                    越來越多人選擇自己在家裡沖咖啡，不只為興趣，也為了更好的咖啡品質。如果你已經，或者正打算要這麼做，那麼第一件你必須要知道的事情就是：好咖啡，來自高品質的咖啡豆。
+                                    這道理就跟大部份的食物一樣。一條不新鮮的魚，用再怎樣華麗的方式料理，也一定不怎麼好吃，但一條新鮮的魚，加點薑清蒸就非常好吃。咖啡也是一樣，品質不好的咖啡豆，再好的沖泡技巧或器具也救不回來，註定只能煮出不好喝的咖啡。
+                                    那麼，什麼是高品質的咖啡豆呢？回想一下你過去曾喝過覺得好喝的咖啡，大概都有兩個特徵，第一是香氣迷人，第二是味道好。不同品種咖啡豆的味道都不一樣，個人喜好當然也見仁見智，但所謂高品質的咖啡豆，就是要能盡可能地保留咖啡的香氣和味道，在最後沖泡時完整散發出來。
+                                </p>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="addi-info">
                             <div class="additional_info_area">
                                 <p>
-                                    What should I do if I receive a damaged parcel?
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit impedit similique qui, itaque delectus labore.</span>
-                                </p>
-                                <p>
-                                    I have received my order but the wrong item was delivered to me.
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis quam voluptatum beatae harum tempore, ab?</span>
-                                </p>
-                                <p>
-                                    Product Receipt and Acceptance Confirmation Process
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum ducimus, temporibus soluta impedit minus rerum?</span>
-                                </p>
-                                <p>
-                                    How do I cancel my order?
-                                    <br> <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum eius eum, minima!</span>
+                                    咖啡豆是最能完整保存咖啡風味的形式，並確保咖啡的新鮮與原味。有些廠商會在同一包咖啡粉裡，摻雜不同來源的咖啡，消費者很難確保咖啡的來源。
+                                    雖然磨豆也是一大門學問，但相信我們，一旦開始自己磨豆之後，你就再也回不去咖啡粉的日子了。嘗試各種粉末粗細沖煮後帶來的不同風味，絕對是自沖咖啡的一大樂趣。
                                 </p>
                             </div>
                         </div>
@@ -251,7 +287,7 @@
 <!-- ##### Related Product Area Start ##### -->
 <div class="related-products-area">
 </div>
-
+<input type="hidden" id="prostock" value="@Model.Stock" />
 
 @section Scripts{
     <script>
@@ -270,10 +306,12 @@
                 "OrderId": 1,"ProductId":pId, "MemberId":1, "CommentParentId":0,
                 "CommentDescription": comStr, "Star": starNum
             }, function (data) {
-                $(".submit_a_review_area").hide();
-                $("#btnComment").hide();
                 alert(data);
-                $("#divComment").load('@Url.Content("~/home/_CommentBoard")',{ "productId": pId });
+                if (data != "您被禁言" && data != "尚未登入") {
+                    $(".submit_a_review_area").hide();
+                    $("#btnComment").hide();
+                    $("#divComment").load('@Url.Content("~/home/_CommentBoard")',{ "productId": pId });
+                }
             })
         })
         //=====================計算評論與回覆的數量並顯示=====================
@@ -331,12 +369,63 @@
                             allow_dismiss: true,
                             stackup_spacing: 10,
                         });
-                    
+
                     } else {
                         window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
                     }
                 });
         })
+
+        //=================加入購物車========================
+        $("#btnsubmit").click(function () {
+            let proid = $(this).parent().find("#proid").val();
+            let qty = $(this).parent().find("#qty").val();
+            let proprice = parseInt($(this).parent().find("#proprice").val());
+            $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": qty, "price" : proprice },
+                function (data) {
+                    if (data === "add") {
+                        $.bootstrapGrowl("成功加入購物車", {
+                            ele: "body",
+                            type: "success",
+                            offset: { from: "bottom", amount: 50 },
+                            align: "right",
+                            width: "auto",
+                            delay: 3000,
+                            allow_dismiss: true,
+                            stackup_spacing: 10
+                        });
+                        CountCart();
+                    }
+                    else {
+                         window.location.href = '@Url.Content("~/Home/Login")';
+                    }
+                }
+            );
+        })
+        async function CountCart() {
+            let countCart = document.querySelector("#countCart");
+            const response = await fetch('@Url.Content("~/api/CountCart")');
+            const result = await response.text();
+            countCart.innerHTML = result;
+            $("#cart-count").html(`${result}`);
+        }
+
+
+
+        //==================判斷加入購物車數量上限==================
+        function overstock() {
+            $.bootstrapGrowl("已達可加入購物車上限", {
+                ele: "body",
+                type: "warning",
+                offset: { from: "bottom", amount: 50 },
+                align: "right",
+                width: "auto",
+                delay: 3000,
+                allow_dismiss: true,
+                stackup_spacing: 10
+            });
+        }
+
 
     </script>
 }

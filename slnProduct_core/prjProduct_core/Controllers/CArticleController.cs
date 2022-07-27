@@ -73,6 +73,18 @@ namespace prjCSCoffee.Controllers
             }
             return View(datas);
         }
+        public IActionResult New()
+        {
+            var q1 = db.Articles.OrderByDescending(p => p.ArticleDate).Take(5).ToList();
+            List<Article> q2 = new List<Article>();
+            foreach (Article item in q1)
+            {
+                q2.Add(item);
+            }
+
+            return PartialView(q2);
+        }
+
 
         public IActionResult Hot()
         {
@@ -147,5 +159,23 @@ namespace prjCSCoffee.Controllers
             int[] result = { acCount, acChridrenCount };
             return Json(result);
         }
+
+        //連結指定商品
+        public IActionResult prodNamelike(string PdtName)
+        {
+            var result = db.Products.Any(m => m.ProductName.Replace(" ", "").Trim().Contains(PdtName) || m.ProductName.Trim().Contains(PdtName));
+            if (result == false)
+            {
+                return Content("false", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                string prod = db.Products.FirstOrDefault(m => m.ProductName.Replace(" ", "").Trim().Contains(PdtName) || m.ProductName.Trim().Contains(PdtName)).ProductId.ToString();
+                return Content(prod, "text/plain", System.Text.Encoding.UTF8);
+            }
+
+        }
+
+
     }
 }

@@ -49,7 +49,7 @@ namespace prjProduct_core.Controllers
 
             return RedirectToAction("List");
         }
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
@@ -69,7 +69,7 @@ namespace prjProduct_core.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Admin a)
+        public IActionResult Edit(Admin a)
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {

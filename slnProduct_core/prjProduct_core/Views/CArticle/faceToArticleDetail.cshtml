@@ -45,7 +45,7 @@
                                 <a href="#">@Model.FirstOrDefault().ArticleDate.ToString().Substring(0, 9)</a>
                             </div>
                             <div class="post-thumbnail mb-30">
-                                <img src="~/images/Frog001.jpg" alt="">
+                                <img src="~/articleImages/@Model.FirstOrDefault().ArticleImage" alt="">
                             </div>
                             <p id="P1">
                                 @Html.Raw(@Model.FirstOrDefault().ArticleDescription)
@@ -171,7 +171,8 @@
                         "ArticleCommentParentId": 0,
                         "ArticleCommentDescription": aComment
                     }, function (data) {
-                        if (data === "login") {
+                            if (data === "login") {
+                                alert("留言前請先登入會員")
                             window.location.href = '@Url.Content("~/Home/Login")';
                         } else {
                             alert(data)
@@ -188,7 +189,8 @@
                         "ArticleCommentParentId": 0,
                         "ArticleCommentDescription": aComment
                     }, function (data) {
-                        if (data === "login") {
+                              if (data === "login") {
+                                  alert("留言前請先登入會員")
                             window.location.href = '@Url.Content("~/Home/Login")';
                         } else {
                             alert(data)

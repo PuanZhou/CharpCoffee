@@ -10,7 +10,7 @@
 <p>
     <a asp-action="Create">新增管理員</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
             <th>
@@ -69,7 +69,8 @@
                     @Html.DisplayFor(modelItem => item.AdminOk)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.AdminId })
+
+                    @Html.ActionLink("Edit", "Edit", "Admin_Admin", new { id = item.AdminId},new {@class= "btn btn-primary" })
 
                 </td>
             </tr>
