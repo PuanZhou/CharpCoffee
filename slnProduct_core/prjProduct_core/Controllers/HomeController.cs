@@ -157,10 +157,8 @@ namespace prjProduct_core.Controllers
         public IActionResult OnlineServices()
         {
             if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) == null)
-            {
-                Member m = db.Members.FirstOrDefault();
-                return View(m);
-            }
+                return RedirectToAction("Login");
+            
             return View(JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)));
         }
     }
