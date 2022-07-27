@@ -337,7 +337,7 @@
              })
 
         //====================加入收藏================================
-        $(".wishlist-btn").click(async function (event) {
+        @*$(".wishlist-btn").click(async function (event) {
             let likeid = event.currentTarget.textContent;
             console.log(likeid);
             $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
@@ -348,7 +348,7 @@
                         window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
                     }
                 });
-        })
+        })*@
 
         //=================加入購物車========================
         $("#btnsubmit").click(function () {

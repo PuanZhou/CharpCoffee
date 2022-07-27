@@ -279,15 +279,12 @@ namespace prjProduct_core.Controllers
         {
             try
             {
-                var mem = _context.Members.Where(m => m.Newspaper == true).ToList();
                 MailMessage mmsg = new MailMessage();
-                mmsg.From = new MailAddress("dateha.jp@gmail.com");
-                foreach(var item in mem)
-                {
-                    mmsg.To.Add(new MailAddress(item.MemberEmail));
-                }
+                string gmailFrom = "msit141csharpcoffee@gmail.com";
+                string gmailPW = "xryubogltaftuanp";
+                mmsg.From = new MailAddress(gmailFrom);
+                mmsg.To.Add(new MailAddress("forgotpwd87@gmail.com"));
                 mmsg.Subject = "[C#Coffee]電子報";
-
                 mmsg.Body = $@"<a href='https://images.plurk.com/4tRwJN3fuGEkmwgwrwTSMs.png'>點此看電子報</a>";
                 mmsg.IsBodyHtml = true;
                 mmsg.BodyEncoding = Encoding.UTF8;
@@ -295,7 +292,7 @@ namespace prjProduct_core.Controllers
                 using (SmtpClient clinet = new SmtpClient("smtp.gmail.com", 587))
                 {
                     clinet.EnableSsl = true;
-                    clinet.Credentials = new NetworkCredential("dateha.jp@gmail.com", "bstjpuocebhdytgy");
+                    clinet.Credentials = new NetworkCredential(gmailFrom, gmailPW);
                     clinet.Send(mmsg);
                 }
                 return Content("OK", "text/plain", Encoding.UTF8);
@@ -304,7 +301,7 @@ namespace prjProduct_core.Controllers
             {
                 return Content("Err", "text/plain", Encoding.UTF8);
             }
-            
+
         }
 
         public IActionResult StockLessThanTen()

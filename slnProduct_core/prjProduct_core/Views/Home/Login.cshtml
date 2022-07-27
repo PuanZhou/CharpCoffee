@@ -63,6 +63,11 @@
                                 <a href="/Home/Create" style="float: left;" class="forget">註冊</a>
                                 <a href="#" style="float: right;" id="forget" data-toggle="modal" data-target="#boxCenter">忘記密碼</a>
                             </div>
+                            <div class="input-group col-12 mb-4">
+                                <button type="button" class="btn btn-primary btndemo" id="d1">Demo091</button>
+                                <button type="button" class="btn btn-primary btndemo" id="d2">Demo092</button>
+                                <button type="button" class="btn btn-primary btndemo" id="d3">Demo093</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -91,6 +96,7 @@
 </div>
 @section Scripts{
     <script>
+        //眼睛
         let eyeclick = false;
         $("#btneye").click(function () {
             eyeclick = !eyeclick;
@@ -155,6 +161,20 @@
                     }
                 })
             }
+        });
+
+        //Demo鍵
+        $("#d1").click(() => {
+            txtAcc.val("0911111111");
+            txtPW.val("0911111111");
+        });
+        $("#d2").click(() => {
+            txtAcc.val("0922222222");
+            txtPW.val("0922222222");
+        });
+        $("#d3").click(() => {
+            txtAcc.val("0933333333");
+            txtPW.val("0933333333");
         })
     </script>
 }

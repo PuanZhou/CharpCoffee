@@ -487,7 +487,7 @@
 
 @section Scripts{
     <script>
-        
+
         //============排序============================
         let flag = true;
         function btnclick() {
@@ -544,7 +544,7 @@
                                             <div class="product-meta d-flex">
                                                 @if (pd.CategoryId == 1)
                                                 {
-                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Price" id="proprice" />
@@ -552,7 +552,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Price" id="proprice" />
@@ -611,7 +611,7 @@
                                             <div class="product-meta d-flex">
                                                 @if (pd.CategoryId == 1)
                                                 {
-                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Price" id="proprice" />
@@ -619,7 +619,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Price" id="proprice" />
@@ -815,8 +815,8 @@
                     $("#compare-count").html(`${data}`);
                 }
     )};
-           //============================加入收藏==============================
-    $(".wishlist-btn").click(async function (event) {
+   //============================加入收藏==============================
+        $("#showcard").on("click",".wishlist-btn",function (event) {
         let likeid = event.currentTarget.textContent;
         $(".bootstrap-growl").remove();
         $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
@@ -825,7 +825,7 @@
                     $.bootstrapGrowl("商品已在收藏當中", {
                         ele: "body",
                         type: "danger",
-                        offset: { from: "top", amount: 100 },
+                        offset: { from: "bottom", amount: 50 },
                         align: "center",
                         width: "auto",
                         delay: 3000,
@@ -837,7 +837,7 @@
                     $.bootstrapGrowl("已加入收藏", {
                         ele: "body",
                         type: "success",
-                        offset: { from: "top", amount: 100 },
+                        offset: { from: "bottom", amount: 50 },
                         align: "center",
                         width: "auto",
                         delay: 3000,

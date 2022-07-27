@@ -79,7 +79,7 @@
                         </div>
                     }
                 <div class="product-meta d-flex">
-                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                     <input type="hidden" value="@pd.ProductId" id="proid" />
                     <input type="hidden" value="@pd.Product.Price" id="proprice" />
@@ -159,7 +159,7 @@
                                             <div class="product-meta d-flex">
                                                 @if (pd.Product.CategoryId == 1)
                                                 {
-                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Product.Price" id="proprice" />
@@ -167,7 +167,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Product.Price" id="proprice" />
@@ -226,7 +226,7 @@
                                             <div class="product-meta d-flex">
                                                 @if (pd.Product.CategoryId == 1)
                                                 {
-                                                    <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Product.Price" id="proprice" />
@@ -234,7 +234,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <a href="#" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"></i></a>
+                                                    <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
                                                     <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
                                                     <input type="hidden" value="@pd.ProductId" id="proid" />
                                                     <input type="hidden" value="@pd.Product.Price" id="proprice" />
@@ -281,7 +281,7 @@
 
         }
     })
-    //=====================加入比較按鈕=====================
+    @*//=====================加入比較按鈕=====================
     $(".compare-btn").click(function () {
         let comid = $(this.children).text();
         $('.bootstrap-growl').remove();
@@ -333,9 +333,9 @@
                 function (data) {
                     $("#compare-count").html(`${data}`);
                 }
-    )};
+    )};*@
            //============================加入收藏==============================
-    $(".wishlist-btn").click(async function (event) {
+    @*$(".wishlist-btn").click(async function (event) {
         let likeid = event.currentTarget.textContent;
         $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
             function (data) {
@@ -346,9 +346,9 @@
                 }
             });
 
-    });
+    });*@
 
 
-   
+
 
 </script>
