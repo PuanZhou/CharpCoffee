@@ -403,7 +403,8 @@ namespace prjCSCoffee.Controllers
                       FName = t.Products.ProductName,
                       Fcount = t.Quantity,
                       Fprice = t.Price,
-                      Fproduct = t.Products
+                      Fproduct = t.Products,
+                      FPhoto=t.Products.MainPhotoPath
                   });
 
             #region 金流支付
@@ -476,6 +477,7 @@ namespace prjCSCoffee.Controllers
                     t.price = (decimal)item.Fprice;
                     t.product = item.Fproduct;
                     t.MerchantTradeNo = tradeNo;
+                    t.mainPhotoPath = item.FPhoto;
                     foreach (var item1 in list1)
                     {
                         t.Receiver = item1.Receiver;
