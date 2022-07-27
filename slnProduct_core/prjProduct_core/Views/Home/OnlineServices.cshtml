@@ -19,9 +19,9 @@
 .neon-effect{
   text-shadow:
     0 0 5px rgba(255, 65, 65, 1),
-    0 0 10px rgba(255, 65, 65, 1),
-    0 0 20px rgba(255, 65, 65, 1),
-    0 0 40px rgba(255, 65, 65, 1);
+    0 0 10px rgba(65, 255, 65, 1),
+    0 0 20px rgba(65, 65, 255, 1),
+    0 0 40px rgba(65, 65, 65, 1);
   animation:neon-shine 2s linear infinite;
 }
 
@@ -30,12 +30,16 @@
   90%{opacity:0.3;}
   100%{color:#232323;}
 }
+
+.Xbox:hover{
+    color:red;
+    font-weight:bold
+}
 </style>
 
 
 
 <div class="breadcrumb-area">
-    <!-- Top Breadcrumb Area -->
     <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
         <h2>線上客服</h2>
     </div>
@@ -55,7 +59,11 @@
 </div>
 @{
     string userName=Model.MemberName;
-    if (Model.MemberName == "李小明")
+    bool ChcekServer()
+    {
+        return Model.MemberName == "李小明";
+    }
+    if (ChcekServer())
     {
         userName = "(客服)";
     }
@@ -68,15 +76,10 @@
 }
 
 
-@*<div class="row">
-        <div class="col-12"><hr/></div>
-    </div>*@
 
-@*<h5>個人 ID: <span id="SelfID"></span></h5>*@
 <div class="container">
     <div class="row">&nbsp;</div>
     <div class="row">
-        @*<div class="col-2">暱稱</div>*@
         <div class="col-4"><input type="hidden" id="userInput" value="@Model.MemberName" /></div>
     </div>
     <div class="row flex-column" hidden>
@@ -116,7 +119,6 @@
 </div>
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
-@*<script src="~/js/chat.js"></script>*@
 
 
 <script>
@@ -144,47 +146,47 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
     let head = message.substr(0, 5);
     let body = message.substr(5);
 
-    if(curUser==server){//1客服視窗
-        if (head == "ihtgs") {//2傳圖
-            if(user==server){//3客服傳圖
+    if(curUser==server){
+        if (head == "ihtgs") {
+            if(user==server){
                 $(`#m${sendTo}`).prepend(`<div class="clearfix mt-1 rounded">
                     <img src="${body}" class="w-25 imgAnime" style="float:right"/>
                 </div>`);
             }
-            else{//3用戶傳圖
-                 if($(`#u${user}`)[0]==null){//4尚未傳訊→新增分頁、訊息頁
-                $("#listUser").append(`<div id="u${user}" class="col-1 border border-1" onclick='hideOther("${user}")'>${user}</div>`);
+            else{
+                 if($(`#u${user}`)[0]==null){
+                     $("#listUser").append(`<div id="u${user}" class="border border-1" onclick='hideOther("${user}")'>${user} &emsp; <i onclick='hideSelf("${user}")' class="Xbox bi bi-x-square-fill"></i></div>`);
                 $("#divParent").append(`<div id="m${user}" hidden></div>`);
-            }//續4 
-            $(`#u${user}`).attr("class","col-1 border border-1 neon-effect");
+                }
+                $(`#u${user}`).attr("class","border border-1 neon-effect");
                 $(`#m${user}`).prepend(`<div class="clearfix mt-1">
                     <img src="${body}" class="w-25 imgAnime"/>
                 </div>`);
             }
         }
-        else{//2傳文
-            if(user==server){//3客服傳訊
+        else{
+            if(user==server){
                  $(`#m${sendTo}`).prepend(`<div class="clearfix mt-1">
-                    <div class="shadow rounded p-1 pull-left bg-primary">
-                        <h6 class="text-white">${hm}</h6><h4 class="text-black">客服：${message}</h4>
+                    <div class="shadow rounded p-1 pull-right bg-light">
+                        <h6 class="text-white">${hm}</h6><h4 class="text-success">客服：${message}</h4>
                     </div>
                  </div>`);
             }
-            else{//3用戶傳訊
-                if($(`#u${user}`)[0]==null){//4尚未傳訊→新增分頁、訊息頁
-                $("#listUser").append(`<div id="u${user}" class="col-1 border border-1" onclick='hideOther("${user}")'>${user}</div>`);
+            else{
+                if($(`#u${user}`)[0]==null){
+                    $("#listUser").append(`<div id="u${user}" class="border border-1" onclick='hideOther("${user}")'>${user} &emsp; <i onclick='hideSelf("${user}")' class="Xbox bi bi-x-square-fill"></i></div>`);
                 $("#divParent").append(`<div id="m${user}" hidden></div>`);
-            }//續4
-            $(`#u${user}`).attr("class","col-1 border border-1 neon-effect");
+                }
+                $(`#u${user}`).attr("class","border border-1 neon-effect");
             $(`#m${user}`).prepend(`<div class="clearfix mt-1">
-                <div class="shadow rounded p-1 pull-right bg-light">
-                    <h6>${hm}</h6><h4 class="text-success">${user}：${message}</h4>
+                <div class="shadow rounded p-1 pull-left bg-primary">
+                    <h6>${hm}</h6><h4 class="text-black">${user}：${message}</h4>
                 </div>
             </div>`);
             }
         }
     }
-    else{//1用戶視窗
+    else{
         if (head == "ihtgs") {SendImg();} 
         else {
             if ($("#userInput")[0].value == server) {
@@ -209,14 +211,14 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
                                             <img src="${body}" class="w-25 imgAnime"/>
                                         </div>`);
         }
-    }//right side
+    }//r
     function SendMes(subject){
         $("#messagesList").prepend(`<div class="clearfix mt-1">
             <div class="shadow rounded p-1 pull-right bg-light">
                 <h6>${hm}</h6><h4 class="text-success">${subject}：${message}</h4>
             </div>
         </div>`);
-    }//left side
+    }//l
     function ReceiveMes(subject){
         $("#messagesList").prepend(`<div class="clearfix mt-1">
             <div class="shadow rounded p-1 pull-left bg-primary">
@@ -228,10 +230,14 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
 //========================================================
 function hideOther(user){
     $(`#m${user}`).removeAttr("hidden").siblings().attr("hidden","hidden");
-    $(`#u${user}`).attr("class","col-1 border border-1").attr("style","background-color:#95F5FE")
+    $(`#u${user}`).attr("class", "border border-1").attr("style", "background-color:#95F5FE")
     .siblings().attr("style","background-color:white");
     sendTo=user;
     //document.getElementById("sendTo").value==user; 
+    };
+function hideSelf(user) {
+    $(`#m${user}`).remove();
+    $(`#u${user}`).remove();
 
 }
 
@@ -276,7 +282,6 @@ document.getElementById("imageButton").addEventListener("click", function (event
     });
     event.preventDefault();
 });
-
 
 </script>
 
