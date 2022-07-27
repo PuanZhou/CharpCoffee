@@ -18,6 +18,7 @@ namespace prjProduct_core.ViewModel
         public Process Process { get; set; }
         public Roasting Roasting { get; set; }
         public string Description { get; set; }
+        public string MainPhotoPath { get; set; }
         public decimal? Price { get; set; }
     }
 }

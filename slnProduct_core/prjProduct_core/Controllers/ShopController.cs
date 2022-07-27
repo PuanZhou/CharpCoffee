@@ -374,6 +374,7 @@ namespace prjProduct_core.Controllers
             var relatedbyRoasting = db.Coffees.Include(p => p.Product).AsEnumerable().Where(p => p.RoastingId == RoastingId && p.CoffeeName != productName)
                 .OrderByDescending(x => rng.Next()).Select(p => new CRelatedViewModel()
                 {
+                    MainPhotoPath=p.Product.MainPhotoPath,
                     ProductId = p.ProductId,
                     CoffeeName = p.CoffeeName,
                     Price = Convert.ToInt32(p.Product.Price)
@@ -386,6 +387,7 @@ namespace prjProduct_core.Controllers
             var relatedbyProcess = db.Coffees.Include(p => p.Product).AsEnumerable().Where(p => p.ProcessId == ProcessId && p.CoffeeName != productName && p.CoffeeName != relatedbyRoasting.CoffeeName)
                 .OrderByDescending(x => rng.Next()).Select(p => new CRelatedViewModel()
                 {
+                    MainPhotoPath = p.Product.MainPhotoPath,
                     ProductId = p.ProductId,
                     CoffeeName = p.CoffeeName,
                     Price = Convert.ToInt32(p.Product.Price)
@@ -399,6 +401,7 @@ namespace prjProduct_core.Controllers
                 .Where(p => p.Country.ContinentId == ContinentId && p.CoffeeName != productName && p.CoffeeName != relatedbyRoasting.CoffeeName && p.CoffeeName != relatedbyProcess.CoffeeName).OrderByDescending(x => rng.Next())
                 .Select(p => new CRelatedViewModel()
                 {
+                    MainPhotoPath = p.Product.MainPhotoPath,
                     ProductId = p.ProductId,
                     CoffeeName = p.CoffeeName,
                     Price = Convert.ToInt32(p.Product.Price)

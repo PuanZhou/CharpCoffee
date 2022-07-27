@@ -39,7 +39,7 @@
                                         <!-- Single Best Seller Products -->
                                         <div class="single-best-seller-product d-flex align-items-center">
                                             <div class="product-thumbnail">
-                                                <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/img/coffee-img/been2.jpg" alt=""></a>
+                                                <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/images/@item.MainPhotoPath" alt=""></a>
                                             </div>
                                             <div class="product-info">
                                                 <a asp-controller="Shop" asp-action="detail" asp-route-id="@item.ProductId">@item.ProductName</a>
@@ -238,6 +238,7 @@
             width: 150px;
             color:#707070
         }
+
         .coffc {
             margin-left: 5px;
             font-size: 5px;
@@ -761,7 +762,8 @@
         /*下拉式選單*/
 
     //=====================加入比較按鈕=====================
-    $(".compare-btn").click(function () {
+
+        $("#showcard").on("click",".compare-btn",function () {
         let comid = $(this.children).text();
         $('.bootstrap-growl').remove();
         $.get('@Url.Content("~/compare/AddCompare")', { "Id": comid },

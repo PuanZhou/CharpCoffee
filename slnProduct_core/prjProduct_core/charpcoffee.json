@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "charpcoffee",
+  "private_key_id": "4fd440b3f19a063fe6fbda503a7c5cc851d30711",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCe17ugUVVzCC8j\nPqAcqKf94I6wsfdsRaAUHhaM4hXSx4dRQtYPLYzOgUM+iMyZ5Hemjatm8m6xtfmR\nzJgEYCPAqwd/6p/41Ffd2GSuD6tEmjtO1y7XSTo8XI+tfWfD36J2+/nbZr+IcnJ6\nvdC0yQCrGwD6grd+iiphjY/RKzR5cv11bEZ0I8HDOZQCsHdmhIAifCf16jhhIrRo\nGESPjTN7w6rPcGNEJtubWmXH1x+HczfFUT7OpkZKdgRRKu9lFCm3yjpJ/MJyz9/C\n3xO1DmzFA60mzo4PIckHVFqfP9Yng1Dx9onn5kPIFFOFbhX1p0mlrOj6O5g+cK03\nOv/QTTOjAgMBAAECggEAKX8QfCxjV17e+aUlrPb+lBtzC4QisD1sOXU2zO1PaDZK\nCpecVnC+5T/tskuIr/d4rqE6EvXopzJ0FXvOhu4ayP2lQuyniBjpL4KVosdjJdPp\nBIrAqOtvdE92FYu6bPhieBURzBiGlv3XHGu0N1Z/fzPZyJgXmc48jimuVaWk2ske\nvjCfIXluM8MLeswwI1+5ST0fmfjqFQmnuyKlvrxEyvsVCdHXw83bYYOIuJ2rwlUD\nkHUDXDC+uTW2miWxi89muHhSzB1E4qLukJITf9mGibhZZgpkXYyYcXBL4ypR6kPi\nQxYMqwONphnmfWcjPuglWoeuD+P0L1FLHnPHd9aeAQKBgQDetTnTrWaa/RKgTXU/\nZA67Zyz2umGarsHybRQmrLGVnchtos6bX5VK/Wrp01r2vJ20n5os6oJpNHpTGVjd\n6qFd7YUP5qkw76tTbPUtXqioebz4Qa+hf6H0uOAACKYAB1H/zB/8EXoCVeDOUpku\nF7Rgcpgf3IPjyCeMs/SPF5//AQKBgQC2lnWf6oqeAGcrPlW3JDWsMgKjcAJElMqE\n/ipWPGwrJgnzq3mUfeVqSdRbZsKjq8vW8s77Q+Dz8uIkND4Wx2TtYAhhTTX6RSr1\nspgQcc4Nz7JB572XxDEx3PRqkMQyA7JGBg9B2TsJkvvQVG9t1v16d4hjgYog/1jd\nh6SNSUPWowKBgFOemgLHpbHl+btkufQ+PmXQ/In7OzCYE0xR9nH6/4acwqefrJGc\nFvMcKat35zyjX1d1Ya8hsiuMP62546sXMNWSnBZ3VemA48QkMf6B/zOa2gAgsbAi\nuw2m6Lw6gxGZrgksfInpifUch5cQXmF3FwvrmwDDjGXXPjpPSzD6/uEBAoGBAKGn\nTlaaCcXfp3fSxYLS7S4aTNm0pl1funnKqWMWNdJx6CezLn44hG/5E6kkrrjHtj4F\nVRmCvFxfMrZJBpuWR5YeCu1StbJxoJpNV3Jfv8Xcl/7flK0Uh1WVQVRD/WAmg6SZ\nYtKy6CEO4CFPUCRYTq0pvTgUDV4vlNb1a8unDQevAoGABUmwT1O44vN6NDzP6hcH\nc51dTVAk5jiVaWSjRK898TRVhel4Y+tUNrAnFlnlH4vddIzFcKbQsB4aSDcF1sUP\nSQkv4Z6HS2/4E4sqaLZAew6WpMYFCvbplmY+e6mAU9M9H7hnsGz+BEiJnuFug2K6\nOJb9bZX7ITu9r1/gXxcbejA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "csharpcoffee@charpcoffee.iam.gserviceaccount.com",
+  "client_id": "116801755779564848277",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/csharpcoffee%40charpcoffee.iam.gserviceaccount.com"
+}

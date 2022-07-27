@@ -5,7 +5,7 @@
         <div class="col-12">
             <!-- Section Heading -->
             <div class="section-heading text-center">
-                <h2>Related Products</h2>
+                <h2>相關推薦商品</h2>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
                 <div class="single-product-area mb-100">
                     <!-- Product Image -->
                     <div class="product-img">
-                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductId"><img src="~/img/Home-img/03.jpg" alt=""></a>
+                        <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductId"><img class="pdpicbox" src="~/images/@item.MainPhotoPath" alt=""></a>
                         <div class="product-meta d-flex">
                             <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
                             <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
