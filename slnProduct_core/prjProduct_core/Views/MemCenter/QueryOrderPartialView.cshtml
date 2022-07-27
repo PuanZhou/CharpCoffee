@@ -1,10 +1,9 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.COrderViewModel>
-
-@*<style>
-    td {
-        white-space: normal
+<style>
+    td,th{
+        text-align:center;
     }
-</style>*@
+</style>
 
 <form class="form-inline">
     查詢訂單：
@@ -82,7 +81,7 @@
     </tbody>
 </table>
 <!-- ##### 浮動視窗 ##### -->
-<div class="modal fade" id="boxCenter" tabindex="-1" role="dialog" aria-labelledby="boxCenterTitle" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="boxCenter" tabindex="-1" role="dialog" aria-labelledby="boxCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -280,14 +279,14 @@
         let btntd = document.createElement("td");
         //檢視btn
         let btnSee = document.createElement("button");
-        btnSee.setAttribute("class", "btn btn-outline-secondary btn-sm detail");
+        btnSee.setAttribute("class", "btn btn-outline-secondary btn-sm ml-1 detail");
         btnSee.setAttribute("data-toggle", "modal");
         btnSee.setAttribute("data-target", "#boxCenter");
         btnSee.innerHTML = "檢視";
         btntd.appendChild(btnSee);
         //申請btn
         let btnCancel = document.createElement("button");
-        btnCancel.setAttribute("class", "btn btn-outline-danger btn-sm cancel");
+        btnCancel.setAttribute("class", "btn btn-outline-danger btn-sm ml-1 cancel");
         btnCancel.innerHTML = "申請";
         btntd.appendChild(btnCancel);
         newtr.appendChild(btntd);

@@ -1,45 +1,92 @@
 ﻿
-    <style>
+@{
+    ViewData["Title"] = "SendOrder";
+}
+
+
+@section Style
+{
+    <style>      
         .div1 {
-            height:1000px;
-            width:800px;
+            height: 1000px;
+            width: 800px;
         }
-       
+        .div2 {
+           text-align:center;      
+        }
+        .divimg img {
+            padding-right: 15px;
+            padding-bottom: 20px;
+        }
+        .divimg span {
+            font-size: 40px;
+        }
+        .sp1 {
+            font-size: 30px;
+        }
+        .sp2 {
+            font-size: 20px;
+        }
     </style>
+}
 
 
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
+    </div>
 
-
-<div>    
-    @*<img src="~/img/Home-img/01.jpg" class="div1"/>*@
-    <h1>訂單生成中...</h1>
-    <input type="hidden" name="MerchantTradeNo" value="@ViewBag.tradeNo" />
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-action="index" asp-controller="Home"><i class="fa fa-home"></i>Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Cart Area Start ##### -->
+<div class="cart-area section-padding-0-100 clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="cart-table clearfix">
+                    <div class="div2">
+                        <div class="divimg">
+                            <img src="~/img/Icon/checked.png" />
+                            <span>付款成功，您的訂單已成立!</span>
+                        </div>
+                        <div style="margin-bottom:30px">
+                            <span class="sp1">訂單號碼:@ViewBag.tradeNo</span><br />
+                        </div>
+                        <div style="margin-bottom:30px">
+                            <span class="sp2">※訂單確認電郵已經發送到您的電子信箱</span><br /><br />
+                        </div>
+                        <input type="button" id="btngo" class="btn alazea-btn w-100" style="border-radius:10px;" value="點我回商品首頁" />
+                        <input type="hidden" name="MerchantTradeNo" value="@ViewBag.tradeNo" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Cart Area End ##### -->
+
 
 
 @section Scripts
 {
     <script>
+        $("#btngo").click(function () {
+             window.location.href = '@Url.Content("~/shop/view")';
 
-
-        @*function loadurl() {
-            setTimeout(()=> {
-            window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
-            }, 2000)
-        }
-
-        loadurl();*@
-
-    function loadurl() {
-           
-            window.location.href = '@Url.Content("~/shop/index")';
-          
-        }
-
-        loadurl();
-
+        });
     </script>
-   
-
-
 }

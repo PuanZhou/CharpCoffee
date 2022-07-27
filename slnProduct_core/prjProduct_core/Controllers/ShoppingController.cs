@@ -41,8 +41,8 @@ namespace prjCSCoffee.Controllers
                       Price = t.Price,
                       product = t.Products,
                       ProStock = t.Products.Stock,
-                      ProPhotoPath=t.Products.MainPhotoPath,
-                      ShoppingCarDetialsId=t.ShoppingCarDetialsId
+                      ProPhotoPath = t.Products.MainPhotoPath,
+                      ShoppingCarDetialsId = t.ShoppingCarDetialsId
                   });
                 if (datas.ToList().Count == 0)
                 {
@@ -96,7 +96,7 @@ namespace prjCSCoffee.Controllers
 
         }
 
-        public IActionResult PartialViewCart() 
+        public IActionResult PartialViewCart()
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
@@ -274,7 +274,7 @@ namespace prjCSCoffee.Controllers
         public IActionResult Deletedrop(int? id) //拖拉刪的
         {
             UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
-            var prod = db.ShoppingCarDetails.FirstOrDefault(t => t.ShoppingCarDetialsId==id);
+            var prod = db.ShoppingCarDetails.FirstOrDefault(t => t.ShoppingCarDetialsId == id);
 
             db.ShoppingCarDetails.Remove(prod);
             db.SaveChanges();
@@ -407,7 +407,6 @@ namespace prjCSCoffee.Controllers
                   });
 
             #region 金流支付
-            //金流的
             string tradeNo = Guid.NewGuid().ToString();
             tradeNo = tradeNo.Substring(tradeNo.Length - 12, 12);
             ViewBag.tradeNo = tradeNo;
@@ -492,183 +491,8 @@ namespace prjCSCoffee.Controllers
             else
                 return RedirectToAction("view", "shop");
         }
-        //[HttpPost]
-        //public IActionResult Car3(CShoppingCartItem vModel)
-        //{
-        //    UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
 
-        //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_付款資訊))
-        //    {
-        //        string jsonCart = HttpContext.Session.GetString(CDictionary.SK_付款資訊);
-        //        List<CShoppingCartItem> cart = JsonSerializer.Deserialize<List<CShoppingCartItem>>(jsonCart);
-        //        foreach (var item in cart)
-        //        {
-        //            vModel.Receiver = item.Receiver;
-        //            vModel.Phone = item.Phone;
-        //            vModel.Address = item.Address;
-        //            vModel.Payment = item.Payment;
-        //            vModel.Discount = item.Discount;
-        //            vModel.Fee = item.Fee;
-        //        }
-        //    }
-        //    #region 產生Order明細
-        //    Order order = new Order();
-        //    order.MemberId = UserId;
-        //    order.OrderDate = DateTime.Now;
-        //    order.OrderStateId = 1;
-        //    order.PaymentId = vModel.Payment;
-        //    order.OrderAddress = vModel.Address;
-        //    order.OrderReceiver = vModel.Receiver;
-        //    order.OrderPhone = vModel.Phone;
-        //    if (vModel.Discount != 0) order.CouponId = vModel.Discount;
-        //    order.Fee = vModel.Fee;
-        //    order.TradeNo = vModel.MerchantTradeNo;
-        //    db.Orders.Add(order);
-        //    db.SaveChanges();
-        //    #endregion
-
-        //    System.Threading.Thread.Sleep(1000);
-        //    #region 產生OrderDetail 明細
-        //    var neworder = db.Orders.OrderByDescending(p => p.OrderId).Take(1).FirstOrDefault();
-        //    var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(p => new CShoppingCarDetailsViewModel()
-        //    {
-        //        ProductsId = p.ProductsId,
-        //        Quantity = p.Quantity,
-        //        ProName = p.Products.ProductName,
-        //        Price = p.Price
-        //    });
-        //    foreach (var item in datas)
-        //    {
-        //        OrderDetail detail = new OrderDetail();
-        //        detail.OrderId = neworder.OrderId;
-        //        detail.ProductId = (int)item.ProductsId;
-        //        detail.Quantity = (int)item.Quantity;
-        //        db.OrderDetails.Add(detail);
-        //    }
-        //    #endregion          
-
-        //    #region 發信給會員
-
-        //    // 收件人信箱
-        //    string userEmail = "jaslin881928@gmail.com";
-
-        //    #region 信件內容
-        //    string mailtable = "";
-        //    string mailreceiver = "";
-        //    var memname = db.Members.FirstOrDefault(m => m.MemberId == UserId).MemberName;
-        //    mailreceiver = mailreceiver += $"<ul class=\"list - group\" style=\"text - align:left; \">" +
-        //        $"<li>會員名稱:{memname}</li>" +
-        //        $"<li>訂單編號: {vModel.MerchantTradeNo}</li>" +
-        //        $"<li>訂單成立日期: {DateTime.Now.ToString()}</li></ul><br />";
-
-        //    mailtable += $"<table style=\"border: 2px solid black; width: 100 %; border - collapse:collapse; \" cellpadding=\"10\" border='1'>" +
-        //        $"<thead><tr>" +
-        //        $"<th scope=\"col\">序號</th>" +
-        //        $"<th scope=\"col\">產品名稱</th>" +
-        //        $"<th scope=\"col\">單價</th>" +
-        //        $"<th scope=\"col\">數量</th>" +
-        //        $"<th scope=\"col\">總價</th>" +
-        //        $"</tr></thead><tbody>";
-
-
-        //    int count = 0;
-        //    int total = 0;
-        //    int discountmoney = 0;
-        //    if (vModel.Discount != 0)
-        //    {
-        //        discountmoney = (int)db.Coupons.FirstOrDefault(p => p.CouponId == vModel.Discount).Money;
-        //    }
-
-        //    foreach (var item in datas)
-        //    {
-        //        count++;
-        //        int subtotal = (int)item.Price * (int)item.Quantity;
-        //        total += subtotal;
-        //        mailtable += $"<tr><th>{count}</th>" +
-        //                            $"<td>{item.ProName}</td>" +
-        //                            $"<td>NT$ {(int)item.Price}</td>" +
-        //                            $"<td>{item.Quantity}</td>" +
-        //                            $"<td>NT$ {subtotal}</td></tr>";
-        //    }
-        //    total = total + vModel.Fee - discountmoney;
-        //    mailtable += $"<tr><td colspan=\"5\" align=\"left\">折扣金額 : -NT$ {discountmoney} 元</td></tr>" +
-        //                $"<tr><td colspan=\"5\" align=\"left\">運費 : NT$ {vModel.Fee} 元</td></tr>" +
-        //                $"<tr><td colspan=\"5\" align=\"left\">總金額 : NT$ {total} 元</td></tr>" +
-        //                $"</tbody></table>";
-
-        //    string mailContent = $"<div style=\"border: 2px solid black; width: 600px; padding: 0 30px 30px 30px; \">" +
-        //        $"<div style=\"text - align:center; color: brown; \"><br />" +
-        //        $"<h3>***本通知信為系統自動發送，請勿直接回覆***</h3>" +
-        //        $"</div><hr /><div style=\"text - align:center; \">" +
-        //        $"<h4>您好，感謝您訂購 CSharpCoffee 商品，下表為您本次交易之明細。</h4>" +
-        //        $"{mailreceiver}{mailtable}</div>" +
-        //        $"<div style=\"text - align:center; color: gray; padding:50px; \"><br />" +
-        //        $"<h7>※如有訂單相關問題，請洽客服處理，謝謝。</h7></div></div>";
-
-        //    #endregion
-
-        //    // 寄件人信箱+驗證碼
-        //    string GoogleMailUserID = "dateha.jp@gmail.com";
-        //    string GoogleMailUserPwd = "lpviyzzmupcnrrqp";
-
-        //    // 使用Google Mail Server 發信
-        //    string SmtpServer = "smtp.gmail.com";
-        //    int SmtpPort = 587;
-        //    MailMessage mms = new MailMessage();
-        //    mms.From = new MailAddress(GoogleMailUserID);
-        //    mms.Subject = "[CSharpCoffee]訂單已成立通知";
-        //    mms.Body = mailContent;
-        //    mms.IsBodyHtml = true;  //讀不讀得懂html語法
-        //    mms.SubjectEncoding = Encoding.UTF8;    //標題編碼()
-        //    mms.BodyEncoding = Encoding.UTF8;
-        //    mms.To.Add(new MailAddress(userEmail)); //收件人
-        //    using (SmtpClient client = new SmtpClient(SmtpServer, SmtpPort))
-        //    {
-        //        client.EnableSsl = true;
-        //        client.Credentials = new NetworkCredential(GoogleMailUserID, GoogleMailUserPwd); // 寄信帳號
-        //        client.Send(mms); // 寄出郵件
-        //    }
-
-        //    #endregion
-
-        //    #region 所有要刪除的地方
-        //    //刪除product庫存
-        //    var data3 = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => new {
-        //        tProductid = t.ProductsId,
-        //        tQuantity = t.Quantity
-        //    }).ToList();
-        //    foreach (var item in data3)
-        //    {
-        //        Product prod = db.Products.FirstOrDefault(p => p.ProductId == item.tProductid);
-        //        prod.Stock -= item.tQuantity;
-        //    }
-
-        //    //刪除coupon
-        //    if (vModel.Discount != 0)
-        //    {
-        //        var delcoupon = db.CouponDetails.FirstOrDefault(m => m.MemberId == UserId && m.CouponId == vModel.Discount);
-        //        db.CouponDetails.Remove(delcoupon);
-        //    }
-
-
-        //    //刪除ShoppingCarDetail明細 
-        //    var data2 = db.ShoppingCarDetails.Where(t => t.MemberId == UserId).Select(t => t.ProductsId).ToList();
-        //    foreach (var item in data2)
-        //    {
-        //        Deletedetail(item);
-        //    }
-        //    db.SaveChanges();
-
-        //    #endregion
-
-        //    HttpContext.Session.Remove(CDictionary.SK_付款資訊);
-        //    HttpContext.Session.Remove(CDictionary.SK_使用的折價卷);
-
-        //    return RedirectToAction("view", "shop");
-        //}
-
-        
-        public IActionResult SendOrder(CShoppingCartItem vModel,string id)
+        public IActionResult SendOrder(CShoppingCartItem vModel, string id)
         {
             UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
 
@@ -687,6 +511,7 @@ namespace prjCSCoffee.Controllers
                     vModel.MerchantTradeNo = id;
                 }
             }
+            ViewBag.tradeNo = id;
             #region 產生Order明細
             Order order = new Order();
             order.MemberId = UserId;
@@ -726,7 +551,7 @@ namespace prjCSCoffee.Controllers
             #region 發信給會員
 
             // 收件人信箱
-            string userEmail = "jaslin881928@gmail.com";
+            string userEmail = "forgotpwd87@gmail.com";
 
             #region 信件內容
             string mailtable = "";
@@ -784,8 +609,8 @@ namespace prjCSCoffee.Controllers
             #endregion
 
             // 寄件人信箱+驗證碼
-            string GoogleMailUserID = "dateha.jp@gmail.com";
-            string GoogleMailUserPwd = "lpviyzzmupcnrrqp";
+            string GoogleMailUserID = "msit141csharpcoffee@gmail.com";
+            string GoogleMailUserPwd = "xryubogltaftuanp";
 
             // 使用Google Mail Server 發信
             string SmtpServer = "smtp.gmail.com";
@@ -841,7 +666,7 @@ namespace prjCSCoffee.Controllers
             HttpContext.Session.Remove(CDictionary.SK_付款資訊);
             HttpContext.Session.Remove(CDictionary.SK_使用的折價卷);
 
-            return RedirectToAction("view", "shop");
+            return View();
 
         }
 
@@ -863,12 +688,12 @@ namespace prjCSCoffee.Controllers
             var detailid = db.ShoppingCarDetails.OrderByDescending(p => p.ShoppingCarDetialsId).FirstOrDefault().ShoppingCarDetialsId;
             ViewBag.detailid = detailid;
             var data = db.Products.AsEnumerable().OrderByDescending(p => p.Stock).Select(p => new CShoppingCarDetailsViewModel()
-            {              
+            {
                 ProductsId = p.ProductId,
                 ProName = p.ProductName,
                 Price = (int)p.Price,
                 ProStock = p.Stock,
-                ProPhotoPath=p.MainPhotoPath
+                ProPhotoPath = p.MainPhotoPath
             }).Take(20).OrderByDescending(x => rng.Next());
 
             var data1 = db.ShoppingCarDetails.Where(m => m.MemberId == UserId).Select(p => p.ProductsId).ToList();
@@ -894,8 +719,5 @@ namespace prjCSCoffee.Controllers
 
     }
 }
-
-
-//TODO 1 金流    
 
 

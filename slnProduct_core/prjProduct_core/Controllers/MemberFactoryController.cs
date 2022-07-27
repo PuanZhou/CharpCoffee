@@ -20,9 +20,9 @@ namespace prjCSCoffee.Controllers
     public class MemberFactoryController : Controller
     {
 
-        CoffeeContext db ;
+        CoffeeContext db;
 
-        public MemberFactoryController(CoffeeContext  _db)
+        public MemberFactoryController(CoffeeContext _db)
         {
             db = _db;
         }
@@ -30,7 +30,7 @@ namespace prjCSCoffee.Controllers
         public IActionResult QueryMemEmail(string MemberEmail)
         {
             var emailExist = db.Members.Any(m => m.MemberEmail == MemberEmail);
-            return Content(emailExist.ToString(),"text/plain",Encoding.UTF8);
+            return Content(emailExist.ToString(), "text/plain", Encoding.UTF8);
         }
 
         public IActionResult QueryMemPhone(string MemberPhone)
@@ -172,20 +172,19 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult ChangeNewPW(string txtNewPW)
         {
-            if(HomeController.loginmem == null)
+            if (HomeController.loginmem == null)
             {
                 return RedirectToAction("Login", "Home");
             }
             else
             {
-                
                 var mem = db.Members.FirstOrDefault(m => m.MemberId == HomeController.loginmem.MemberId);
                 string newPW = new CMemberViewModel().PWHasH(txtNewPW);
                 mem.MemberPassword = newPW;
                 db.SaveChanges();
                 return Content("OK", "text/plain", Encoding.UTF8);
             }
-            
+
         }
 
 
@@ -213,33 +212,53 @@ namespace prjCSCoffee.Controllers
                     mmsg.IsBodyHtml = false;
                     mmsg.BodyEncoding = Encoding.UTF8;
                     mmsg.SubjectEncoding = Encoding.UTF8;
-                    using(SmtpClient clinet = new SmtpClient("smtp.gmail.com",587))
+                    using (SmtpClient clinet = new SmtpClient("smtp.gmail.com", 587))
                     {
                         clinet.EnableSsl = true;
                         clinet.Credentials = new NetworkCredential("dateha.jp@gmail.com", "bstjpuocebhdytgy");
                         clinet.Send(mmsg);
                     }
-                    return Content("信件已寄出", "text/plain", Encoding.UTF8);
+                    return Content("sended", "text/plain", Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {
-                    return Content("信箱格式有誤", "text/plain", Encoding.UTF8);
+                    return Content("err", "text/plain", Encoding.UTF8);
                 }
 
             }
             else
             {
-                return Content("此信箱未被註冊", "text/plain", Encoding.UTF8);
+                return Content("none", "text/plain", Encoding.UTF8);
 
             }
 
         }
 
-
-        public IActionResult MailNews()//寄送電子報
+        public IActionResult Notice()
         {
+            var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new
+            {
+                TradeNo = n.TradeNo,
+                NotifyTime = n.NotifyTime,
+                orderState = n.OrderState.OrderState1
+            });
+            return Json(noti);
+        }
 
-            return Content("");
+        public IActionResult DeletNotice(int id)
+        {
+            if (HomeController.loginmem == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                var noti = db.Notifications.FirstOrDefault(n => n.MemberId == HomeController.loginmem.MemberId && n.NotificationId == id);
+                db.Notifications.Remove(noti);
+                db.SaveChanges();
+                return Content("OK", "text/plain", Encoding.UTF8);
+            }
+            
         }
 
     }

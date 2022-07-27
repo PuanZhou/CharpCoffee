@@ -18,6 +18,10 @@
     </div>
 </form>
 <br />
+<a class="btn btn-info d-inline-flex align-items-center me-2" href="/Admin_Member/Newspaper" id="emailNews">
+    <i class="fa-solid fa-paper-plane"></i>發送電子報
+</a>
+<br/>
 <br />
 <div class="card card-body border-0 shadow table-wrapper table-responsive">
     <table class="table-hover rounded">
@@ -53,51 +57,51 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberId)
-                </td>
-                <td>
-                    <img src="~/Images/@item.MemberPhotoPath" />
-                </td>
-                <td style="text-align:center">
-                    @Html.DisplayFor(modelItem => item.MemberPhone)
-                </td>
-                <td style="text-align:center">
-                    @Html.DisplayFor(modelItem => item.MemberName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberAddress)
-                </td>
-                <td style="text-align:center">
-                    @Html.DisplayFor(modelItem => item.MemberEmail)                    
-                </td>
-                <td style="text-align:center">
-                    @Convert.ToDateTime(item.MemberBirthDay).ToString("yyyy/MM/dd")
-                </td>
-                <td style="text-align:center">
-                    @{
-                        if (item.BlackList == false)
-                        {
-                            @Html.Label("未停權", "未停權", new { style = "color:green;font-weight:bold" })
-                        }
-                        else
-                        {
-                            @Html.Label("停權中", "停權中", new { style = "color:red;font-weight:bold" })
-                        }
-                    }
-                </td>
-                <td class="col-md-1" style="text-align:center">
-                    @Html.ActionLink("消費紀錄", "Details", "Admin_Member", new { id = item.MemberId}, new { @class = "btn btn-sm btn-primary" })
-                    <br />
-                    <br />
-                    @{ if (item.BlackList == false)
-                            @Html.ActionLink("停權處理", "suspend", "Admin_Member", new { id = item.MemberId }, new { @class = "btn btn-sm btn-danger", onclick = "return confirm('確認要停權此會員嗎?')" })
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemberId)
+                    </td>
+                    <td>
+                        <img src="~/Images/@item.MemberPhotoPath" />
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.MemberPhone)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.MemberName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MemberAddress)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.MemberEmail)
+                    </td>
+                    <td style="text-align:center">
+                        @Convert.ToDateTime(item.MemberBirthDay).ToString("yyyy/MM/dd")
+                    </td>
+                    <td style="text-align:center">
+                        @{
+                            if (item.BlackList == false)
+                            {
+                                @Html.Label("未停權", "未停權", new { style = "color:green;font-weight:bold" })
+                            }
                             else
-                                @Html.ActionLink("重新啟用", "restart", "Admin_Member", new { id = item.MemberId }, new { @class = "btn btn-sm btn-success key", onclick = "return confirm('確認要解除此會員的停權嗎?')" })
-                    }
-                </td>
-            </tr>
+                            {
+                                @Html.Label("停權中", "停權中", new { style = "color:red;font-weight:bold" })
+                            }
+                        }
+                    </td>
+                    <td class="col-md-1" style="text-align:center">
+                        @Html.ActionLink("消費紀錄", "Details", "Admin_Member", new { id = item.MemberId }, new { @class = "btn btn-sm btn-primary" })
+                        <br />
+                        <br />
+                        @{ if (item.BlackList == false)
+                                @Html.ActionLink("停權處理", "suspend", "Admin_Member", new { id = item.MemberId }, new { @class = "btn btn-sm btn-danger", onclick = "return confirm('確認要停權此會員嗎?')" })
+                                else
+                                    @Html.ActionLink("重新啟用", "restart", "Admin_Member", new { id = item.MemberId }, new { @class = "btn btn-sm btn-success key", onclick = "return confirm('確認要解除此會員的停權嗎?')" })
+                        }
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

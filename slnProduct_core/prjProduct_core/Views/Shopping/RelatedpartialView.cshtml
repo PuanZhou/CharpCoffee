@@ -1,6 +1,12 @@
 ﻿@*@model IEnumerable<prjProduct_core.ViewModel.CRelatedViewModel>*@
+
 @model IEnumerable<prjCSCoffee.ViewModel.CShoppingCarDetailsViewModel>
-<div class="container wow fadeInUp" data-wow-delay="100ms">
+<style>
+    .product-img img{
+        height:350px;
+    }
+</style>
+<div  class="container wow fadeInUp" data-wow-delay="100ms">
     <div class="row">
         <div class="col-12">
             <!-- Section Heading -->
@@ -18,7 +24,7 @@
             <div class="col-12 col-sm-6 col-lg-4">
                 <div class="single-product-area mb-100">
                     <!-- Product Image -->
-                    <div class="product-img">
+                    <div class="product-img" style="height:350px;">
                         @if (item.ProPhotoPath == null)
                         {
                             <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductsId"><img src="~/img/Home-img/03.jpg" alt=""></a>

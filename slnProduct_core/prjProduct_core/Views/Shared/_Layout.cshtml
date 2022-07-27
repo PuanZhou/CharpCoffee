@@ -1,4 +1,5 @@
 ﻿@using prjProduct_core.Controllers
+@using prjProduct_core.ViewModel
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,24 +20,27 @@
     <!-- animate style -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link href="~/css/PagedList.css" rel="stylesheet" />
+    <link href="~/css/Notice.css" rel="stylesheet" />
     @await RenderSectionAsync("Style", required: false)
     <style>
         .pdpicbox {
-           
             height: 250px;
         }
+
         .nvlogo {
             height: 75px;
             width: 175px;
         }
+
         .right-banner {
             position: fixed;
             top: 50vh;
             right: 2rem;
-            z-index:999;
+            z-index: 999;
         }
+
         .Aibot {
-            cursor:pointer;
+            cursor: pointer;
             position: fixed;
             top: 75vh;
             right: 1.5rem;
@@ -45,6 +49,7 @@
             animation-duration: 1.5s;
             animation-iteration-count: infinite;
         }
+
         .micicon {
             -webkit-transition-duration: 500ms;
             transition-duration: 500ms;
@@ -60,6 +65,7 @@
             .micicon:hover, .micicon.current {
                 color: #70c745;
             }
+
         .coffc {
             margin-left: 5px;
             font-size: 5px;
@@ -348,9 +354,7 @@
                                         <button class="btn btn-secondary dropdown-toggle mr-30" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">會員專區</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="/MemCenter/Index">會員中心</a>
-                                            <a class="dropdown-item" href="#"><i style="color:black" class="fa-solid fa-bell"></i>會員通知?</a>
-                                            @*<a class="dropdown-item" href="#">會員xx</a>
-                                            <a class="dropdown-item" href="#">會員ox</a>*@
+                                            @*<a class="dropdown-item" href="#">會員ox</a>*@
                                             <a class="dropdown-item" href="/home/onlineServices">即時客服</a>
                                             <a class="dropdown-item" href="/Home/Logout" id="logout" hidden>登出</a>
                                         </div>
@@ -358,8 +362,52 @@
                                 </div>
                                 <!-- Login -->
                                 <div class="login">
-                                    <a href="/Home/Login" id="loginID"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@HomeController.MemName</span></a>
+                                    @{ string arror = "pointer";
+                                        if (HomeController.MemName != "Login")
+                                        { arror = "default"; }
+                                        <a href="/Home/Login" id="loginID" style="cursor:@arror"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@HomeController.MemName</span></a>}
                                 </div>
+                                <!-- 通知 -->
+                                @{
+                                    if (HomeController.loginmem != null)
+                                    {
+                                        CoffeeContext db = new CoffeeContext();
+                                        var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new CNotificationViewModel()
+                                        {
+                                            TradeNo = n.TradeNo,
+                                            NotifyTime=n.NotifyTime,
+                                            statement = n.OrderState.OrderState1
+
+                                        }).Take(5).ToList();
+
+                                        <div class="notifications">
+                                            <a href="#" id="notify" hidden><i class="fa-solid fa-bell"></i></a>
+                                            <div class="notification_dd">
+                                                <ul class="notification_ul">
+                                                    
+                                                    @{foreach (var item in noti)
+                                                        {
+                                                    <li>
+                                                        <div class="notify_data">
+                                                            <div class="title">@item.TradeNo 的訂單通知</div>
+                                                            <div class="sub_title">您的商品目前：@item.statement</div>
+                                                        </div>
+                                                        <div class="notify_status">
+                                                            <p class="timebefore">@item.NotifyTime.ToString("R")</p>
+                                                        </div>
+                                                    </li>
+                                                        }
+                                                    }
+                                                    <li class="showAll">
+                                                        <a href="/MemCenter/Notice"><p class="link">顯示全部</p></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+
+                                }
+
                                 <!-- Cart -->
                                 <div class="cart">
                                     <a asp-controller="Shopping" asp-action="ShoppingCar"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
@@ -435,16 +483,15 @@
         </div>
     </header>
     <!-- ##### Header Area End ##### -->
-   
+
     <div>
         <!-- ##### Right-Banner ##### -->
         <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
             <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /> <span class="badge badge-light" id="compare-count"></span></button>
             <button id="cart" type="button" class="btn btn-light" title="購物車"><img src="~/img/Icon/carts.png" /> <span class="badge badge-light" id="cart-count"></span></button>
-            <button type="button" class="btn btn-light"><i class="fa-solid fa-bell"></i></button>
         </div>
         <!-- ##### AiBot ##### -->
-        <img class="Aibot"  src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
+        <img class="Aibot" src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
         <main role="main" class="pb-3">
 
             @RenderBody()
@@ -563,12 +610,51 @@
                 }
             );
         });
+    //=======================通知============================
+    $("#notify").click(function () {
+        $(this).parent().toggleClass("active");
+    });
+    //=============多少時間前的通知=====================
+    let notiTimes = $(".timebefore");
+    let timeArr = [];
+    $.each(notiTimes, function (index, value) {
+        timeArr.push(value.innerText);
+    });
+    function timeAgo() {
+        let nowTime = new Date().getTime();
+        for (let i = 0; i < timeArr.length; i++) {
+            let NotifyTime = new Date(timeArr[i]).getTime();
+            let period = nowTime - NotifyTime;
+            let days = Math.floor(period / (24 * 60 * 60 * 1000));
+            if (days >= 1) {//超過一天
+                notiTimes.get(i).innerText = `${days}天前`;
+            } else {//一天之內
+                let hours = Math.floor((period % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60));
+                if (hours >= 1) {
+                    notiTimes.get(i).innerText = `${hours}小時前`;
+                } else {//一小時內
+                    let minutes = Math.floor((period % (60 * 60 * 1000)) / (1000 * 60));
+                    if (minutes >= 1) {
+                        notiTimes.get(i).innerText = `${minutes}分鐘前`;
+                    } else {//一分鐘內
+                        notiTimes.get(i).innerText = `幾秒鐘前`;
+                    }
+                }
+                
+            }
+        }
+    }
+    timeAgo();
+    $(document).ready(() => {
+        let timer = setInterval(timeAgo, 1000);
+    });
 
-          //=================前往購物車====================
-        $("#cart").click(function () {
-            $('.bootstrap-growl').remove();
-             window.location.href = '@Url.Content("~/shopping/shoppingcar")';
-        });
+
+    //=================前往購物車====================
+    $("#cart").click(function () {
+        $('.bootstrap-growl').remove();
+            window.location.href = '@Url.Content("~/shopping/shoppingcar")';
+    });
 
 </script>
 </body>

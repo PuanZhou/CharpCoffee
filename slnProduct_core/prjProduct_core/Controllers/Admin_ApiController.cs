@@ -275,6 +275,38 @@ namespace prjProduct_core.Controllers
             return Json(new { state = "200" });
         }
 
+        public IActionResult SendNewspaper(string newsimg)
+        {
+            try
+            {
+                var mem = _context.Members.Where(m => m.Newspaper == true).ToList();
+                MailMessage mmsg = new MailMessage();
+                mmsg.From = new MailAddress("dateha.jp@gmail.com");
+                foreach(var item in mem)
+                {
+                    mmsg.To.Add(new MailAddress(item.MemberEmail));
+                }
+                mmsg.Subject = "[C#Coffee]電子報";
+
+                mmsg.Body = $@"<a href='https://images.plurk.com/4tRwJN3fuGEkmwgwrwTSMs.png'>點此看電子報</a>";
+                mmsg.IsBodyHtml = true;
+                mmsg.BodyEncoding = Encoding.UTF8;
+                mmsg.SubjectEncoding = Encoding.UTF8;
+                using (SmtpClient clinet = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    clinet.EnableSsl = true;
+                    clinet.Credentials = new NetworkCredential("dateha.jp@gmail.com", "bstjpuocebhdytgy");
+                    clinet.Send(mmsg);
+                }
+                return Content("OK", "text/plain", Encoding.UTF8);
+            }
+            catch
+            {
+                return Content("Err", "text/plain", Encoding.UTF8);
+            }
+            
+        }
+
         public IActionResult StockLessThanTen()
         {
             var count = _context.Products.Where(p => p.Stock < 10).ToList().Count;

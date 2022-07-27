@@ -39,7 +39,7 @@ namespace prjProduct_core.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(CMemberViewModel cmem)
+        public IActionResult Index(CEditMemberViewModel cmem)
         {
             if (HomeController.loginmem == null)
             {
@@ -59,7 +59,6 @@ namespace prjProduct_core.Controllers
                     mem.MemberName = cmem.MemberName;
                     mem.MemberEmail = cmem.MemberEmail;
                     mem.MemberAddress = cmem.MemberAddress;
-                    mem.MemberPassword = cmem.MemberPassword;
                     mem.Newspaper = cmem.Newspaper;
                 }
                 db.SaveChanges();
@@ -152,6 +151,18 @@ namespace prjProduct_core.Controllers
             }
         }
 
+        public IActionResult Notice()
+        {
+            var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime)
+                .Select(n => new CNotificationViewModel()
+                {
+                    NotificationId = n.NotificationId,
+                    NotifyTime = n.NotifyTime,
+                    statement = n.OrderState.OrderState1,
+                    TradeNo = n.TradeNo
+                }).ToList();
+            return View(noti);
+        }
 
     }
 }

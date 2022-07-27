@@ -61,7 +61,7 @@
                                 <button type="submit" class="btn alazea-btn btn-lg mt-15" id="btnlogin">登入</button>
                                 <br />
                                 <a href="/Home/Create" style="float: left;" class="forget">註冊</a>
-                                <a href="#" style="float: right;" class="" data-toggle="modal" data-target="#boxCenter">忘記密碼</a>
+                                <a href="#" style="float: right;" id="forget" data-toggle="modal" data-target="#boxCenter">忘記密碼</a>
                             </div>
                         </div>
                     </form>
@@ -104,14 +104,36 @@
 
         })
 
-        //忘記密碼寄信
+        //忘記密碼寄信 TODO 01
+        $("#forget").click(() => { $("#recipient-name").val(""); });
         $("#sendEmail").click(function () {
-            console.log("AA")
             let mail = $("#recipient-name").val()
             $.get('@Url.Content("~/MemberFactory/SendMail")', { "MemberEmail": mail },
                 function (data) {
-                    $("#recipient-name").html("");
-                    $.boot
+                    $("#recipient-name").val("");
+                    if (data == "sended") {
+                        $.bootstrapGrowl("郵件已成功寄出", {
+                            ele: "body",
+                            type: "success",
+                            offset: { from: "top", amount: 300 },
+                            align: "center",
+                            width: "auto",
+                            delay: 3000,
+                            allow_dismiss: true,
+                            stackup_spacing: 10,
+                        })
+                    } else{
+                        $.bootstrapGrowl("郵件地址有誤", {
+                            ele: "body",
+                            type: "success",
+                            offset: { from: "top", amount: 300 },
+                            align: "center",
+                            width: "auto",
+                            delay: 3000,
+                            allow_dismiss: true,
+                            stackup_spacing: 10,
+                        })
+                    }
                 })
         })
 

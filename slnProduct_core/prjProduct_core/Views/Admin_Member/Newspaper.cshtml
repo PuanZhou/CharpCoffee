@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewData["Title"] = "Newspaper";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+@section Styles{
+    @*<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">*@
+}
+<h1 style="margin-top: 0.5em; font-weight: bold">發送電子報</h1>
+<br />
+<div style="width:70%;">
+    <div style="width:70%;display:inline-block;">
+        <input class="form-control" style="display:inline;" type="file" id="newsfile">
+    </div>
+    <div style="width:10%;display:inline-block;">
+        <button class="btn btn-secondary" type="button" id="sendmail" disabled>送出</button>
+    </div>
+    <br />
+    <img style="height:40%;width:30%;margin-top:0.5em;" id="newsimg" />
+</div>
+
+
+@section Scripts{
+    <script>
+    //預覽圖片
+        let file = null;
+        let arraybuffer = null;
+    $("#newsfile").on("change", function (eve) {
+        file = this.files[0];
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            arraybuffer = this.result;
+            $("#newsimg").attr("src", e.target.result);
+
+        }
+        reader.readAsDataURL(file);
+        if ($("#newsfile").val()!="")
+        $("#sendmail").removeAttr("disabled");
+    })
+    //送信
+
+        $("#sendmail").click(() => {
+            let arraybufferview = new Uint8Array(arraybuffer);
+            let blob = new Blob([arraybufferview], { type: "image/jpg" });
+            let urlCreater = window.URL || window.webkitURL;
+            let url = urlCreater.createObjectURL(blob).substr(5);
+            $.get('@Url.Content("~/Admin_Api/SendNewspaper")', { "newsimg": url },
+                function (data) {
+                    if (data === "OK") {
+                        alert("發送成功");
+                    } else {
+                        alert("發送失敗");
+                    }
+                })
+    })
+    </script>
+
+}
