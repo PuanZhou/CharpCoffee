@@ -288,8 +288,16 @@
             });
         });
 
+        // 點擊#，checkbox全選
+        var checkFlag = false;
         $("#one").click(function () {
-           $(":input:checkbox").prop("checked","checked")
+            if (checkFlag) {
+                checkFlag = !checkFlag;
+                $(":input:checkbox").prop("checked", false);
+            } else {
+                checkFlag = !checkFlag;
+                $(":input:checkbox").prop("checked", true);
+            }
         });
 
         $("#batchTakeDown").click(function () {
