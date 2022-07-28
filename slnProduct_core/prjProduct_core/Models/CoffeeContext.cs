@@ -394,20 +394,10 @@ namespace prjProduct_core.Models
                     .HasForeignKey(d => d.OrderStateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notification_OrderStates");
-
-                entity.HasOne(d => d.TradeNoNavigation)
-                    .WithMany(p => p.Notifications)
-                    .HasPrincipalKey(p => p.TradeNo)
-                    .HasForeignKey(d => d.TradeNo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Notification_Orders");
             });
 
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.HasIndex(e => e.TradeNo, "IX_TradeNo")
-                    .IsUnique();
-
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
                 entity.Property(e => e.CouponId).HasColumnName("CouponID");
@@ -640,16 +630,17 @@ namespace prjProduct_core.Models
 
                 entity.Property(e => e.SurveyId).HasColumnName("SurveyID");
 
-                entity.Property(e => e.TradeNo)
+                entity.Property(e => e.Date)
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.HasOne(d => d.TradeNoNavigation)
-                    .WithMany(p => p.Surveys)
-                    .HasPrincipalKey(p => p.TradeNo)
-                    .HasForeignKey(d => d.TradeNo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Survey_Orders");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.TradeNo)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

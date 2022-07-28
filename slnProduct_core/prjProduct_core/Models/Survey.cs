@@ -9,7 +9,7 @@ namespace prjProduct_core.Models
     {
         public int SurveyId { get; set; }
         public string TradeNo { get; set; }
-
-        public virtual Order TradeNoNavigation { get; set; }
+        public string Date { get; set; }
+        public string Name { get; set; }
     }
 }

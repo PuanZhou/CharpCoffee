@@ -15,6 +15,5 @@ namespace prjProduct_core.Models
 
         public virtual Member Member { get; set; }
         public virtual OrderState OrderState { get; set; }
-        public virtual Order TradeNoNavigation { get; set; }
     }
 }
