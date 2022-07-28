@@ -2,15 +2,15 @@
 @using prjProduct_core.Controllers
 @model List<CArticleCommentViewModel>
 <style>
-    .divlv_0{
-        border : 0.25em solid orange;
+    .divlv_0 {
+        border: 0.25em solid orange;
         border-radius: 20px;
     }
 </style>
-<h4>文章評論</h4>
+@*<h4>文章討論</h4>*@
 
 <div>
-    @{ //顯示最高層級評論(parentId==0)
+    @{ //顯示最高層級討論(parentId==0)
         List<CArticleCommentViewModel> list = Model.Where(x => x.ArticleCommentParentId == 0).ToList();
 
         foreach (var item in list)
@@ -33,17 +33,17 @@
                     }
                 }
             </div>
-                    }
+        }
 
-                    //取得子回覆數量
-                    int getACommentsChildrenCount(CArticleCommentViewModel item)
-                    {
-                        return Model.Count(a => a.ArticleCommentParentId == item.ArticleCommentId);
-                    }
+        //取得子回覆數量
+        int getACommentsChildrenCount(CArticleCommentViewModel item)
+        {
+            return Model.Count(a => a.ArticleCommentParentId == item.ArticleCommentId);
+        }
 
-                    //顯示回覆
-                    void LoadArticleComments(CArticleCommentViewModel cavModel, int count)
-                    {
+        //顯示回覆
+        void LoadArticleComments(CArticleCommentViewModel cavModel, int count)
+        {
 
             <div class="m-3 ml-4 divlv_@cavModel.ArticleCommentParentId">
 
@@ -58,7 +58,7 @@
                         <span class="font-bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@cavModel.MemberName &nbsp;：</span>
                     }
                     <span style="background-color:linen; color:black;border-radius:20px" class="prodnamelike">@cavModel.ArticleCommentDescription &nbsp;&nbsp;</span>
-                    <br/>
+                    <br />
                     <span> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</span>
                 }
                 @{
@@ -75,11 +75,11 @@
                     //隱藏回覆紐
 
                     //新增回覆
-            <div>
-                <span id="s_@cavModel.ArticleCommentId" hidden="hidden">回覆：</span>
-                <input id="ip_@cavModel.ArticleCommentId" class="anwsering" type="text" name="txtArticleComment" style="width:80%" hidden="hidden" />
-                <button id="b_@cavModel.ArticleCommentId" class="btnNewAComment btn btn-sm btn-outline-info " hidden="hidden">送出回覆</button>
-            </div>
+                    <div>
+                        <span id="s_@cavModel.ArticleCommentId" hidden="hidden">回覆：</span>
+                        <input id="ip_@cavModel.ArticleCommentId" class="anwsering" type="text" name="txtArticleComment" style="width:80%" hidden="hidden" />
+                        <button id="b_@cavModel.ArticleCommentId" class="btnNewAComment btn btn-sm btn-outline-info " hidden="hidden">送出回覆</button>
+                    </div>
                     //新增回覆
                     getArticleComment(cavModel);
                 }
