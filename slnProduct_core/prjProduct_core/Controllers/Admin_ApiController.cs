@@ -155,7 +155,7 @@ namespace prjProduct_core.Controllers
                     client.Send(mms); // 寄出郵件
                 }
 
-                outModel.ResultMsg = "請於 30 分鐘內至你的信箱點擊連結重新設定密碼，逾期將無效";
+                outModel.ResultMsg = "請於 30 分鐘內至你的信箱點擊連結重新設定密碼，逾期將無效。";
             }
             else
             {
@@ -197,7 +197,7 @@ namespace prjProduct_core.Controllers
             if (!HttpContext.Session.Keys.Contains(CDictionary.SK_ResetPassword_AdminId) ||
                 HttpContext.Session.GetString(CDictionary.SK_ResetPassword_AdminId) == "")
             {
-                outModel.ErrMsg = "無修改帳號";
+                outModel.ErrMsg = "無修改帳號，或者操作逾期，請重新作業";
                 return Json(outModel);
             }
 
