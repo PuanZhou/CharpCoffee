@@ -1,0 +1,68 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CAdmin_ConstellationViewModel>
+
+@{
+    ViewData["Title"] = "EditConstellation";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<h1 class="h1" style="margin-top:0.5em">星座</h1>
+<table class="table" style="width:100%">
+    <thead>
+        <tr>
+            <th class="col-md-1">
+                <br />
+                編號
+            </th>
+            <th class="col-md-2">
+                星座
+            </th>
+            <th class="col-md-3">
+                推廣商品
+            </th>
+            <th class="col-md-2"></th>
+        </tr>
+    </thead>
+    <tbody style="border-top: 0.125rem solid currentColor">
+        @{
+            int Count = 0;
+
+            foreach (var item in Model)
+            {
+                Count++;
+                <tr id="tr_@item.ConstellationId">
+                    <td><span>&nbsp;&nbsp;&nbsp;&nbsp;@Count</span></td>
+                    <td><span>@item.ConstellationName</span></td>
+                    <td>&nbsp;&nbsp;<input type="text" id="ip_@item.ConstellationId"  class="ip" placeholder="@item.ConstellationProductId" /></td>
+                    <td><input type="button" id="btn_@item.ConstellationId" class="btnChangeProdID btn btn-sm btn-secondary" value="修改" /></td>
+                </tr>
+            }
+
+        }
+
+
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+        $(".btnChangeProdID").click(function () {
+            let idd = $(event.target).attr("id").substr(4); 
+            if (parseInt($(`#ip_${idd}`).val()) == null) {
+                return
+            }
+            else if (parseInt($(`#ip_${idd}`).val()) == $(`#ip_${idd}`).attr("placeholder")) {
+                return
+            }
+            else {
+                let newpd = $(`#ip_${idd}`).val();
+                $.get('@Url.Content("~/Admin_Constellation/ChangeProductID")', { "cid": idd,"chpd":newpd}, function (data) {
+                    if (data == "sus") {
+                        alert("變更成功");
+                        $(`#ip_${idd}`).attr("placeholder", newpd)
+                    }
+
+                })
+
+            }
+        })
+    </script>
+}

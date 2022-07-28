@@ -55,6 +55,44 @@ namespace prjProduct_core.Controllers
             _context.SaveChanges();
             return RedirectToAction("ConstellationList");
         }
+        public IActionResult EDConstellation()
+        {
+            IEnumerable<CAdmin_ConstellationViewModel> datas = null;
+            var list = _context.Constellations.Select(a => new CAdmin_ConstellationViewModel()
+            {
+                ConstellationId = a.ConstellationId,
+                ConstellationName = a.ConstellationName,
+                ConstellationProductId = a.ConstellationProductId
+            });
+            if (list != null)
+            {
+                datas = list;
+            }
+            return View(datas);
+        }
 
+        public IActionResult ChangeProductID(int cid, int chpd)
+        {
+            Constellation con = _context.Constellations.FirstOrDefault(c => c.ConstellationId == cid);
+            if (chpd == 0)
+            {
+                return Content("fal", "text/plain", System.Text.Encoding.UTF8);
+            }
+            else
+            {
+                if (con != null)
+                {
+                    con.ConstellationProductId = chpd;
+                    _context.SaveChanges();
+                    return Content("sus", "text/plain", System.Text.Encoding.UTF8);
+                }
+                else
+                {
+                    return Content("fal", "text/plain", System.Text.Encoding.UTF8);
+                }
+            }
+
+
+        }
     }
 }
