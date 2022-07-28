@@ -14,7 +14,7 @@
                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
             </svg>
         </span>
-        <span class="input-group-text" id="topbar-mic" style="cursor:pointer;width:3em" onclick="startButton(event)" >
+        <span class="input-group-text" id="topbar-mic" style="cursor:pointer;width:3em" onclick="startButton(event)">
             <i class="fa-solid fa-microphone-slash"></i>
         </span>
         <input type="text" name="txtKeyword" class="form-control" id="topbarInputIconLeft" placeholder="搜尋" aria-label="Search" aria-describedby="topbar-addon">
@@ -41,6 +41,16 @@
 </a>
 <br />
 <br />
+@{ if (Model.ToList().Count!=0)
+    {
+        <label>共 @Model.ToList().Count 筆</label>
+    }
+    else
+    {
+        <label>共 0 筆</label>
+    }
+}
+
 <div class="card card-body border-0 shadow table-wrapper table-responsive">
     <table class="table-hover rounded">
         <thead class="theadcss">
@@ -154,7 +164,8 @@
     </table>
 </div>
 @section Scripts{
-    <script> 
+    <script>
+
         stockWarning();
         //==================================================================================================
         let pro = document.querySelector("#product");

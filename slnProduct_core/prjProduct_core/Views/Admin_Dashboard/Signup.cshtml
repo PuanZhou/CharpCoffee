@@ -129,6 +129,10 @@
                                 <div class="d-grid">
                                     <input type="submit" class="btn btn-gray-800" style="font-weight:bold" value="註冊" id="submit" />
                                 </div>
+                                <br />
+                                <div>
+                                    <input type="button" class="btn btn-gray-800 col-2.5" style="font-weight:bold " id="demo1" value="Demo1" />                                    
+                                </div>
                             </form>
                             <div class="d-flex justify-content-center align-items-center mt-4">
                                 <span class="fw-normal">
@@ -297,5 +301,12 @@
         }
 
         check();
+    });
+
+    // demo1 註冊普通管理員
+    $("#demo1").click(() => {
+        $("#email").val("csharpcoffee@gmail.com");
+        $("#password").val("Zz123456789");
+        $("#confirm_password").val("Zz123456789");
     })
 </script>
