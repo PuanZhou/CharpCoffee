@@ -36,7 +36,7 @@ namespace prjProduct_core.Controllers
         public IActionResult List()
         {
             LoadGoogleSheet();
-            var tradeno = db.Surveys.Select(x => x.TradeNo).ToList();
+            var tradeno = db.Surveys.Select(x => x.TradeNo).Distinct().ToList();
             var survey = (from a in db.Orders
                            where tradeno.Contains(a.TradeNo) && a.OrderStateId == 3 && a.SurveyCoupon == false
                            join s in db.Surveys
@@ -48,7 +48,7 @@ namespace prjProduct_core.Controllers
                                OrderDate = a.OrderDate.ToString(),
                                SurveyName = s.Name,
                                SurveyDate = s.Date
-                           }).ToList();
+                           }).Distinct().ToList();
 
             return View(survey);
         }

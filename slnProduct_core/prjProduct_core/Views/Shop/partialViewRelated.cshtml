@@ -43,7 +43,7 @@
 
 <script>
        //=====================加入比較按鈕=====================
-    @*$(".compare-btn").click(function () {
+    $(".compare-btn").click(function () {
         let comid = $(this.children).text();
         $('.bootstrap-growl').remove();
         $.get('@Url.Content("~/compare/AddCompare")', { "Id": comid },
@@ -95,7 +95,7 @@
                     $("#compare-count").html(`${data}`);
                 }
         )
-    };*@
+    };
 
      //=================加入購物車========================
     $(".add-to-cart-btn").click(function () {
