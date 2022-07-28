@@ -237,15 +237,26 @@ namespace prjCSCoffee.Controllers
         }
 
 
-        public IActionResult Notice()
+        public IActionResult AddNotice(string TradNo, int OrderStateId)
         {
-            var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new
+            try
             {
-                TradeNo = n.TradeNo,
-                NotifyTime = n.NotifyTime,
-                orderState = n.OrderState.OrderState1
-            });
-            return Json(noti);
+                Notification noti = new Notification()
+                {
+                    NotifyTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                    TradeNo = TradNo,
+                    MemberId = HomeController.loginmem.MemberId,
+                    OrderStateId = OrderStateId
+                };
+                db.Notifications.Add(noti);
+                db.SaveChanges();
+                return Content("OK", "text/plain", Encoding.UTF8);
+            }
+            catch
+            {
+                return Content("fall", "text/plain", Encoding.UTF8);
+            }
+
         }
 
         public IActionResult DeletNotice(int id)

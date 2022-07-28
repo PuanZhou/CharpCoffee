@@ -393,7 +393,7 @@
                                                             <div class="sub_title">您的商品目前：@item.statement</div>
                                                         </div>
                                                         <div class="notify_status">
-                                                            <p class="timebefore">@item.NotifyTime.ToString("R")</p>
+                                                            <p class="timebefore">@item.NotifyTime</p>
                                                         </div>
                                                     </li>
                                                         }
@@ -615,7 +615,7 @@
         $(this).parent().toggleClass("active");
     });
     //=============多少時間前的通知=====================
-    let notiTimes = $(".timebefore");
+    let notiTimes = $(".timebefore");//yyyy/MM/dd HH:mm:ss
     let timeArr = [];
     $.each(notiTimes, function (index, value) {
         timeArr.push(value.innerText);
@@ -640,7 +640,7 @@
                         notiTimes.get(i).innerText = `幾秒鐘前`;
                     }
                 }
-                
+
             }
         }
     }

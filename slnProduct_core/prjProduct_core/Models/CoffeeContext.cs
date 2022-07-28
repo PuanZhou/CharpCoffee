@@ -375,7 +375,9 @@ namespace prjProduct_core.Models
             {
                 entity.ToTable("Notification");
 
-                entity.Property(e => e.NotifyTime).HasColumnType("date");
+                entity.Property(e => e.NotifyTime)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.OrderStateId).HasColumnName("OrderStateID");
 

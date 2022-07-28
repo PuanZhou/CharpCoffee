@@ -163,6 +163,16 @@ namespace prjProduct_core.Controllers
             if (data != null)
             {
                 data.OrderStateId = (int)stateid;
+                #region 加入通知
+                Notification noti = new Notification()
+                {
+                    TradeNo = data.TradeNo,
+                    NotifyTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                    MemberId = data.MemberId,
+                    OrderStateId = Convert.ToInt32(stateid)
+                };
+                db.Notifications.Add(noti);
+                #endregion
                 db.SaveChanges();
             }
             return RedirectToAction("index");

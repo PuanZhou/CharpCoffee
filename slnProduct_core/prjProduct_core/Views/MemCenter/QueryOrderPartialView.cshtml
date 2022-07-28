@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.COrderViewModel>
 <style>
-    td,th{
-        text-align:center;
+    td, th {
+        text-align: center;
     }
 </style>
 
@@ -223,17 +223,34 @@
             function (data) {
                 if (data == "check") {
                     state.text("審核中");
-                    $.bootstrapGrowl("已將您的訂單交由工作人員審核中，審核完畢將會為您取消訂單", {
-                        ele: "body",
-                        type: "success",//樣式
-                        offset: { from: "top", amount: 300 },
-                        align: "center",//出現位置
-                        width: "auto",
-                        delay: 5000,//延遲
-                        allow_dissmiss: true, //是否允許使用者關閉
-                        stackup_spacing: 10 //條間距
-                    });
                     $('#Modelcancel').modal('hide');
+                    //將狀態加入Noti資料表
+                    $.post('@Url.Content("~/MemberFactory/AddNotice")', { "TradNo": TradeNoID, "OrderStateId": 5 },
+                        function (data2) {
+                            if (data2 == "OK") {
+                                $.bootstrapGrowl("已將您的訂單交由工作人員審核中，審核完畢將會為您取消訂單", {
+                                    ele: "body",
+                                    type: "success",//樣式
+                                    offset: { from: "top", amount: 300 },
+                                    align: "center",//出現位置
+                                    width: "auto",
+                                    delay: 3000,//延遲
+                                    allow_dissmiss: true, //是否允許使用者關閉
+                                    stackup_spacing: 10 //條間距
+                                });
+                            }
+                        });
+                } else {
+                    $.bootstrapGrowl("申請失敗，請洽客服人員", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "top", amount: 300 },
+                        align: "center",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dissmiss: true,
+                        stackup_spacing: 10
+                    });
                 }
 
             }
@@ -243,7 +260,7 @@
     //Search
     let btnSearch = document.querySelector("#Findord");
     $("#Findord").click(function (eve) {
-        eve.preventDefault();                     
+        eve.preventDefault();
         $.get('@Url.Content("~/MemberFactory/QueryOrder")', { "oYear": selY.value, "oMonth": selMon.value, "oMonth2": selMon2.value },function (data) {
             if (data.length == 0) {
                 $.bootstrapGrowl("查無訂單", {

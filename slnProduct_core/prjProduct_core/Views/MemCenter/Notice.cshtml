@@ -20,8 +20,8 @@
         .notili {
             display: flex;
             align-items: center;
-            border-bottom:1px solid rgb(129,129,129);
-            margin-bottom:1px;
+            border-bottom: 1px solid rgb(129,129,129);
+            margin-bottom: 1px;
         }
 
             .notili:hover {
@@ -30,7 +30,7 @@
 
         .notiData {
             margin: 0 0.9rem;
-            margin-top:0.8rem;
+            margin-top: 0.8rem;
             width: 25rem; /*訊息的寬度*/
         }
 
@@ -86,7 +86,7 @@
                     <div class="notiData">
                         <div class="notiTitle">訂單 @item.TradeNo</div>
                         <div class="subTitle">此訂單目前的狀態：@item.statement</div>
-                        <p class="notiTime">@item.NotifyTime.ToString("R")</p>
+                        <p class="notiTime">@item.NotifyTime</p>
                     </div>
                     <div class="notiDel">
                         <button class="trash"><i class="fa-solid fa-trash-can"><span hidden>@item.NotificationId</span></i></button>

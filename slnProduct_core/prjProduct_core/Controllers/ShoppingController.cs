@@ -444,7 +444,7 @@ namespace prjCSCoffee.Controllers
             parameters["MerchantTradeNo"] = tradeNo;
             parameters["PaymentType"] = "aio";
             parameters["Redeem"] = "";
-            parameters["ReturnURL"] = $"{Request.Scheme}://{Request.Host}/";
+            parameters["ReturnURL"] = "https://developers.opay.tw/AioMock/MerchantReturnUrl";
             parameters["StoreID"] = "";
             parameters["TotalAmount"] = total.ToString();
             parameters["TradeDesc"] = "建立信用卡測試訂單";
@@ -527,6 +527,18 @@ namespace prjCSCoffee.Controllers
             order.Fee = vModel.Fee;
             order.TradeNo = vModel.MerchantTradeNo;
             db.Orders.Add(order);
+            db.SaveChanges();
+            #endregion
+
+            #region 加入通知
+            Notification noti = new Notification()
+            {
+                TradeNo = vModel.MerchantTradeNo,
+                NotifyTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
+                MemberId = UserId,
+                OrderStateId = 1
+            };
+            db.Notifications.Add(noti);
             db.SaveChanges();
             #endregion
 

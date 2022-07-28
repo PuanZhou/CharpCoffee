@@ -9,7 +9,7 @@ namespace prjProduct_core.Models
     {
         public int NotificationId { get; set; }
         public int MemberId { get; set; }
-        public DateTime NotifyTime { get; set; }
+        public string NotifyTime { get; set; }
         public int OrderStateId { get; set; }
         public string TradeNo { get; set; }
 
