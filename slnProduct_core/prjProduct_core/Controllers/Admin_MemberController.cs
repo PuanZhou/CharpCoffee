@@ -242,7 +242,7 @@ namespace prjProduct_core.Controllers
             var data = _context.OrderDetails.Where(t => t.OrderId == id).Select(o => new
             {
                 d產品名 = o.Product.ProductName,
-                d單價 = o.Product.Price,
+                d單價 = o.Price,
                 d數量 = o.Quantity,
                 d小計 = o.Product.Price * o.Quantity,
                 d運費 = fee,
