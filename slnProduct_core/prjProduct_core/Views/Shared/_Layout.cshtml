@@ -1,5 +1,6 @@
 ﻿@using prjProduct_core.Controllers
 @using prjProduct_core.ViewModel
+@inject CoffeeContext db
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -368,24 +369,31 @@
                                         <a href="/Home/Login" id="loginID" style="cursor:@arror"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@HomeController.MemName</span></a>}
                                 </div>
                                 <!-- 通知 -->
-                                @{
+                                                             @{
                                     if (HomeController.loginmem != null)
                                     {
-                                        CoffeeContext db = new CoffeeContext();
+
                                         var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new CNotificationViewModel()
                                         {
                                             TradeNo = n.TradeNo,
-                                            NotifyTime=n.NotifyTime,
-                                            statement = n.OrderState.OrderState1
+                                            NotifyTime = n.NotifyTime,
+                                            statement = n.OrderState.OrderState1,
+                                            HasRead = n.HasRead
 
                                         }).Take(5).ToList();
 
                                         <div class="notifications">
+                                            @if (noti.Any(n=>n.HasRead==false)){
+                                            <a href="#" id="notify" hidden><i class="fa-solid fa-bell"><span id="readDot"></span></i></a>
+                                            }
+                                            else{
                                             <a href="#" id="notify" hidden><i class="fa-solid fa-bell"></i></a>
+                                            }
                                             <div class="notification_dd">
                                                 <ul class="notification_ul">
-                                                    
-                                                    @{foreach (var item in noti)
+                                                    @if (noti.Count != 0)
+                                                    {
+                                                        foreach (var item in noti)
                                                         {
                                                     <li>
                                                         <div class="notify_data">
@@ -397,10 +405,15 @@
                                                         </div>
                                                     </li>
                                                         }
-                                                    }
                                                     <li class="showAll">
                                                         <a href="/MemCenter/Notice"><p class="link">顯示全部</p></a>
                                                     </li>
+                                                    }
+                                                    else {
+                                                        <li class="showAll">
+                                                            <a href="/MemCenter/Notice"><p class="link">目前沒有任何通知喔！</p></a>
+                                                        </li>
+                                                    }
                                                 </ul>
                                             </div>
                                         </div>
