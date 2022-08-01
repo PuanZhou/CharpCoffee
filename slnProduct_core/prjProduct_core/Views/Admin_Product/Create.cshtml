@@ -253,10 +253,10 @@
             };
 
             $.ajax({
-                url: "https://msit141-03-vision.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params),
+                url: "https://csharpcoffeevision.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params),
                 beforeSend: function (xhrObj) {
                     xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
-                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "c3b95ede298c455e80f20aa99e972245");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "1f288f25831f4d67a9bd7871b6698e27");
                 },
                 type: "POST",
                 processData: false,
