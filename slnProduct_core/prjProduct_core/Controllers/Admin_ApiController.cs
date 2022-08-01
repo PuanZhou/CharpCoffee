@@ -9,6 +9,7 @@ using prjProduct_core.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -275,17 +276,22 @@ namespace prjProduct_core.Controllers
             return Json(new { state = "200" });
         }
 
-        public IActionResult SendNewspaper(string newsimg)
+        public IActionResult SendNewspaper(IFormFile newsimgphoto)
         {
             try
             {
                 MailMessage mmsg = new MailMessage();
                 string gmailFrom = "msit141csharpcoffee@gmail.com";
                 string gmailPW = "xryubogltaftuanp";
+                if (newsimgphoto != null)
+                {
+                    mmsg.Body = CreatBody();
+                }
                 mmsg.From = new MailAddress(gmailFrom);
+                mmsg.To.Add(new MailAddress("chiakiultra@gmail.com"));
                 mmsg.To.Add(new MailAddress("forgotpwd87@gmail.com"));
                 mmsg.Subject = "[C#Coffee]電子報";
-                mmsg.Body = $@"<a href='https://images.plurk.com/4tRwJN3fuGEkmwgwrwTSMs.png'>點此看電子報</a>";
+
                 mmsg.IsBodyHtml = true;
                 mmsg.BodyEncoding = Encoding.UTF8;
                 mmsg.SubjectEncoding = Encoding.UTF8;
@@ -302,6 +308,16 @@ namespace prjProduct_core.Controllers
                 return Content("Err", "text/plain", Encoding.UTF8);
             }
 
+        }
+
+        public string CreatBody()
+        {
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(_environment.WebRootPath + @"\newspa.html"))
+            {
+                body = reader.ReadToEnd();
+            }
+            return body;
         }
 
         public IActionResult StockLessThanTen()

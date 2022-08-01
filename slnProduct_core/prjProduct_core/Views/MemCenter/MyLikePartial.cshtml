@@ -229,7 +229,14 @@
         $("#cart-count").html(`${result}`);
     }
 
-          //=====================加入比較按鈕=====================
+  //=====================加入比較按鈕=====================
+    function ReportCompareCount() {
+         $.get('@Url.Content("~/Compare/ReportCompareCount")',
+                function (data) {
+                    $("#compare-count").html(`${data}`);
+                }
+        )
+    };
     $(".compare-btn").click(function () {
         let comid = $(this.children).text();
         $('.bootstrap-growl').remove();
