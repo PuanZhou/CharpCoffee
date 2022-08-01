@@ -276,6 +276,65 @@ namespace prjProduct_core.Controllers
             return Json(new { state = "200" });
         }
 
+        public JsonResult Delete(string id)
+        {
+            CDoResetPwdOut outModel = new CDoResetPwdOut();
+            Coffee product = _context.Coffees.FirstOrDefault(p => p.ProductId == Convert.ToInt32(id));
+            if(product != null)
+            {
+                try
+                {
+                    var subPhotos = _context.Photos.Where(p => p.ProductId == Convert.ToInt32(id)).ToList();
+                    if (subPhotos.Count > 0)
+                    {
+                        foreach(Photo photo in subPhotos)
+                        {
+                            System.IO.File.Delete(_environment.WebRootPath + "/Images/" + photo.ImagePath);
+                            _context.Photos.Remove(photo);
+                        }
+                    } 
+                    _context.Coffees.Remove(product);
+                    _context.SaveChanges();
+                    Product p = _context.Products.Find(Convert.ToInt32(id));
+                    System.IO.File.Delete(_environment.WebRootPath + "/Images/" + p.MainPhotoPath);
+                    _context.Products.Remove(p);
+                    outModel.ResultMsg = _context.SaveChanges().ToString();
+                    return Json(outModel);
+                }
+                catch (Exception ex)
+                {
+                    outModel.ErrMsg = ex.Message;
+                    return Json(outModel);
+                }
+            }
+            else
+            {
+                try
+                {
+                    var subPhotos = _context.Photos.Where(p => p.ProductId == Convert.ToInt32(id)).ToList();
+                    if (subPhotos.Count > 0)
+                    {
+                        foreach (Photo photo in subPhotos)
+                        {
+                            System.IO.File.Delete(_environment.WebRootPath + "/Images/" + photo.ImagePath);
+                            _context.Photos.Remove(photo);
+                        }
+                    }
+                    _context.SaveChanges();
+                    Product p = _context.Products.Find(Convert.ToInt32(id));
+                    System.IO.File.Delete(_environment.WebRootPath + "/Images/" + p.MainPhotoPath);
+                    _context.Products.Remove(p);
+                    outModel.ResultMsg = _context.SaveChanges().ToString();
+                    return Json(outModel);
+                }
+                catch (Exception ex)
+                {
+                    outModel.ErrMsg = ex.Message;
+                    return Json(outModel);
+                }
+            }
+            
+        }
         public IActionResult SendNewspaper(IFormFile newsimgphoto)
         {
             try
