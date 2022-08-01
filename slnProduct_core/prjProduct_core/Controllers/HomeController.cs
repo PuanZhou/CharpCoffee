@@ -137,6 +137,10 @@ namespace prjProduct_core.Controllers
         //===============留言板PV===============
         public IActionResult _CommentBoard(int productId)
         {
+            int mId = 0;
+            if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) != null)
+                mId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
             var data = db.Comments.Where(x => x.ProductId == productId)
                 .OrderByDescending(x => x.CommentId)
                 .Select(x => new CCommentsViewModel()
@@ -150,6 +154,11 @@ namespace prjProduct_core.Controllers
                     OrderId = x.OrderId,
                     MemberName = x.Member.MemberName
                 }).ToList();
+            foreach (var c in data)
+            {
+                c.tc = db.Awesomes.Where(x => x.CommentId == c.CommentId).Count();
+                c.hasT = db.Awesomes.Any(x => x.MemberId == mId && x.CommentId == c.CommentId);
+            }
             return PartialView(data);
         }
 

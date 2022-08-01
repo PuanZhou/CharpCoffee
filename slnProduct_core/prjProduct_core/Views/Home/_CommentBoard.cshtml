@@ -24,16 +24,16 @@
                     }
                 }
             </div>
-        }
-        //=====================計算子回覆數量=====================
-        int CountChildren(CCommentsViewModel item)
-        {
-            return Model.Count(x => x.CommentParentId == item.CommentId);
-        }
-        //=====================印出評價或回覆=====================
-        void LoadComments(CCommentsViewModel item, int count)
-        {
-    <div class="m-3 ml-4 comHC">
+                    }
+                    //=====================計算子回覆數量=====================
+                    int CountChildren(CCommentsViewModel item)
+                    {
+                        return Model.Count(x => x.CommentParentId == item.CommentId);
+                    }
+                    //=====================印出評價或回覆=====================
+                    void LoadComments(CCommentsViewModel item, int count)
+                    {
+<div class="m-3 ml-4 comHC">
     @{ if (item.CommentId == @Model.FirstOrDefault().CommentId)
         {
             <small class="text-danger">New</small>
@@ -65,6 +65,16 @@
             {<small class="text-black-50 text-sm">(尚無回覆)</small>}
         };
         <i style="font-size:x-large;cursor:pointer" id="r_@item.CommentId" class="bi bi-reply-fill text-success"></i>
+        if (item.hasT == true)
+        {
+            <i style="font-size:x-large;cursor:pointer" id="tu_@item.CommentId" class="bi bi-hand-thumbs-up-fill text-primary"></i>
+        }
+        else
+        {
+            <i style="font-size:x-large;cursor:pointer" id="tu_@item.CommentId" class="bi bi-hand-thumbs-up-fill"></i>
+        }
+        <span id="tc_@item.CommentId">@item.tc</span>
+
         <div>
             <span id="s_@item.CommentId" hidden="hidden">回覆：</span>
             <input id="t_@item.CommentId" type="text" name="txtReply" style="width:70%" hidden="hidden" />
@@ -78,6 +88,17 @@
 </div>
 
 <script>
+    //=====================按讚===========================
+
+
+    $(".bi-hand-thumbs-up-fill").click(async function () {
+        //console.log(event.target)
+        let prId = @(Model.Select(x => x.ProductId).FirstOrDefault());
+        let cId = $(event.target).attr("id").substr(3);
+        const response = await fetch('@Url.Content("~/api/ThumbsCount")' + `?cId=${cId}`);        
+        $("#divComment").load('@Url.Content("~/home/_CommentBoard")', { "productId": prId });
+    })
+
     //=====================顯示/隱藏所有內容===============================
     $("#btnColl").click(function () {
         if ($(".comHC").attr("hidden") == "hidden") {
@@ -94,7 +115,7 @@
     //=====================送出回覆，刷新該欄(callback)=====================
     $(".btnReply").click(function () {
         let cpId = $(event.target).attr("id").substr(2);
-        let prId = @(Model.Take(1).Select(x => x.ProductId).FirstOrDefault());
+        let prId = @(Model.Select(x => x.ProductId).FirstOrDefault());
         let txtReply = $(`#t_${cpId}`).val();
         $.post('@Url.Content("~/api/AddComment")', {
             "OrderId": @(Model.First().OrderId), "ProductId": prId, "MemberId": 1, "CommentParentId": cpId,

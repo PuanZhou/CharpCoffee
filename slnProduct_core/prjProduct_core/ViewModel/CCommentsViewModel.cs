@@ -13,6 +13,7 @@ namespace prjProduct_core.ViewModels
         public double? Star { get; set; }
 
         public string MemberName { get; set; }
-
+        public int tc { get; set; }
+        public bool hasT { get; set; }
     }
 }

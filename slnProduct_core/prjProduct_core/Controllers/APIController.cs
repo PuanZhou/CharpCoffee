@@ -97,23 +97,6 @@ namespace prjProduct_core.Controllers
             int[] result = { countP, countC };
             return Json(result);
         }
-        //===============確認留言資格============
-        //public IActionResult CehckMember()
-        //{
-            
-        //    if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) == null)
-        //    {
-        //        return Content("尚未登入", "text/plain", System.Text.Encoding.UTF8);
-        //    }
-        //    else if (JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).BlackList)
-        //    {
-        //        return Content("您被禁言", "text/plain", System.Text.Encoding.UTF8);
-        //    }
-        //    else
-        //    {
-        //        return Content("可留言", "text/plain", System.Text.Encoding.UTF8);
-        //    }
-        //}
         //===============新增留言===============
         public IActionResult AddComment(Comment c)
         {
@@ -133,6 +116,37 @@ namespace prjProduct_core.Controllers
             db.Comments.Add(c);
             db.SaveChanges();
             return Content("您的評論已成功送出！", "text/plain", System.Text.Encoding.UTF8);
+        }
+        //================按讚================
+        public IActionResult ThumbsCount(int cId)
+        {
+            Awesome a = new Awesome();
+            if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) == null)
+            {
+                return Content("尚未登入", "text/plain", System.Text.Encoding.UTF8);
+            }
+            //else if (JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).BlackList)
+            //{
+            //    return Content("您被禁言", "text/plain", System.Text.Encoding.UTF8);
+            //}
+            else
+            {
+                int mId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+                a.MemberId = mId;
+            }
+            a.CommentId = cId;
+
+            var r = db.Awesomes.FirstOrDefault(x => x.CommentId == cId && x.MemberId == a.MemberId);
+            if (r != null)
+            {
+                db.Awesomes.Remove(r);
+            }
+            else
+            {
+                db.Awesomes.Add(a);
+            }
+            db.SaveChanges();
+            return Content("", "text/plain", System.Text.Encoding.UTF8);
         }
         //===============客服圖===============
         public IActionResult uploadImage(IFormFile file)
