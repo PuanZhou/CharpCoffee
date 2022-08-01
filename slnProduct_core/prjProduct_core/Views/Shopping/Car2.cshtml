@@ -127,6 +127,7 @@
                                                 <div class="col-md-offset-2 col-md-10">
                                                     @Html.ActionLink("返回上一步", "ShoppingCar", "Shopping", null, new { @class = "btn prebtn" })
                                                     <input type="submit" value="前往最後確認" class="btn alazea-btn" id="nextpage" style="border-radius:10px;" />
+                                                    <input type="button" value="DEMO" class="btn alazea-btn" id="Demo1" style="border-radius:10px;" />
                                                 </div>
                                             </div>
 
@@ -237,15 +238,15 @@
 
             var shopname = place.name;
             var shopaddress = (place.plus_code.compound_code).substring(10) + (place.vicinity).substring(3);
-            //$("#content").val(shopaddress)
             var t = document.querySelector("#content");
             t.value = shopaddress;
-
-            //console.log(place)
-            //console.log(place.name)
-            //console.log((place.plus_code.compound_code).substring(10) + (place.vicinity).substring(3))
-            //console.log((place.vicinity).substring(3))
         }
+
+        $("#Demo1").click(function () {
+            $("#fReceiver").val("張三");
+            $("#fPhone").val("0911222333");
+            
+        })
 
     </script>
 

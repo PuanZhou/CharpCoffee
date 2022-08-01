@@ -311,20 +311,20 @@
                     let 運費 = 0;
                     let 總金額 = 0;
                     $.each(data, function (index, value) {
-                        let content = `<tr><td>${value.d產品名}</td><td>${value.d單價}</td><td>${value.d數量}</td><td>${value.d小計}</td>`
+                        let content = `<tr><td>${value.d產品名}</td><td>NT$${value.d單價}</td><td>${value.d數量}</td><td>NT$${value.d小計}</td>`
                         $("#detailbody").append(content);
                         小計 += value.d小計;
                         折價卷金額 = value.d優惠卷金額;
                         運費 = value.d運費;
                     })
                     總金額 = 小計 - 折價卷金額 + 運費;
-                    $("#labsubtotal").html(`商品小計 : $NT${小計}`);
+                    $("#labsubtotal").html(`商品小計 : NT$${小計}`);
                     if (折價卷金額!=0) {
-                        $("#labcoupon").html(`優惠折扣 : -$NT${折價卷金額}`);
+                        $("#labcoupon").html(`優惠折扣 : -NT$${折價卷金額}`);
                     }
                     else $("#labcoupon").html("");
-                    $("#labfee").html(`運費 : $NT${運費}`);
-                    $("#labtotal").html(`訂單總金額 : $NT${總金額}`).css({ "font-size": 20, "color": "#F75000" });
+                    $("#labfee").html(`運費 : NT$${運費}`);
+                    $("#labtotal").html(`訂單總金額 : NT$${總金額}`).css({ "font-size": 20, "color": "#F75000" });
                 })
         })
     </script>

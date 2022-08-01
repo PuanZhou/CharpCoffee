@@ -244,7 +244,7 @@ namespace prjProduct_core.Controllers
                 d產品名 = o.Product.ProductName,
                 d單價 = o.Price,
                 d數量 = o.Quantity,
-                d小計 = o.Product.Price * o.Quantity,
+                d小計 = o.Price * o.Quantity,
                 d運費 = fee,
                 d優惠卷金額 = couponprice
             });

@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link href="~/css/PagedList.css" rel="stylesheet" />
     <link href="~/css/Notice.css" rel="stylesheet" />
+    <link href="~/css/Cart.css" rel="stylesheet" />
     @await RenderSectionAsync("Style", required: false)
     <style>
         .pdpicbox {
@@ -314,9 +315,9 @@
         .fa-bell {
             color: #73BF00;
         }
-        
-        #navbarPhone{
-            margin-right:30px;
+
+        #navbarPhone {
+            margin-right: 30px;
         }
     </style>
 </head>
@@ -422,9 +423,23 @@
                                 }
 
                                 <!-- Cart -->
-                                <div class="cart">
-                                    <a asp-controller="Shopping" asp-action="ShoppingCar"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
+                                <div class="floatcart">
+                                    @{
+                                        if (HomeController.loginmem != null)
+                                        {
+                                            <a asp-controller="Shopping" asp-action="ShoppingCar" id="cartbtn"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
+
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Shopping" asp-action="ShoppingCar"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
+
+                                        }
+                                    }
+                                  <div class="floatcartin"></div>
+
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -666,8 +681,60 @@
     //=================前往購物車====================
     $("#cart").click(function () {
         $('.bootstrap-growl').remove();
-            window.location.href = '@Url.Content("~/shopping/shoppingcar")';
+            window.location.href = '@Url.Content("~/Shopping/ShoppingCar")';
     });
+
+    //=================懸浮購物車====================
+
+    $("#cartbtn").mouseenter(function () {
+        console.log("1load")
+        Cload();
+        $(this).parent().addClass("active");
+    });
+
+    $(".floatcartin").on("mouseleave", "#cartdivin", function () {
+        console.log("leave")
+        $(this).parent().parent().removeClass("active");
+        $(this).remove();
+    })
+
+    async function Cload() {
+        $(".floatcartin").load('@Url.Content("~/shopping/FloatPartialViewCart")')
+    }
+
+    $(".floatcartin").on("click", "#box_btndel", function () {
+        let detailid = $(this).parent().find("#box_detailid").val();
+        CDEL(detailid);
+        $(this).parent().parent().parent().remove();
+        if (window.location.pathname == "/Shopping/ShoppingCar") {
+            $("tbody").find(`#${detailid}`).remove();
+             if ($("tbody>tr").length == 0) {
+                window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
+            }
+            計算購物明細();
+            proid = 0;
+            deltr = null;
+            proprice = 0;
+            detailid = 0;
+        }
+
+        if ($(".floatcartin li").length == 2) {
+            $(".floatcart_dd").remove();
+            $(".floatcartin").append(`<div class="floatcart_dd" id="cartdivin">
+            <ul class="floatcart_ul" style="padding: 2.5rem;">
+                <li class="box_lab">
+                    <h5 style="width:350px; opacity:0.8;">購物車內目前沒有商品</h5>
+                </li>
+            </ul>
+        </div>`);
+        }
+
+    })
+
+    async function CDEL(id) {
+        const response = await fetch("@Url.Content("~/shopping/Deletedrop")" + `?id=${id}`);
+        CountCart();
+    }
 
 </script>
 </body>

@@ -61,7 +61,6 @@
             <div class="col-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        @*<li class="breadcrumb-item"><a asp-action="index" asp-controller="Home"></a><a href="#"><i class="fa fa-home"></i> Home</a></li>*@
                         <li class="breadcrumb-item"><a asp-action="index" asp-controller="Home"><i class="fa fa-home"></i>Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Cart</li>
                     </ol>
@@ -103,7 +102,9 @@
                                 <th class="col-md-1.8" style="text-align:center">
                                     @Html.DisplayNameFor(model => model.小計)
                                 </th>
-                                <th class="col-md-2" style="text-align:center"></th>
+                                <th class="col-md-2" style="text-align:center">
+                                    <img src="~/img/Icon/close.png" id="btndelall" />
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="detailcart">
@@ -205,6 +206,21 @@
             </div>
         </div>
 
+        <!-- ##### 刪除所有產品 ##### -->
+        <div class="modal fade" id="delallModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">確定要清空購物車?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+                        <button type="button" class="btn btn-primary" id="delallyes">是</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row" style="margin-top:-30px;">
 
             <!-- Coupon Discount -->
@@ -260,7 +276,7 @@
 
 @section Scripts
 { 
-    <script>
+    <script> 
         $("#detailcart").load('@Url.Content("~/shopping/PartialViewCart")');
 
         //購物車數量計算(layout上的圖示)==========================
@@ -283,7 +299,6 @@
             proid = $(this).parent().find("#productId").val();
             deltr = $(this).closest("tr");
             proprice = $(this).parent().prev().prev().find("#txtprice").text().trim().substring(3);
-            console.log(proprice)
         }
 
         async function CDelete(id,proprice) {   //給刪除鍵ㄉ
@@ -344,6 +359,22 @@
             $("#exampleModalCenter").modal("show");
         }
 
+        //刪除所有購物車=======================================================
+        $("#btndelall").click(function () {
+            $("#delallModalCenter").modal("show");
+        })
+
+        $("#delallyes").click(function () {
+            $('#delallModalCenter').modal('hide');
+            CDelAll();
+            window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';             
+        });
+
+         async function CDelAll() {
+            const response = await fetch("@Url.Content("~/shopping/DeleteAll")");
+            CountCart();
+        }
+
         //修改購物車數量=======================================================
         $("tbody").on("click", "#plus", PLUS);
         function PLUS() {
@@ -351,7 +382,6 @@
             let qty = parseInt($(this).parent().find(".qty-text").val()) + 1;
             let stock = $(this).parent().find("#stock").val();
             let proprice = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
-            //console.log(proprice)
             if (qty > stock) {
                 qty -= 1;
                 $.bootstrapGrowl("已達可訂購最高數量", {
