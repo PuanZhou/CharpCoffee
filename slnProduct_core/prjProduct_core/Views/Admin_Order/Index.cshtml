@@ -64,7 +64,7 @@
                 background-color: red;
                 border: 1px red solid;
                 color: white;
-            }
+            }       
     </style>
 }
 
@@ -224,6 +224,7 @@
                                 <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=3})" onclick="return confirm('確認要修改訂單狀態?')">已送達收貨地址</a></li>
                                 <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=4})" onclick="return confirm('確認要修改訂單狀態?')">已取消</a></li>
                                 <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=5})" onclick="return confirm('確認要修改訂單狀態?')">審核中</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=6})" onclick="return confirm('確認要修改訂單狀態?')">已完成訂單</a></li>
                             </ul>
                         </div>
 
@@ -293,6 +294,7 @@
             else if ($(this).parent().find("#stateid").val() == 3) $(this).addClass("active3");
             else if ($(this).parent().find("#stateid").val() == 4) $(this).addClass("active4");
             else if ($(this).parent().find("#stateid").val() == 5) $(this).addClass("active5");
+            else if ($(this).parent().find("#stateid").val() == 6) $(this).addClass("active6");
         })
 
     </script>
