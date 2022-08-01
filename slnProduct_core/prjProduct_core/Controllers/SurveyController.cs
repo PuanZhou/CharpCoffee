@@ -36,21 +36,21 @@ namespace prjProduct_core.Controllers
         public IActionResult List()
         {
             LoadGoogleSheet();
+           
             var tradeno = db.Surveys.Select(x => x.TradeNo).Distinct().ToList();
-            var survey = (from a in db.Orders
-                           where tradeno.Contains(a.TradeNo) && a.OrderStateId == 3 && a.SurveyCoupon == false
-                           join s in db.Surveys
-                           on a.TradeNo equals s.TradeNo
-                           select new CSurveyViewModel()
-                           {
-                               TradeNo = a.TradeNo,
-                               MemberName = a.Member.MemberName,
-                               OrderDate = a.OrderDate.ToString(),
-                               SurveyName = s.Name,
-                               SurveyDate = s.Date
-                           }).Distinct().ToList();
 
-            return View(survey);
+            var survey = db.Orders.Where(o => tradeno.Contains(o.TradeNo) && o.OrderStateId == 3 && o.SurveyCoupon == false)
+                .Join(db.Surveys, o => o.TradeNo, s => s.TradeNo, (o, s) => new CSurveyViewModel()
+                {
+                    TradeNo = o.TradeNo,
+                    MemberName = o.Member.MemberName,
+                    OrderDate = o.OrderDate.ToString(),
+                    SurveyName = s.Name,
+                    SurveyDate = s.Date
+                }).ToList();
+
+            var newsuervey = survey.GroupBy(s => s.TradeNo).Distinct().ToList();
+            return View(newsuervey);
         }
 
         public IActionResult SentCoupon(string TradeNo)
@@ -95,8 +95,8 @@ namespace prjProduct_core.Controllers
             {
                 TradeNo = TradeNo.Substring(0, TradeNo.Length - 1);
                 string[] newTradeNo = TradeNo.Split("+");
-                
-                foreach(string No in newTradeNo)
+
+                foreach (string No in newTradeNo)
                 {
                     var survey = db.Surveys.FirstOrDefault(s => s.TradeNo == No);
                     if (survey != null)
@@ -113,7 +113,7 @@ namespace prjProduct_core.Controllers
         public IActionResult LoadSurveyAPI()
         {
             var survey = db.Surveys.ToList();
-            if (survey != null&&survey.Count>0)
+            if (survey != null && survey.Count > 0)
             {
                 return Content("true", "text/plain", Encoding.UTF8);
             }
