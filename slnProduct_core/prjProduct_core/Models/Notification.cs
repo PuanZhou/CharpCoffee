@@ -12,6 +12,7 @@ namespace prjProduct_core.Models
         public string NotifyTime { get; set; }
         public int OrderStateId { get; set; }
         public string TradeNo { get; set; }
+        public bool HasRead { get; set; }
 
         public virtual Member Member { get; set; }
         public virtual OrderState OrderState { get; set; }

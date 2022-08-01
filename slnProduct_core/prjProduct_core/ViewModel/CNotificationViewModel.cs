@@ -26,6 +26,7 @@ namespace prjProduct_core.ViewModel
         public int OrderStateId { get; set; }
         public string TradeNo { get; set; }
         public string statement { get; set; }
+        public bool HasRead { get; set; }
 
     }
 }
