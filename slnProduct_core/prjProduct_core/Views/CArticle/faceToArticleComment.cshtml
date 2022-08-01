@@ -9,7 +9,7 @@
 </style>
 @*<h4>文章討論</h4>*@
 
-<div>
+<div id="divtest">
     @{ //顯示最高層級討論(parentId==0)
         List<CArticleCommentViewModel> list = Model.Where(x => x.ArticleCommentParentId == 0).ToList();
 
@@ -57,7 +57,27 @@
                     {
                         <span class="font-bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@cavModel.MemberName &nbsp;：</span>
                     }
-                    <span style="background-color:linen; color:black;border-radius:20px" class="prodnamelike">@cavModel.ArticleCommentDescription &nbsp;&nbsp;</span>
+                    if (cavModel.ArticleCommentDescription.IndexOf("@") == -1)
+                    {
+                        <span style="background-color:linen; color:black;border-radius:20px" class="prodnamelike">@cavModel.ArticleCommentDescription&nbsp;&nbsp;</span>
+                    }
+                    else
+                    {
+                        if (cavModel.ArticleCommentDescription.IndexOf(" ") != -1)
+                        {
+                            int t1 = cavModel.ArticleCommentDescription.IndexOf("@");
+                            int t2 = cavModel.ArticleCommentDescription.LastIndexOf(" ");
+                            int t3 = t2 - t1;
+                            int t4 = t3 - 1;
+                            <span style="background-color:linen; color:black;border-radius:20px" class="prodnamelike">@cavModel.ArticleCommentDescription.Split("@")[0]<em style="color:red">@@@cavModel.ArticleCommentDescription.Split("@")[1].Substring(0, t4)</em>@cavModel.ArticleCommentDescription.Substring(t2)&nbsp;&nbsp;</span>
+                        }
+                        else
+                        {
+                            <span style="background-color:linen; color:black;border-radius:20px" class="prodnamelike">@cavModel.ArticleCommentDescription&nbsp;&nbsp;</span>
+                        }
+
+                    }
+
                     <br />
                     <span> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</span>
                 }
@@ -78,6 +98,7 @@
                     <div>
                         <span id="s_@cavModel.ArticleCommentId" hidden="hidden">回覆：</span>
                         <input id="ip_@cavModel.ArticleCommentId" class="anwsering" type="text" name="txtArticleComment" style="width:80%" hidden="hidden" />
+                        <ul id="u_@cavModel.ArticleCommentId" class="border border-light bg-light ulAuto" style="list-style-type:none;"></ul>
                         <button id="b_@cavModel.ArticleCommentId" class="btnNewAComment btn btn-sm btn-outline-info " hidden="hidden">送出回覆</button>
                     </div>
                     //新增回覆
@@ -92,7 +113,7 @@
 <script>
     $(".btnNewAComment").click(function () {
         let cd = $(event.target).attr("id").substr(2);
-        let aid = @Model.Select(x=>x.ArticleId).FirstOrDefault();
+        let aid = @Model.Select(x => x.ArticleId).FirstOrDefault();
         let txtArticleComment = $(`#ip_${cd}`).val();
 
         $.get('@Url.Content("~/CArticle/CheckArticleCommentMemberId")', function (dt) {
@@ -128,18 +149,6 @@
 
         })
     })
-        @*$.post('@Url.Content("~/CArticle/AddArticleComment")', {
-            "ArticleId": aid, "MemberId":@HomeController.loginmem.MemberId , "ArticleCommentParentId": cd, "ArticleCommentDescription": txtArticleComment
-        }, function (data) {
-                if (data === "login") {
-                    window.location.href = '@Url.Content("~/Home/Login")';
-                } else {
-                $("#divAComment").load('@Url.Content("~/CArticle/faceToArticleComment")', { "articleId": aid});
-                }
-
-        })*@
-
-
     $(".bi-reply-all-fill").click(function () {
         let acmd = $(event.target).attr("id").substr(2);
         if ($(`#s_${acmd}`).attr("hidden") == "hidden") {
@@ -175,29 +184,108 @@
     }
 
     $(".anwsering").focus(function () {
-        $(".focus").removeAttr("class","focus")
-        event.target.setAttribute("class","focus")
+        $(".focus").removeAttr("class","focus foc")
+        event.target.setAttribute("class","focus foc")
     })
-
     $(".font-bold").click(function () {
         $(".focus").val(`${event.target.innerText.trim()}`)
     })
-
     $(".prodnamelike").click(function () {
         var PdtName = event.target.innerText.trim();
-        $.get('@Url.Content("~/CArticle/prodNamelike")', { "PdtName": PdtName }, function (data) {
-            if (data == "false") {
-                //console.log(data)
-                return;
-            }
-            else {
-                var n = data;
-                window.location.href = '@Url.Content("~/Shop/detail")' + `?id=${n}`;
-                //console.log(n)
-            }
-        })
+        if (event.target.innerText.indexOf("@@") == -1) {
+            $.get('@Url.Content("~/CArticle/prodNamelike")', { "PdtName": PdtName }, function (data) {
+                if (data == "false") {
+                    return;
+                }
+                else {
+                    var n = data;
+                    window.location.href = '@Url.Content("~/Shop/detail")' + `?id=${n}`;
+                }
+            })
+        }
+        else {
+            let n = event.target.innerText.indexOf("@@") + 1
+            PdtName = event.target.innerText.length>10? event.target.innerText.substr(n,10):event.target.innerText.substr(n,event.target.innerText.length-2)
+                $.get('@Url.Content("~/CArticle/prodNamelike")', { "PdtName": PdtName }, function (data) {
+                if (data == "false") {
+                    return;
+                }
+                else {
+                    var n = data;
+                    window.location.href = '@Url.Content("~/Shop/detail")' + `?id=${n}`;
+                }
+            })
+            //console.log(PdtName)
+        }
         //console.log(PdtName)
+
     })
+
+
+
+    //自動提詞
+    //const commentInput = $(".anwsering")
+    //console.log(commentInput)
+    let ulAuto
+    let f = document.createDocumentFragment();
+    let len
+    $(".anwsering").keydown(function (event) {
+        if (event.shiftKey && event.keyCode == 50) {
+            len = $('.foc').val().length + 1
+            document.querySelector(".foc").addEventListener('input', inp)
+        }
+    })
+
+    function inp() {
+        let kw = $('.foc').val().substr(len)
+        console.log(kw)
+
+        let qid = document.querySelector(".foc").id.substr(3);
+        //ulAuto = $(`#u_${qid}`)
+        ulAuto = document.querySelector(`#u_${qid}`)
+        AutoComp(kw)
+    }
+
+    //commentInput.keydown(function (event) {
+    //    if (event.shiftKey && event.keyCode == 50) {
+    //        console.log("a")
+    //    }
+    //})
+
+    async function AutoComp(kw) {
+        f.innerHTML = "";
+        ulAuto.innerHTML = "";
+        const response = await fetch('@Url.Content("~/CArticle/GetKeyWords")' + `?kw=${kw}`);
+        const result = await response.json();
+        result.forEach(k => { f.innerHTML += `<li>${k}</li>` })
+        ulAuto.innerHTML = f.innerHTML;
+    }
+
+    $("#divtest").on("click", "li", function (event) {
+        //console.log("AA")
+        //console.log(event.currentTarget)
+        let k = event.currentTarget.innerText;
+        AddToInput(k)
+    })
+
+    function AddToInput(w) {
+        //commentInput.val(w);
+        let a = $('.foc').val().lastIndexOf("@@")+1
+        let n = $('.foc').val().substr(0, a)
+        let k = w.length
+        console.log(k);
+        //document.querySelector(".foc").val().substr(a,k).setAttribute("style","background-color:gray")
+        //console.log(n);
+        //console.log(n + w)
+        $('.foc').val(n + w+" ");
+        //document.querySelector('.foc').vallue = w;
+        ulAuto.innerHTML = "";
+        document.querySelector(".foc").removeEventListener('input', inp)
+        document.querySelector(".foc").focus()
+    }
+
+
+
 
 
 </script>
