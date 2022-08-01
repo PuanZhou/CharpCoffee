@@ -158,5 +158,10 @@ namespace prjProduct_core.Controllers
             return PartialView();
         }
 
+        public IActionResult Error403()
+        {
+            return PartialView();
+        }
+
     }
 }
