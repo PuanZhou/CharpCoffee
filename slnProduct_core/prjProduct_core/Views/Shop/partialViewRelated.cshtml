@@ -130,4 +130,41 @@
         countCart.innerHTML = result;
         $("#cart-count").html(`${result}`);
     }
+
+    //============加入收藏=============================================
+    $(".wishlist-btn").click(function () {
+         let likeid = event.currentTarget.textContent;
+        $(".bootstrap-growl").remove();
+        $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
+            function (data) {
+                if (data == "had") {
+                    $.bootstrapGrowl("商品已在收藏當中", {
+                        ele: "body",
+                        type: "danger",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10,
+                    });
+                }
+                else if (data == "join") {
+                    $.bootstrapGrowl("已加入收藏", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10,
+                    });
+                }
+                else {
+                    window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
+                }
+            });
+    })
+
 </script>

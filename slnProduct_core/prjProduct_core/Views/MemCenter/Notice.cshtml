@@ -10,6 +10,15 @@
             width: 30rem;
         }
 
+        #allread {
+            cursor: pointer;
+            margin-right: 0;
+            padding-right: 0;
+            right: 0;
+            display: inline;
+            text-align: right;
+        }
+
         .notiul {
             margin: auto auto;
             width: 30rem;
@@ -20,7 +29,6 @@
         .notili {
             display: flex;
             align-items: center;
-            border-bottom: 1px solid rgb(129,129,129);
             margin-bottom: 1px;
         }
 
@@ -50,7 +58,7 @@
                 margin-top: 2px;
             }
 
-        .trash {
+        .trash, .readed {
             cursor: pointer;
             border: none;
             background-color: transparent;
@@ -59,7 +67,7 @@
 }
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
         <h2>通知</h2>
     </div>
     <div class="container">
@@ -78,11 +86,12 @@
     </div>
 </div>
 <div class="container" id="container">
+    <div><p id="allread">全部標為已讀</p></div>
     <ul class="notiul">
         @{
             foreach (var item in Model)
             {
-                <li class="notili">
+                <li class="notili r_@item.HasRead ">
                     <div class="notiData">
                         <div class="notiTitle">訂單 @item.TradeNo</div>
                         <div class="subTitle">此訂單目前的狀態：@item.statement</div>
@@ -90,6 +99,7 @@
                     </div>
                     <div class="notiDel">
                         <button class="trash"><i class="fa-solid fa-trash-can"><span hidden>@item.NotificationId</span></i></button>
+                        <button class="readed">標為已讀<span hidden>@item.NotificationId</span></button>
                     </div>
                 </li>
             }
@@ -101,7 +111,41 @@
 
 @section Scripts{
     <script>
-    //刪除訊息
+    //===========已讀未讀=============================
+        $(document).ready(function () {
+            $(".r_False").css("background-color", "rgba(115,191,0,0.1)");
+            $(".r_True").css("background-color", "transparent");
+        });
+    //==========標為已讀====================
+        //全標
+        $("#allread").click(() => {
+            $.get('@Url.Content("~/MemberFactory/ReadOneNoti")', function (data) {
+                if (data == "OK") {
+                    $(".r_False").css("background-color", "transparent");
+                    $("#readDot").attr("hidden","hidden");
+                } else {
+                    window.location.href = '@Url.Content("~/MemberFactory/ReadOneNoti")';
+                }
+            })
+        })
+        //單個標
+        $(".readed").click(function (e) {
+            let notiid = e.currentTarget.textContent.substr(4);
+            let li = $(this).closest(".notili");
+            $.post('@Url.Content("~/MemberFactory/ReadOneNoti")', { "id": notiid },
+                function (data) {
+                    if (data == "OK") {
+                        li.css("background-color", "transparent");
+                    } else if (data == "AllRead") {
+                        li.css("background-color", "transparent");
+                        $("#readDot").attr("hidden", "hidden");
+                    }
+                    else {
+                        window.location.href = '@Url.Content("~/MemberFactory/ReadOneNoti")';
+                    }
+                });
+        })
+    //===========刪除訊息=============================
         $(".trash").click(function (e) {
             let notiid = e.currentTarget.textContent;
             let li = $(this).closest(".notili");

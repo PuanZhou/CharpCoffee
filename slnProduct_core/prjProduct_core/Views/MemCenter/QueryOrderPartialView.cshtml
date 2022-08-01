@@ -101,6 +101,7 @@
                     <tbody id="floattb"></tbody>
                 </table>
                 <span id="usecou"></span><br />
+                <span id="delifee"></span><br />
                 <span id="Mbefore"></span><br />
                 <span id="Mafter"></span><br />
                 <span id="Mtotal"></span>
@@ -169,7 +170,7 @@
     })
 
 
-    //動態繫結 查看明細
+    //==================動態繫結 查看明細=============================================
     docfrag = document.createDocumentFragment();
     $("tbody").on("click", ".detail", function () {
         $("#floattb").html("");
@@ -180,19 +181,23 @@
                 let subtotal = 0;
                 let usecou = "";
                 let couprice = 0;
+                let fee = 0;
                 $.each(data, function (index, values) {
-                    $("#floattb").append(`<tr><td>${values.商品名}</td><td>${values.商品單價}</td><td>${values.商品數量}</td><td>${values.小計}</td>`);
+                    $("#floattb").append(`<tr><td>${values.商品名}</td><td>NT$${values.商品單價}</td><td>${values.商品數量}</td><td>NT$${values.小計}</td>`);
                     subtotal += values.小計;
                     usecou = values.使用的優惠券;
                     couprice = values.優惠券金額;
+                    fee = values.運費;
                 })
-                $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：${couprice}`);
-                $("#Mbefore").html(`折價前金額：${subtotal}`);
-                $("#Mafter").html(`折價後金額：${subtotal - couprice}`);
-                $("#Mtotal").html(`總金額：${subtotal - couprice}`);
+                $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：NT$${couprice}`);
+                $("#delifee").html(`運費：NT$${fee}`);
+                $("#Mbefore").html(`折價前金額：NT$${subtotal+fee}`);
+                $("#Mafter").html(`折價後金額：NT$${subtotal - couprice}`);
+                $("#Mtotal").html(`總金額：NT$${subtotal - couprice}`);
             });
     });
 
+    //============取消訂單=====================================
     let TradeNoID = null; //取消訂單用
     let state = null;
     //動態繫結 詢問取消訂單
@@ -217,7 +222,7 @@
 
     })
 
-    //確定取消訂單
+    //=========================確定取消訂單================================
     $("#goCancel").click(function () {
         $.get('@Url.Content("~/MemberFactory/OrdCancel")', { "id": TradeNoID },
             function (data) {
