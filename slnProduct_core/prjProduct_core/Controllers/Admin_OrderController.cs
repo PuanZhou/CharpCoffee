@@ -87,11 +87,11 @@ namespace prjProduct_core.Controllers
                     return View(datas);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
 

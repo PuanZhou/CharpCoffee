@@ -93,11 +93,11 @@ namespace prjProduct_core.Controllers
                     return View(list);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult suspend(int id)
@@ -114,11 +114,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult restart(int id)
@@ -135,11 +135,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult Details(int? id)
@@ -174,11 +174,11 @@ namespace prjProduct_core.Controllers
                     return View(modelDetails);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult Filter1(int? id)
@@ -244,7 +244,7 @@ namespace prjProduct_core.Controllers
                 d產品名 = o.Product.ProductName,
                 d單價 = o.Price,
                 d數量 = o.Quantity,
-                d小計 = o.Product.Price * o.Quantity,
+                d小計 = o.Price * o.Quantity,
                 d運費 = fee,
                 d優惠卷金額 = couponprice
             });
@@ -258,7 +258,7 @@ namespace prjProduct_core.Controllers
             {
                 return View();
             }
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
     }
 
