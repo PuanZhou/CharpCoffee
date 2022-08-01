@@ -204,7 +204,7 @@ namespace prjProduct_core.Controllers
                 //        }
                 //    ]
                 //}";
-                JObject obj = new JObject { { "content", $"親愛的 {name} 您好，你的包裹已送達，請攜帶雙證件前往取貨。您的取貨編號為： {tradeNo}" } }; // 簡訊內容
+                JObject obj = new JObject { { "content", $"親愛的 {name} 您好，CSharp咖啡提醒您的包裹已送達，請攜帶雙證件前往取貨。您的取貨編號為： {tradeNo}" } }; // 簡訊內容
                 JArray recipients = new JArray
                 {
                     new JObject{ { "address", "0905815005" }, { "country_code", "886" }} // 傳送到我的手機，國別台灣
