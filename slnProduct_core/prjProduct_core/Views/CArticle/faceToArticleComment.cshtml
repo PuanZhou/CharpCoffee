@@ -115,6 +115,9 @@
         let cd = $(event.target).attr("id").substr(2);
         let aid = @Model.Select(x => x.ArticleId).FirstOrDefault();
         let txtArticleComment = $(`#ip_${cd}`).val();
+        if (txtArticleComment == "") {
+            return;
+        }
 
         $.get('@Url.Content("~/CArticle/CheckArticleCommentMemberId")', function (dt) {
             if (dt != "NoMember") {
@@ -221,8 +224,6 @@
 
     })
 
-
-
     //自動提詞
     //const commentInput = $(".anwsering")
     //console.log(commentInput)
@@ -245,12 +246,6 @@
         ulAuto = document.querySelector(`#u_${qid}`)
         AutoComp(kw)
     }
-
-    //commentInput.keydown(function (event) {
-    //    if (event.shiftKey && event.keyCode == 50) {
-    //        console.log("a")
-    //    }
-    //})
 
     async function AutoComp(kw) {
         f.innerHTML = "";
@@ -284,7 +279,50 @@
         document.querySelector(".foc").focus()
     }
 
+    $(".anwsering").keydown(function (event) {
+        if (event.keyCode == 13) {
+            let cd = $(event.target).attr("id").substr(3);
+            let aid = @Model.Select(x => x.ArticleId).FirstOrDefault();
+            let txtArticleComment = $(`#ip_${cd}`).val();
+            if (txtArticleComment == "") {
+                return;
+            }
 
+        $.get('@Url.Content("~/CArticle/CheckArticleCommentMemberId")', function (dt) {
+            if (dt != "NoMember") {
+                $.post('@Url.Content("~/CArticle/AddArticleComment")', {
+                    "MemberId": dt,
+                    "ArticleId": aid,
+                    "ArticleCommentParentId": cd,
+                    "ArticleCommentDescription": txtArticleComment
+                }, function (data) {
+                        if (data === "login") {
+                        alert("留言前請先登入會員")
+                        window.location.href = '@Url.Content("~/Home/Login")';
+                    } else {
+                        $("#divAComment").load('@Url.Content("~/CArticle/faceToArticleComment")', { "articleId": aid });
+                    }
+                })
+            } else {
+                $.post('@Url.Content("~/CArticle/AddArticleComment")', {
+                    "MemberId": 1,
+                    "ArticleId": aid,
+                    "ArticleCommentParentId": cd,
+                    "ArticleCommentDescription": txtArticleComment
+                }, function (data) {
+                        if (data === "login") {
+                        alert("留言前請先登入會員")
+                        window.location.href = '@Url.Content("~/Home/Login")';
+                    } else {
+                        $("#divAComment").load('@Url.Content("~/CArticle/faceToArticleComment")', { "articleId": aid });
+                    }
+                })
+            }
+
+        })
+
+        }
+    })
 
 
 
