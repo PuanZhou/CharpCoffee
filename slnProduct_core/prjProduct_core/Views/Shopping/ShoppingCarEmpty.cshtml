@@ -1,12 +1,7 @@
 ﻿@model IEnumerable<prjCSCoffee.Models.CShoppingCartItem>
 
 @{
-    ViewData["Title"] = "ShoppingCarEmpty";
-    int count = 0;
-    int Fee = 0;
-    int Subtotal = 0;
-    int Total = 0;
-    int Discount = 0;
+    ViewData["Title"] = "ShoppingCarEmpty";   
 }
 
 @section Style
@@ -27,11 +22,14 @@
             padding-bottom: 8px;
             padding-right: 8px;
         }
+        .empty {
+            width: 800px;
+            margin:0 auto;
+            text-align:center;
+        }
 
     </style>
 }
-
-
 
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
@@ -59,110 +57,14 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <div class="cart-table clearfix">
-
-                    <div class="progress" style="height: 40px; background-color: #F0F0F0;">
-                        <div class="progress-bar" role="progressbar" style="width: 33%; font-size: 15px" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">商品確認</div>
-                        <div class="progress-bar" role="progressbar" style="width: 33%; font-size: 15px; background-color: #BEBEBE " aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">付款方式</div>
-                        <div class="progress-bar" role="progressbar" style="width: 34%; font-size: 15px; background-color: #BEBEBE " aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">最後確認</div>
-                    </div>
-
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>
-                                    產品名稱
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.count)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.price)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.小計)
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="4" align="center">
-                                    目前尚無商品，快去加入購物車吧!
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="alert alert-warning" role="alert" style="height:50px; padding:0; margin-top:30px;">
-            <p><img src="~/img/Icon/free-shipping.png" />   單筆消費滿NT$1,200元，即可享受免運費優惠；如單筆消費金額未滿NT$1,200元則需支付NT$100元運費。</p>
-        </div>
-
-        <div class="row">
-            <!-- Coupon Discount -->
-            <div class="col-12 col-lg-6" id="couponlist">
-                <div class="coupon-discount mt-70">
-                    <h5 class="alert alert-secondary">查看擁有的優惠卷</h5>
-                </div>
-            </div>
-
-            <!-- Cart Totals -->
-            <div class="col-12 col-lg-6 ">
-                <div class="cart-totals-area mt-70">
-                    <h5 class="alert alert-secondary">訂單資訊</h5>
-                    <div class="subtotal d-flex justify-content-between">
-                        <h5>小計 : </h5>
-                        <h5 id="labSubtotal">NT$ @Subtotal</h5>
-                    </div>
-                    <div class="subtotal d-flex justify-content-between">
-                        <h5>折扣優惠 : </h5>
-                        <h5 id="labDiscount">-NT$ @Discount</h5>
-                    </div>
-                    <div class="subtotal d-flex justify-content-between">
-                        <h5>運費 : </h5>
-                        <h5 id="labFee">NT$ @Fee</h5>
-                    </div>
-                    <div class="subtotal d-flex justify-content-between">
-                        <h6>共 @count 項商品</h6>
-                    </div>
-                    <div class="total d-flex justify-content-between">
-                        <h5>總金額 : </h5>
-                        <h5 id="labTotal">NT$ @Total</h5>
-                    </div>
-                    <div class="checkout-btn">
-                        <input type="button" class="btn alazea-btn w-100" value="前往結帳" id="btnsubmit" />
-                    </div>
+                <div class="empty">
+                    <img src="~/img/Icon/empty-cart.png" />
+                    <h3>目前購物車內尚無商品，快去加入購物車吧!</h3><br />
+                    @Html.ActionLink("前往商城", "view", "Shop", null, new { @class = "btn alazea-btn w-50", style = "border-radius:10px;" })
                 </div>
             </div>
         </div>
     </div>
-
-</div>
 </div>
 <!-- ##### Cart Area End ##### -->
 
-
-
-@section Scripts
-{
-    <script>
-        $("#btnsubmit").click(function () {
-            $.bootstrapGrowl("目前購物車為空，無法結帳", {
-                ele: "body",
-                type: "danger",
-                offset: { from: "bottom", amount: 50 },
-                align: "right",
-                width: "auto",
-                delay: 3000,
-                allow_dismiss: true,
-                stackup_spacing: 10
-            });
-
-        })
-
-    </script>
-}

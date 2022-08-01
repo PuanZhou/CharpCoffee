@@ -1,0 +1,60 @@
+﻿@model IEnumerable<prjCSCoffee.Models.CShoppingCartItem>
+
+
+@{
+    if (Model.Count() == 0)
+    {
+        <div class="floatcart_dd" id="cartdivin">
+            <ul class="floatcart_ul" style="padding: 2.5rem;">
+                <li class="box_lab">
+                    <h5 style="width:350px; opacity:0.8;">購物車內目前沒有商品</h5>
+                </li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div class="floatcart_dd" id="cartdivin">
+            <ul class="floatcart_ul">
+                <li class="box_li">
+                    <h6>最近加入項目</h6>
+                </li>
+                @foreach (var item in Model)
+                {
+                    <li>
+                        <div class="box_detail">
+                            <div class="box_img">
+                                @if (item.mainPhotoPath == null)
+                                {
+                                    <img src="~/images/d9fd3b42-b75c-4fc7-bde3-053e14338dd2.jpg">
+                                }
+                                else
+                                {
+                                    <img src="~/images/@item.mainPhotoPath">
+                                }
+                            </div>
+
+                            <div class="box_content">
+                                <p>@item.product.ProductName</p>
+                                <span style="color:red;">NT$ @(Convert.ToInt32(item.price).ToString("0"))</span>
+                                <span>X @item.count</span>
+                            </div>
+                            <div class="box_del">
+                                <img src="~/img/Icon/trash-can.png" id="box_btndel" />
+                                <input type="hidden" value="@item.ShoppingCarDetialsId" id="box_detailid" />
+                            </div>
+                        </div>
+                    </li>
+                }
+                <li class="box_btn" style=" width: 350px;">
+                    <a href="/Shopping/ShoppingCar" style=" width: 350px; padding-left: 25px; padding-top: 15px;"><p class="btn alazea-btn w-100">前往結帳</p></a>
+                </li>
+
+            </ul>
+        </div>
+
+    }
+
+}
+    
+

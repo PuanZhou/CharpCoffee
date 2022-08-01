@@ -163,9 +163,50 @@ namespace prjCSCoffee.Controllers
                 return RedirectToAction("Login", "Home");
             }
         }
+
         public IActionResult ShoppingCarEmpty()
         {   //如果購物車為空的話，跳這邊
             return View();
+        }
+
+        public IActionResult FloatPartialViewCart()
+        {
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
+                var datas = db.ShoppingCarDetails.Where(t => t.MemberId == UserId)
+                  .Select(t => new CShoppingCarDetailsViewModel
+                  {
+                      ProductsId = t.ProductsId,
+                      Quantity = t.Quantity,
+                      Price = t.Price,
+                      product = t.Products,
+                      ProStock = t.Products.Stock,
+                      ProPhotoPath = t.Products.MainPhotoPath,
+                      ShoppingCarDetialsId = t.ShoppingCarDetialsId
+                  });
+
+
+                List<CShoppingCartItem> list = new List<CShoppingCartItem>();
+                foreach (var item in datas)
+                {
+                    CShoppingCartItem t = new CShoppingCartItem();
+                    t.productId = (int)item.ProductsId;
+                    t.count = (int)item.Quantity;
+                    t.price = (decimal)item.Price;
+                    t.product = item.product;
+                    t.stock = (int)item.ProStock;
+                    t.mainPhotoPath = item.ProPhotoPath;
+                    t.ShoppingCarDetialsId = item.ShoppingCarDetialsId;
+                    list.Add(t);
+                }
+                return PartialView(list);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Home");
+            }
         }
 
         public IActionResult UseCoupon(int? id)
@@ -262,7 +303,7 @@ namespace prjCSCoffee.Controllers
 
         }
 
-        public IActionResult Delete(int? id, int price) //購物車用ㄉ
+        public IActionResult Delete(int? id, int price) //購物車按鈕用ㄉ
         {
             UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
             var prod = db.ShoppingCarDetails.FirstOrDefault(t => t.MemberId == UserId && t.ProductsId == id && t.Price == price);
@@ -271,7 +312,8 @@ namespace prjCSCoffee.Controllers
             db.SaveChanges();
             return RedirectToAction("ShoppingCar");
         }
-        public IActionResult Deletedrop(int? id) //拖拉刪的
+
+        public IActionResult Deletedrop(int? id) //拖拉刪的(抓shoppingdetail id)
         {
             UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
             var prod = db.ShoppingCarDetails.FirstOrDefault(t => t.ShoppingCarDetialsId == id);
@@ -281,6 +323,18 @@ namespace prjCSCoffee.Controllers
             return RedirectToAction("ShoppingCar");
         }
 
+        public IActionResult DeleteAll() //刪全部ㄉ購物車
+        {
+            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+            var data = db.ShoppingCarDetails.Where(t => t.MemberId == UserId);
+
+            foreach (var item in data)
+            {
+                db.ShoppingCarDetails.Remove(item);
+            }
+            db.SaveChanges();
+            return RedirectToAction("ShoppingCar");
+        }
         public IActionResult Plus(int? id, int price)
         {
             UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
@@ -293,6 +347,7 @@ namespace prjCSCoffee.Controllers
             db.SaveChanges();
             return RedirectToAction("ShoppingCar");
         }
+
         public IActionResult Reduce(int? id, int price)
         {
             UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
@@ -404,7 +459,7 @@ namespace prjCSCoffee.Controllers
                       Fcount = t.Quantity,
                       Fprice = t.Price,
                       Fproduct = t.Products,
-                      FPhoto=t.Products.MainPhotoPath
+                      FPhoto = t.Products.MainPhotoPath
                   });
 
             #region 金流支付
@@ -558,6 +613,7 @@ namespace prjCSCoffee.Controllers
                 detail.OrderId = neworder.OrderId;
                 detail.ProductId = (int)item.ProductsId;
                 detail.Quantity = (int)item.Quantity;
+                detail.Price = (int)item.Price;
                 db.OrderDetails.Add(detail);
             }
             #endregion
@@ -566,7 +622,6 @@ namespace prjCSCoffee.Controllers
 
             // 收件人信箱
             string userEmail = "forgotpwd87@gmail.com";
-
             #region 信件內容
             string mailtable = "";
             string mailreceiver = "";

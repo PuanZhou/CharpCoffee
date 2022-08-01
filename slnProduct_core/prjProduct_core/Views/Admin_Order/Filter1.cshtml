@@ -113,11 +113,12 @@
                             @item.OrderState.OrderState1
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=1})" onclick="return confirm('確認要修改訂單狀態?')">已收到訂單</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=2})" onclick="return confirm('確認要修改訂單狀態?')">已出貨</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=3})" onclick="return confirm('確認要修改訂單狀態?')">已送達收貨地址</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=4})" onclick="return confirm('確認要修改訂單狀態?')">已取消</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=5})" onclick="return confirm('確認要修改訂單狀態?')">審核中</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=1})" onclick="return confirm('確認要修改訂單狀態?')">已收到訂單</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=2})" onclick="return confirm('確認要修改訂單狀態?')">已出貨</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=3})" onclick="return confirm('確認要修改訂單狀態?')">已送達收貨地址</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=4})" onclick="return confirm('確認要修改訂單狀態?')">已取消</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=5})" onclick="return confirm('確認要修改訂單狀態?')">審核中</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=6})" onclick="return confirm('確認要修改訂單狀態?')">已完成訂單</a></li>
                         </ul>
                     </div>
 
@@ -134,5 +135,7 @@
         else if ($(this).parent().find("#stateid").val() == 3) $(this).addClass("active3");
         else if ($(this).parent().find("#stateid").val() == 4) $(this).addClass("active4");
         else if ($(this).parent().find("#stateid").val() == 5) $(this).addClass("active5");
+        else if ($(this).parent().find("#stateid").val() == 6) $(this).addClass("active6");
+
     })
 </script>
