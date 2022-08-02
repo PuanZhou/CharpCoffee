@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="phone">手機號碼*</label>
-                                <input type="text" class="form-control" maxlength="10" id="phone" name="MemberPhone" placeholder="手機號碼為10字元" pattern="[0-9]{10}" />
+                                <input type="text" class="form-control" maxlength="10" id="phone" name="MemberPhone" placeholder="手機號碼為10字元" pattern="[0]{1}[9]{1}[0-9]{8}" />
                                 <span asp-validation-for="MemberPhone" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-4">

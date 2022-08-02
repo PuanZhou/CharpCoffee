@@ -67,10 +67,11 @@
                                 <a href="/Home/Create" style="float: left;" class="forget">註冊</a>
                                 <a href="#" style="float: right;" id="forget" data-toggle="modal" data-target="#boxCenter">忘記密碼</a>
                             </div>
-                            <div class="input-group col-12 mb-4">
+                            <div class="input-group col-12 mb-4" style="margin-top:1rem;">
                                 <button type="button" class="btn btn-primary btndemo" id="d1">Demo091</button>
                                 <button type="button" class="btn btn-primary btndemo" id="d2">Demo092</button>
                                 <button type="button" class="btn btn-primary btndemo" id="d3">Demo093</button>
+                                <button type="button" class="btn btn-primary btndemo" id="d4">Demo新註冊</button>
                             </div>
                         </div>
                     </form>
@@ -92,6 +93,7 @@
                 <input type="email" class="form-control" id="recipient-name" name="MemberEmail">
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="EmailDemo">Demo</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary" id="sendEmail">送出</button>
             </div>
@@ -135,7 +137,7 @@
                     } else{
                         $.bootstrapGrowl("郵件地址有誤", {
                             ele: "body",
-                            type: "success",
+                            type: "danger",
                             offset: { from: "top", amount: 300 },
                             align: "center",
                             width: "auto",
@@ -179,6 +181,13 @@
         $("#d3").click(() => {
             txtAcc.val("0933333333");
             txtPW.val("0933333333");
+        });
+        $("#d4").click(() => {
+            txtAcc.val("0988555222");
+        })
+        //忘記密碼Demo
+        $("#EmailDemo").click(() => {
+            $("#recipient-name").val("akari@@gmail.com");
         })
     </script>
 }

@@ -3,6 +3,12 @@
     td, th {
         text-align: center;
     }
+
+    #Mdetail p {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 0.85em;
+    }
 </style>
 
 <form class="form-inline">
@@ -82,7 +88,7 @@
 </table>
 <!-- ##### 浮動視窗 ##### -->
 <div class="modal fade bd-example-modal-lg" id="boxCenter" tabindex="-1" role="dialog" aria-labelledby="boxCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="boxCenterTitle">訂單詳細</h5>
@@ -100,11 +106,13 @@
                     </thead>
                     <tbody id="floattb"></tbody>
                 </table>
-                <span id="usecou"></span><br />
-                <span id="delifee"></span><br />
-                <span id="Mbefore"></span><br />
-                <span id="Mafter"></span><br />
-                <span id="Mtotal"></span>
+                <div class="text-right" id="Mdetail">
+                    <p id="usecou"></p>
+                    <p id="delifee"></p>
+                    <p id="Mbefore"></p>
+                    <p id="Mafter"></p>
+                    <p id="Mtotal"></p>
+                </div>
                 <!-- ##### 詳細內容 ##### -->
             </div>
             <div class="modal-footer">

@@ -23,7 +23,7 @@
             margin: auto auto;
             width: 30rem;
             align-content: center;
-            text-align: center;
+            /*text-align: center;*/
         }
 
         .notili {
@@ -86,7 +86,7 @@
     </div>
 </div>
 <div class="container" id="container">
-    <div><p id="allread">全部標為已讀</p></div>
+    <div><p id="allread">&nbsp;&nbsp;全部標為已讀</p></div>
     <ul class="notiul">
         @{
             foreach (var item in Model)
@@ -98,7 +98,7 @@
                         <p class="notiTime">@item.NotifyTime</p>
                     </div>
                     <div class="notiDel">
-                        <button class="trash"><i class="fa-solid fa-trash-can"><span hidden>@item.NotificationId</span></i></button>
+                        <button class="trash" style="margin-left: 1.5em"><i class="fa-solid fa-trash-can"><span hidden>@item.NotificationId</span></i></button>
                         <button class="readed">標為已讀<span hidden>@item.NotificationId</span></button>
                     </div>
                 </li>

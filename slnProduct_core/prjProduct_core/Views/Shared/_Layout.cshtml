@@ -395,7 +395,7 @@
                                                     {
                                                         foreach (var item in noti)
                                                         {
-                                                    <li>
+                                                    <li class="n_@item.HasRead">
                                                         <div class="notify_data">
                                                             <div class="title">@item.TradeNo 的訂單通知</div>
                                                             <div class="sub_title">您的商品目前：@item.statement</div>
@@ -640,6 +640,10 @@
     //=======================通知============================
     $("#notify").click(function () {
         $(this).parent().toggleClass("active");
+    });
+    $(document).ready(() => {
+        $(".n_True").css("background-color", "transparent");
+        $(".n_False").css("background-color", "rgba(115,191,0,0.1)");
     });
     //=============多少時間前的通知=====================
     let notiTimes = $(".timebefore");//yyyy/MM/dd HH:mm:ss
