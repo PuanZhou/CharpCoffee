@@ -211,7 +211,7 @@
     var map;
     var markers = [];
     var infowindow = [];
-    //var infowindow = new google.maps.InfoWindow(InfoWindowOptions);
+    var prev_infowindow = false;    //記前一個開過的視窗
     var position = [
         { label: '衣索比亞', lat: 9.034671441775707, lng: 38.74716846124983, id:1 },
         { label: '肯亞', lat: 0.526042035384196, lng: 37.8909545257353, id:2 },
@@ -230,7 +230,6 @@
         { label: '尼加拉瓜', lat: 12.934313978830096, lng: -84.88933197732533, id:17 },
         { label: '日本', lat: 36.45750367962861, lng: 138.3425164228975, id:18},
     ];
-
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -269,11 +268,14 @@
         });
 
         markers[e].addListener('click', function () {
+            if (prev_infowindow) {
+                prev_infowindow.close();
+            }
+            prev_infowindow = infowindow[e];
             infowindow[e].open(map, markers[e]);
         });
+
     }
-
-
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGpyWf0sKrCz1tKARvQDXEtpuRZQQ5JhI&libraries=places&callback=initMap"
