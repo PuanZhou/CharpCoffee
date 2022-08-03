@@ -178,7 +178,8 @@ namespace prjProduct_core.Controllers
                     if (p.photo != null)
                     {
                         string pName = Guid.NewGuid().ToString() + ".jpg";
-                        p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                        using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create))
+                            p.photo.CopyTo(fs);
                         prod.MainPhotoPath = pName;
                     }
 
@@ -192,10 +193,11 @@ namespace prjProduct_core.Controllers
                         {
                             // 新建圖片檔案在wwwroot/Images
                             string spName = Guid.NewGuid().ToString() + ".jpg";
-                            subphoto.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create));
+                            using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create))
+                                subphoto.CopyTo(fs);                            
                             // 更新副圖片資料表
                             Photo newphoto = new Photo();
-                            newphoto.ProductId = _context.Products.Last().ProductId;
+                            newphoto.ProductId = _context.Products.OrderBy(p=>p.ProductId).Last().ProductId;
                             newphoto.ImagePath = spName;
                             _context.Photos.Add(newphoto);
                             _context.SaveChanges();
@@ -372,7 +374,8 @@ namespace prjProduct_core.Controllers
                         {
                             // 新建圖片檔案在wwwroot/Images
                             string pName = Guid.NewGuid().ToString() + ".jpg";
-                            p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                            using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create))
+                                p.photo.CopyTo(fs);
                             // 更新資料庫圖片檔名
                             prod.MainPhotoPath = pName;
                         }
@@ -391,7 +394,8 @@ namespace prjProduct_core.Controllers
 
                                 // 新建圖片檔案在wwwroot/Images
                                 string spName = Guid.NewGuid().ToString() + ".jpg";
-                                subphoto.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create));
+                                using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create))
+                                    subphoto.CopyTo(fs);
                                 // 更新副圖片資料表
                                 Photo newphoto = new Photo();
                                 newphoto.ProductId = p.ProductId;
