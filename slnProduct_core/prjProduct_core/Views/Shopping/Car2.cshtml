@@ -97,8 +97,8 @@
                                     <h5 class="alert alert-secondary">付款方式</h5>
                                     <div class="form-group">
                                         <span class="control-label col-md-2">付款方式</span>
-                                        <div class="col-md-10">
-                                            @Html.RadioButton("payment", "2", true) 信用卡<br />
+                                        <div class="col-md-10" >
+                                            @Html.RadioButton("payment", "2", new { @id = "btnpayment"}) 信用卡<br />
                                             @Html.RadioButton("payment", "1")貨到付款
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@
                                                     <option value="convenience_store">超商取貨</option>
                                                 </select>
                                             </div>
-                                            <input id="content" name="fAddress" placeholder="請輸入寄送地址" style="width:300px" /><br />
+                                            <input id="content" name="fAddress" placeholder="請輸入寄送地址" style="width:300px" required/><br />
                                             <div id="map" style="width:1000px; height:500px"></div>
                                             
                                             <input type="hidden" id="discountid" name="discountid" value="@ViewData["discount"]" class="form-control" />
@@ -245,6 +245,7 @@
         $("#Demo1").click(function () {
             $("#fReceiver").val("張三");
             $("#fPhone").val("0911222333");
+            $("#btnpayment").attr("checked","checked")
             
         })
 

@@ -34,7 +34,7 @@
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" id="div1">
     </div>
 
     <div class="container">
@@ -88,5 +88,8 @@
              window.location.href = '@Url.Content("~/shop/view")';
 
         });
+
+        let div1 = document.querySelector("#div1");
+        div1.style.backgroundImage = "url('@Url.Content("~/img/Home-img/02.jpg")')";
     </script>
 }

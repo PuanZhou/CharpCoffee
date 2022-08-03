@@ -2,7 +2,7 @@
 @*標題*@
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);" id="div1">
         <h2>Shop</h2>
     </div>
 
@@ -727,8 +727,10 @@
         @*$("#showcard").load('@Url.Content("~/Shop/partialView")');*@
 
         if ($("#countryid").val() != 0) {
-             let id = $("#countryid").val();
+            let id = $("#countryid").val();
             $('#showcard').load('@Url.Content("~/Shop/partialViewContry")' + "?id=" + id);
+            let div1 = document.querySelector("#div1");
+            div1.style.backgroundImage = "url('@Url.Content("~/img/Home-img/02.jpg")')";
         }
 
          $('#selectall').click(function () {
