@@ -24,7 +24,7 @@ namespace prjProduct_core.Controllers
         CoffeeContext db = null;
 
         public static Member loginmem = null;  //登入中的會員
-        public static string MemName = "Login";
+        //public static string MemName = "Login";
 
         public HomeController(ILogger<HomeController> logger , CoffeeContext _db)
         {
@@ -74,7 +74,7 @@ namespace prjProduct_core.Controllers
                     string jsonUser = JsonSerializer.Serialize(mem);  //將物件轉字串
                     HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, jsonUser); //放入到session紀錄登入資訊
                     loginmem = JsonSerializer.Deserialize<Member>(jsonUser);
-                    MemName = $"{loginmem.MemberName}您好";
+                    //MemName = $"{loginmem.MemberName}您好";
                     return Content("OK", "text/plain", Encoding.UTF8);
                 }
             }
@@ -87,7 +87,7 @@ namespace prjProduct_core.Controllers
         {
             HttpContext.Session.Remove(CDictionary.SK_LOGINED_USER);
             loginmem = null;
-            MemName = "Login";
+            //MemName = "Login";
             return RedirectToAction("Index"); 
         }
 
@@ -119,8 +119,8 @@ namespace prjProduct_core.Controllers
                 db.ShoppingCars.Add(sc);
                 db.SaveChanges();
                 //發送周年慶優惠券
-                CouponDetail cd = new CouponDetail() { MemberId=newmem.ShoppingCarId, CouponId=1 };
-                db.CouponDetails.Add(cd);
+                //CouponDetail cd = new CouponDetail() { MemberId=newmem.ShoppingCarId, CouponId=1 };
+                //db.CouponDetails.Add(cd);
                 db.SaveChanges();
 
                 return RedirectToAction("Login");

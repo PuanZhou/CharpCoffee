@@ -1,0 +1,116 @@
+﻿@model IEnumerable<prjProduct_core.Models.Coupon>
+
+@{
+    ViewData["Title"] = "領取優惠券";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Style{ 
+<style>
+
+    .coupon {
+        border-radius: 12px;
+        box-shadow:3px 5px 8px 5px rgba(218,218,218,0.7);
+    }
+    .CName{
+        margin-top: 0.2em;
+    }
+    .code:hover {
+        background: #73BF00;
+        color: #fff;
+        cursor: pointer
+    }
+    .coupBody{
+        margin-top:1rem;
+    }
+</style>
+}
+
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
+        <h2>領取優惠券</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">優惠券領取</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<div class="container CouponDiv"> 
+    <div class="d-flex justify-content-center row"> 
+    @{foreach (var item in Model)
+        {
+    <div class="col-md-6 coupBody"> 
+        <div class="coupon p-3 bg-white"> 
+        <div class="row no-gutters"> 
+            <div class="col-md-4 border-right"> 
+                <div class="d-flex flex-column align-items-center">
+                    <span class="d-block h4 CName">@item.CouponName</span>
+                    <button class="btn btn-outline-success code">領取</button>
+                    <span hidden>@item.CouponId</span>
+                </div> 
+            </div> 
+            <div class="col-md-8"> 
+            <div> 
+                <div class="d-flex flex-row justify-content-center off">
+                    <h3>折抵Nt$@item.Money.ToString("0") 元</h3>
+                </div> 
+                <div class="d-flex flex-row justify-content-between off px-3 p-2">
+                <span>消費滿 NT$@item.Condition 即可使用</span>
+                <span>期限：@item.CouponDeadline.ToShortDateString()</span>
+                </div> 
+            </div> 
+            </div> 
+        </div> 
+        </div> 
+        </div> 
+            }
+        }
+    </div> 
+</div>
+@section Scripts{ 
+<script>
+    $(".code").click(function () {
+        let coupId = $(this).next().html();
+        $.get('@Url.Content("~/MemberFactory/GetCoupon")', { "id": coupId },
+            function (data) {
+                $(".bootstrap-growl").remove();
+                if (data == "OK") {
+                    $.bootstrapGrowl("已新增優惠券", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "top", amount: 300 },
+                        align: "center",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dissmiss: true,
+                        stackup_spacing: 10
+                    });
+                } else if (data == "Had") {
+                    $.bootstrapGrowl("您已經拿過了！", {
+                        ele: "body",
+                        type: "danger",
+                        offset: { from: "top", amount: 300 },
+                        align: "center",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dissmiss: true,
+                        stackup_spacing: 10
+                    });
+                } else {
+                    window.location.href = "/Home/Login";
+                }
+            })
+    });
+</script>
+}

@@ -12,6 +12,7 @@ namespace prjProduct_core.Models
             ArticleComments = new HashSet<ArticleComment>();
             Comments = new HashSet<Comment>();
             CouponDetails = new HashSet<CouponDetail>();
+            HeldCoupons = new HashSet<HeldCoupon>();
             MyLikes = new HashSet<MyLike>();
             Notifications = new HashSet<Notification>();
             Orders = new HashSet<Order>();
@@ -33,6 +34,7 @@ namespace prjProduct_core.Models
         public virtual ICollection<ArticleComment> ArticleComments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<CouponDetail> CouponDetails { get; set; }
+        public virtual ICollection<HeldCoupon> HeldCoupons { get; set; }
         public virtual ICollection<MyLike> MyLikes { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

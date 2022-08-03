@@ -82,7 +82,6 @@ namespace prjCSCoffee.Controllers
                 coupname = coupon.CouponName;
                 couprice = coupon.Money;
             }
-            int fee = thiscouid.CouponId == null ? 0 : 100;
             var mycou = db.OrderDetails.Include(od => od.Order).ThenInclude(c => c.Coupon).Where(o => o.Order.TradeNo == id).Select(f => new
             {
                 商品名 = f.Product.ProductName,
@@ -91,7 +90,7 @@ namespace prjCSCoffee.Controllers
                 小計 = f.Product.Price * f.Quantity,
                 使用的優惠券 = coupname,
                 優惠券金額 = couprice,
-                運費 = fee
+                運費 = f.Order.Fee
             });
             return Json(mycou);
         }
@@ -313,6 +312,38 @@ namespace prjCSCoffee.Controllers
                 db.SaveChanges();
                 return Content("OK", "text/plain", Encoding.UTF8);
             }
+        }
+
+        public IActionResult GetCoupon(int id)
+        {
+            if (HomeController.loginmem == null)
+            {
+                return Content("Login", "text/plain", Encoding.UTF8);
+            }
+            else
+            {
+                //檢查該會員有過該Coupon
+                var cou = db.HeldCoupons.Any(c => c.MemberId == HomeController.loginmem.MemberId && c.CouponId == id);
+                if (!cou)//如果沒有過
+                {
+                    CouponDetail cd = new CouponDetail()
+                    {
+                        MemberId = HomeController.loginmem.MemberId,
+                        CouponId = id
+                    };
+                    db.CouponDetails.Add(cd);
+                    HeldCoupon hc = new HeldCoupon()
+                    {
+                        MemberId = HomeController.loginmem.MemberId,
+                        CouponId = id
+                    };
+                    db.HeldCoupons.Add(hc);
+                    db.SaveChanges();
+                    return Content("OK", "text/plain", Encoding.UTF8);
+                }
+                return Content("Had", "text/plain", Encoding.UTF8);
+            }
+
         }
 
     }

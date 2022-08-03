@@ -165,5 +165,12 @@ namespace prjProduct_core.Controllers
             return View(noti);
         }
 
+        public IActionResult GetCoupon()
+        {
+            DateTime now = DateTime.Now;
+            var coupon = db.Coupons.Where(c => c.CouponStartDate <= now && c.CouponDeadline >= now &&c.CouponId!=3).ToList();
+            return View(coupon);
+        }
+
     }
 }
