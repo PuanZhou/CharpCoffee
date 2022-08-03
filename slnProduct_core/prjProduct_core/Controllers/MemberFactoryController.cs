@@ -65,33 +65,35 @@ namespace prjCSCoffee.Controllers
 
         }
 
-        public IActionResult QueryOrdDetail(string id) //此id為ordertID 
+        public IActionResult QueryOrdDetail(string id) //此id為TradeNo
         {
             //1搜尋order的coupid 2.從coupid去cdb.oupon找名字
             string coupname = "";
             decimal couprice = 0;
-            var thiscouid = db.Orders.FirstOrDefault(o => o.TradeNo == id && o.MemberId == HomeController.loginmem.MemberId).CouponId;
-            if (thiscouid == null)
+            var thiscouid = db.Orders.FirstOrDefault(o => o.TradeNo == id && o.MemberId == HomeController.loginmem.MemberId);
+            if (thiscouid.CouponId == null)
             {
                 coupname = "無";
                 couprice = 0;
             }
             else
             {
-                var coupon = db.Coupons.FirstOrDefault(c => c.CouponId == thiscouid);
+                var coupon = db.Coupons.FirstOrDefault(c => c.CouponId == thiscouid.CouponId);
                 coupname = coupon.CouponName;
                 couprice = coupon.Money;
             }
-            var coup = db.OrderDetails.Include(od => od.Order).ThenInclude(c => c.Coupon).Where(o => o.Order.TradeNo == id).Select(f => new
+            int fee = thiscouid.CouponId == null ? 0 : 100;
+            var mycou = db.OrderDetails.Include(od => od.Order).ThenInclude(c => c.Coupon).Where(o => o.Order.TradeNo == id).Select(f => new
             {
                 商品名 = f.Product.ProductName,
-                商品單價 = f.Product.Price,
+                商品單價 = f.Price,
                 商品數量 = f.Quantity,
                 小計 = f.Product.Price * f.Quantity,
                 使用的優惠券 = coupname,
-                優惠券金額 = couprice
+                優惠券金額 = couprice,
+                運費 = fee
             });
-            return Json(coup);
+            return Json(mycou);
         }
 
 
@@ -272,7 +274,40 @@ namespace prjCSCoffee.Controllers
                 db.SaveChanges();
                 return Content("OK", "text/plain", Encoding.UTF8);
             }
-            
+
+        }
+
+        public IActionResult ReadOneNoti(int? id)
+        {
+            if (HomeController.loginmem == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                if (id == null)//全部標已讀
+                {
+                    var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).ToList();
+                    foreach (var item in noti)
+                    {
+                        item.HasRead = true;
+                    }
+                }
+                else //單個已讀
+                {
+                    var noti = db.Notifications.FirstOrDefault(n => n.MemberId == HomeController.loginmem.MemberId && n.NotificationId == id);
+                    noti.HasRead = true;
+                    db.SaveChanges();
+                    //有無全部已讀
+                    var noti2 = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId && n.HasRead == false).ToList();//算未讀的數量
+                    if (noti2.Count == 0)
+                    {
+                        return Content("AllRead", "text/plain", Encoding.UTF8);
+                    }
+                }
+                db.SaveChanges();
+                return Content("OK", "text/plain", Encoding.UTF8);
+            }
         }
 
     }

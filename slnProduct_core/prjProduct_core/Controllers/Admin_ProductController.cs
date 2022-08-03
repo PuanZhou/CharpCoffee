@@ -129,11 +129,11 @@ namespace prjProduct_core.Controllers
                     return View(datas);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpGet]
@@ -148,11 +148,11 @@ namespace prjProduct_core.Controllers
                     return View();
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpPost]
@@ -226,11 +226,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult TakeDown(int id)
@@ -247,11 +247,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult Launch(int id)
@@ -268,11 +268,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpGet]
@@ -347,11 +347,11 @@ namespace prjProduct_core.Controllers
                     return View(prod[0]);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpPost]
@@ -459,11 +459,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
     }
 }

@@ -18,7 +18,7 @@ namespace prjProduct_core.Controllers
     {
         private readonly CoffeeContext db;
         IWebHostEnvironment _environment;
-        public MemCenterController(CoffeeContext _db , IWebHostEnvironment iweb)
+        public MemCenterController(CoffeeContext _db, IWebHostEnvironment iweb)
         {
             db = _db;
             _environment = iweb;
@@ -27,7 +27,7 @@ namespace prjProduct_core.Controllers
         public IActionResult Index() //會員中心
         {
 
-            if (HomeController.loginmem==null)
+            if (HomeController.loginmem == null)
             {
                 return RedirectToAction("Login", "Home");   //如果沒有登入則要求登入
             }
@@ -80,7 +80,7 @@ namespace prjProduct_core.Controllers
             {
                 return PartialView();
             }
-            
+
         }
 
         public IActionResult MyLikePartial()
@@ -101,7 +101,7 @@ namespace prjProduct_core.Controllers
                 });
                 return PartialView(mylike);
             }
-            
+
         }
 
         public IActionResult CouponPartialView() //優惠券
@@ -112,12 +112,12 @@ namespace prjProduct_core.Controllers
             }
             else
             {
-                
-                var cou = db.CouponDetails.Where(c => c.MemberId == HomeController.loginmem.MemberId &&c.Coupon.CouponDeadline>=DateTime.Now).Select(c => new CCouponDetailViewModel()
+
+                var cou = db.CouponDetails.Where(c => c.MemberId == HomeController.loginmem.MemberId && c.Coupon.CouponDeadline >= DateTime.Now).Select(c => new CCouponDetailViewModel()
                 {
                     couponName = c.Coupon.CouponName,
                     money = c.Coupon.Money,
-                    condition  =c.Coupon.Condition,
+                    condition = c.Coupon.Condition,
                     startDate = c.Coupon.CouponStartDate,
                     deadline = c.Coupon.CouponDeadline
                 });
@@ -159,7 +159,8 @@ namespace prjProduct_core.Controllers
                     NotificationId = n.NotificationId,
                     NotifyTime = n.NotifyTime,
                     statement = n.OrderState.OrderState1,
-                    TradeNo = n.TradeNo
+                    TradeNo = n.TradeNo,
+                    HasRead = n.HasRead
                 }).ToList();
             return View(noti);
         }

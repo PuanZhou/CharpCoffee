@@ -87,11 +87,11 @@ namespace prjProduct_core.Controllers
                     return View(datas);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
 
@@ -156,9 +156,9 @@ namespace prjProduct_core.Controllers
             var data = db.OrderDetails.Where(t => t.OrderId == id).Select(o => new
             {
                 d產品名 = o.Product.ProductName,
-                d單價 = o.Product.Price,
+                d單價 = o.Price,
                 d數量 = o.Quantity,
-                d小計 = o.Product.Price * o.Quantity,
+                d小計 = o.Price * o.Quantity,
                 d運費 = fee,
                 d優惠卷金額 = couponprice
             });
@@ -166,26 +166,30 @@ namespace prjProduct_core.Controllers
             return Json(data);
         }
 
-        public IActionResult Editstate(int? orderid, int? stateid)
+        public IActionResult Editstate(int? orderid, int? oldstateid, int? newstateid)
         {
             var data = db.Orders.Include(o=>o.Member).FirstOrDefault(t => t.OrderId == orderid);
             if (data != null)
             {
-                data.OrderStateId = (int)stateid;
+                if (oldstateid == 5 && newstateid == 4)
+                {
+                    EditProStock(orderid);
+                }
+                data.OrderStateId = (int)newstateid;
                 #region 加入通知
                 Notification noti = new Notification()
                 {
                     TradeNo = data.TradeNo,
                     NotifyTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
                     MemberId = data.MemberId,
-                    OrderStateId = Convert.ToInt32(stateid)
+                    OrderStateId = Convert.ToInt32(newstateid)
                 };
                 db.Notifications.Add(noti);
                 #endregion
                 db.SaveChanges();
             }
 
-            if (stateid == 3) // 假如訂單狀態修改為"已送達收穫地址"
+            if (newstateid == 3) // 假如訂單狀態修改為"已送達收穫地址"
             {
                 string name = data.Member.MemberName, // 收件者姓名
                        tradeNo = data.TradeNo; // 訂單編號
@@ -242,8 +246,23 @@ namespace prjProduct_core.Controllers
             }
             return RedirectToAction("index");
         }
-          
 
+        public IActionResult EditProStock(int? orderid)
+        {
+            var data = db.OrderDetails.Where(o => o.OrderId == orderid).Select(o => new
+            {
+                Fproid = o.ProductId,
+                Fquantity = o.Quantity
+            }).ToList();
+
+            foreach (var item in data)
+            {
+                var prod = db.Products.FirstOrDefault(p => p.ProductId == item.Fproid);
+                prod.Stock += item.Fquantity;
+            }
+            db.SaveChanges();
+            return RedirectToAction("index");
+        }
     }
 }
 

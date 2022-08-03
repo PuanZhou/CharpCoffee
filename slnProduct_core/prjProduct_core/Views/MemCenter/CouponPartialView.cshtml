@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.CCouponDetailViewModel>
-    <style>
-        td, th {
-            text-align: center;
-        }
-    </style>
+<style>
+    td, th {
+        text-align: center;
+    }
+</style>
 
 <table class="table table-hover">
     <thead style="background-color: #61A340; color: ghostwhite;">
@@ -26,25 +26,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @item.couponName
-            </td>
-            <td>
-                @item.money.ToString("0")
-            </td>
-            <td>
-                @item.condition.ToString("0")
-            </td>
-            <td>
-                @item.startDate.ToShortDateString()
-            </td>
-            <td class="countdown">
-                @item.deadline.ToShortDateString()
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.couponName
+                </td>
+                <td>
+                    NT$@item.money.ToString("0")
+                </td>
+                <td>
+                    NT$@item.condition.ToString("0")
+                </td>
+                <td>
+                    @item.startDate.ToShortDateString()
+                </td>
+                <td class="countdown">
+                    @item.deadline.ToShortDateString()
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 

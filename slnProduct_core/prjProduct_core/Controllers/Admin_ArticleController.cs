@@ -54,11 +54,11 @@ namespace prjProduct_core.Controllers
                     return View(datas);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
         //Creat
         public IActionResult CreatArticle()
@@ -72,11 +72,11 @@ namespace prjProduct_core.Controllers
                     return View();
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
         [HttpPost]
         public IActionResult CreatArticle(CAdmin_ArticleViewModel a)
@@ -103,11 +103,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("List");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
         //Delete
         public IActionResult DeleteArticle(int? id)
@@ -133,11 +133,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("List");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
         //Edit
         public IActionResult EditArticle(int? id)
@@ -157,11 +157,11 @@ namespace prjProduct_core.Controllers
                     return View(art);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
         [HttpPost]
         public IActionResult EditArticle(CAdmin_ArticleViewModel a)
@@ -189,11 +189,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("List");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
     }
 }

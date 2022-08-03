@@ -176,6 +176,14 @@ namespace prjCSCoffee.Controllers
 
         }
 
+        //自動提詞
+        public IActionResult GetKeyWords(string kw)
+        {
+            var result = db.Products.Select(k => k.ProductName).Where(w => w.Contains(kw)).Take(10);
+            return Json(result);
+        }
+
+
 
     }
 }
