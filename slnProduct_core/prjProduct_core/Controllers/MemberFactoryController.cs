@@ -180,11 +180,15 @@ namespace prjCSCoffee.Controllers
             }
             else
             {
-                var mem = db.Members.FirstOrDefault(m => m.MemberId == HomeController.loginmem.MemberId);
-                string newPW = new CMemberViewModel().PWHasH(txtNewPW);
-                mem.MemberPassword = newPW;
-                db.SaveChanges();
-                return Content("OK", "text/plain", Encoding.UTF8);
+                if (txtNewPW != null)
+                {
+                    var mem = db.Members.FirstOrDefault(m => m.MemberId == HomeController.loginmem.MemberId);
+                    string newPW = new CMemberViewModel().PWHasH(txtNewPW);
+                    mem.MemberPassword = newPW;
+                    db.SaveChanges();
+                    return Content("OK", "text/plain", Encoding.UTF8);
+                }
+                return Content("NO", "text/plain", Encoding.UTF8);
             }
 
         }
@@ -209,6 +213,7 @@ namespace prjCSCoffee.Controllers
                     string emailPW = "xryubogltaftuanp";
                     mmsg.From = new MailAddress(emailfrom);
                     mmsg.To.Add(new MailAddress("forgotpwd87@gmail.com"));
+                    mmsg.To.Add(new MailAddress("chiakiultra@gmail.com"));
                     mmsg.Subject = "[C#Coffee]忘記密碼通知信";
                     mmsg.Body = $"尊敬的會員您好：\n\n您新的密碼為{newPW}。請以新密碼登入並修改您的舊密碼。\n如果未有忘記密碼的需求，請忽略此信件。\n" +
                         $"請注意，由於部分信箱可能有收不到站方通知信件的情況，所以也請您不吝多留意「垃圾郵件夾」。\n" +

@@ -90,10 +90,11 @@ namespace prjCSCoffee.ViewModel
         }
 
         [DisplayName("生日")]
-        public DateTime MemberBirthDay
+        [Required(ErrorMessage = "不可為空")]
+        public DateTime? MemberBirthDay
         {
             get { return _mem.MemberBirthDay; }
-            set { _mem.MemberBirthDay = value; }
+            set { _mem.MemberBirthDay = Convert.ToDateTime(value); }
         }
 
         public string MemberPhotoPath

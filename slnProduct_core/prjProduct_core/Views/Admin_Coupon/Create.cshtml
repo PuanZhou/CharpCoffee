@@ -1,0 +1,72 @@
+﻿@model prjProduct_core.ViewModel.CCouponViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+@section Styles{
+<style>
+    .form-group label{
+        margin-top:1em;
+    }
+    #backtoList {
+        margin-right: 0.5em;
+    }
+</style>
+}
+
+<h1 style="margin-top:0.5em;">新增優惠券</h1>
+<a asp-action="CouponList" class="btn btn-primary" id="backtoList">回清單</a>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CouponName" class="control-label"></label>
+                <input asp-for="CouponName" class="form-control" required id="Cname" />
+                <span asp-validation-for="CouponName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Money" class="control-label"></label>
+                <input asp-for="Money" class="form-control" required id="Cmoney"/>
+                <span asp-validation-for="Money" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Condition" class="control-label"></label>
+                <input asp-for="Condition" class="form-control" required id="Ccondi"/>
+                <span asp-validation-for="Condition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CouponStartDate" class="control-label"></label>
+                <input asp-for="CouponStartDate" class="form-control" required id="Cstart" />
+                <span asp-validation-for="CouponStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CouponDeadline" class="control-label"></label>
+                <input asp-for="CouponDeadline" class="form-control" required id="Cdead"/>
+                <span asp-validation-for="CouponDeadline" class="text-danger"></span>
+            </div>
+            <br />
+            <div>
+                <input type="submit" value="新增" class="btn btn-secondary" />
+                <input type="button" value="DemoNew" class="btn btn-gray-800" style="margin-left:1em;" id="demo1" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+<script>
+    $("#demo1").click(() => {
+        $("#Cname").val("暑假大放送");
+        $("#Cmoney").val("888");
+        $("#Ccondi").val("8888");
+        $("#Cstart").val("2022-07-01");
+        $("#Cdead").val("2022-08-31");
+    })
+</script>
+}

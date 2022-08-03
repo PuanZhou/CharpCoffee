@@ -109,7 +109,7 @@ namespace prjProduct_core.Controllers
                     MemberAddress = newmem.MemberAddress,
                     MemberPhone = newmem.MemberPhone,
                     MemberPassword = newmem.PWHasH(newmem.MemberPassword),
-                    MemberBirthDay = newmem.MemberBirthDay,
+                    MemberBirthDay = Convert.ToDateTime(newmem.MemberBirthDay),
                     ShoppingCarId = newmem.ShoppingCarId,
                     Newspaper = newmem.Newspaper
                 };
