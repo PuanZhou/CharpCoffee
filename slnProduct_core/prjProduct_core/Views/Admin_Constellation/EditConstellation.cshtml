@@ -35,6 +35,9 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 <script>
+    let cons = document.querySelector("#constellation");
+    cons.classList.add("active")
+
     let constellation = document.querySelector("#constellation");
     constellation.classList.add("active")
 </script>
