@@ -42,7 +42,7 @@
                 <img src="~/images/@item.MainPhotoPath" class="card-img-top pdpicbox">
                 <div class="card-body">
                     產品名稱:<h5 class="card-title">@item.ProductName</h5>
-                    <p class="card-text">風味描述:@item.Description</p>
+                    風味描述: <p class="card-text fs-6">@item.Description</p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">產區:@item.Country.Continent.ContinentName</li>
@@ -62,13 +62,13 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <p>比較列表中已無任何商品，請先回到商品頁面重新將商品加入比較</p>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer  d-flex justify-content-center">
                 <button type="button" id="returnView" class="btn btn-info">回到商品頁面</button>
             </div>
         </div>

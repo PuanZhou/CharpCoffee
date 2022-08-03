@@ -70,8 +70,8 @@ namespace prjProduct_core.Controllers
                         couponDetail.MemberId = order.MemberId;
                         couponDetail.CouponId = 3;
                         db.CouponDetails.Add(couponDetail);
-                        db.SaveChanges();
                     }
+                    db.SaveChanges();
                     return Content("success", "text/plain", Encoding.UTF8);
                 }
                 else
@@ -102,9 +102,9 @@ namespace prjProduct_core.Controllers
                     if (survey != null)
                     {
                         db.Surveys.Remove(survey);
-                        db.SaveChanges();
                     }
                 }
+                db.SaveChanges();
                 return Content("success", "text/plain", Encoding.UTF8);
             }
             return Content("null", "text/plain", Encoding.UTF8);
@@ -162,9 +162,9 @@ namespace prjProduct_core.Controllers
                         survey.Name = row[1].ToString();
                         survey.TradeNo = row[2].ToString();
                         db.Surveys.Add(survey);
-                        db.SaveChanges();
                     }
                 }
+                db.SaveChanges();
                 ClearSurvey();
             }
         }
