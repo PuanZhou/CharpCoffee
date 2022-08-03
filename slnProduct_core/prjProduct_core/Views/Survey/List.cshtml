@@ -66,6 +66,9 @@
 @section Scripts
 {
     <script>
+        let survey = document.querySelector("#survey");
+        survey.classList.add("active")
+
         $('#sent').click(function () {
             let str = $(".TradeNo").text();
             $.get('@Url.Content("~/Survey/SentCoupon")', {"TradeNo":str},
