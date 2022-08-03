@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <!-- Title -->
-    <title>CSCoffee &amp; Landscaping HTML Template</title>
+    <title>CSCoffee</title>
 
     <!-- Favicon -->
     <link rel="icon" href="/img/Home-img/coffee.png">
@@ -342,7 +342,7 @@
                             <!-- Top Header Content -->
                             <div class="top-header-meta">
                                 @*<a href="#" data-toggle="tooltip" data-placement="bottom" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: infodeercreative@gmail.com</span></a>
-        <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
+                                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
                                 <a href="#" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: cscoffee@msit141.com.tw</span></a>
                                 <a href="#" title="+1 234 122 122" id="navbarPhone"><i class="fa fa-phone" aria-hidden="true"></i> <span>Tel: 02-2222-2222</span></a>
                                 <a asp-controller="Admin_Dashboard" asp-action="Signin" title="Content Management System"><i class="fa-solid fa-cube"></i> <span>管理員後台系統</span></a>
@@ -369,7 +369,7 @@
                                         <a href="/Home/Login" id="loginID" style="cursor:@arror"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@HomeController.MemName</span></a>}
                                 </div>
                                 <!-- 通知 -->
-                                 @{
+                                @{
                                     if (HomeController.loginmem != null)
                                     {
 
@@ -383,11 +383,13 @@
                                         }).Take(5).ToList();
 
                                         <div class="notifications">
-                                            @if (noti.Any(n=>n.HasRead==false)){
-                                            <a href="#" id="notify" hidden><i class="fa-solid fa-bell"><span id="readDot"></span></i></a>
+                                            @if (noti.Any(n => n.HasRead == false))
+                                            {
+                                                <a href="#" id="notify" hidden><i class="fa-solid fa-bell"><span id="readDot"></span></i></a>
                                             }
-                                            else{
-                                            <a href="#" id="notify" hidden><i class="fa-solid fa-bell"></i></a>
+                                            else
+                                            {
+                                                <a href="#" id="notify" hidden><i class="fa-solid fa-bell"></i></a>
                                             }
                                             <div class="notification_dd">
                                                 <ul class="notification_ul">
@@ -395,21 +397,22 @@
                                                     {
                                                         foreach (var item in noti)
                                                         {
-                                                    <li class="n_@item.HasRead">
-                                                        <div class="notify_data">
-                                                            <div class="title">@item.TradeNo 的訂單通知</div>
-                                                            <div class="sub_title">您的商品目前：@item.statement</div>
-                                                        </div>
-                                                        <div class="notify_status">
-                                                            <p class="timebefore">@item.NotifyTime</p>
-                                                        </div>
-                                                    </li>
+                                                            <li class="n_@item.HasRead">
+                                                                <div class="notify_data">
+                                                                    <div class="title">@item.TradeNo 的訂單通知</div>
+                                                                    <div class="sub_title">您的商品目前：@item.statement</div>
+                                                                </div>
+                                                                <div class="notify_status">
+                                                                    <p class="timebefore">@item.NotifyTime</p>
+                                                                </div>
+                                                            </li>
                                                         }
-                                                    <li class="showAll">
-                                                        <a href="/MemCenter/Notice"><p class="link">顯示全部</p></a>
-                                                    </li>
+                                                        <li class="showAll">
+                                                            <a href="/MemCenter/Notice"><p class="link">顯示全部</p></a>
+                                                        </li>
                                                     }
-                                                    else {
+                                                    else
+                                                    {
                                                         <li class="showAll">
                                                             <a href="/MemCenter/Notice"><p class="link">目前沒有任何通知喔！</p></a>
                                                         </li>
@@ -435,7 +438,7 @@
 
                                         }
                                     }
-                                  <div class="floatcartin"></div>
+                                    <div class="floatcartin"></div>
 
                                 </div>
 
@@ -525,11 +528,8 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; MSIT141 西夏普咖啡 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
+
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>*@
@@ -548,7 +548,7 @@
     <script>new WOW().init();</script>
     <script type="text/javascript" src="~/js/jquery.simplePagination.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-<script>
+    <script>
         //====================語音控制==========================
 
         var recognition = new window.webkitSpeechRecognition;
@@ -739,6 +739,6 @@
         CountCart();
     }
 
-</script>
+    </script>
 </body>
 </html>
