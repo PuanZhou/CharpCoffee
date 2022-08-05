@@ -50,6 +50,10 @@ namespace prjProduct_core.Controllers
                     else
                     {
                         datas = list.Where(a => a.ArticleName.Contains(vModel.txtKeyword));
+                        if (datas.Count() == 0)
+                        {
+                            datas = list;
+                        }
                     }
                     return View(datas);
                 }

@@ -38,6 +38,11 @@ namespace prjCSCoffee.Controllers
             else
             {
                 datas = db.Articles.Where(t => t.ArticleName.Contains(vModel.txtKeyword));
+                if (datas.Count() == 0)
+                {
+                    datas = from c in db.Articles
+                            select c;
+                }
             }
             return View(datas.ToPagedList(currentPage,pageSize));
         }
