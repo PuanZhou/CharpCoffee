@@ -201,8 +201,8 @@
                     $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：NT$${couprice}`);
                     $("#delifee").html(`運費：NT$${fee}`);
                     $("#Mbefore").html(`折價前金額：NT$${subtotal + fee}`);
-                    $("#Mafter").html(`折價後金額：NT$${subtotal - couprice}`);
-                    $("#Mtotal").html(`總金額：NT$${subtotal - couprice}`);
+                    /*$("#Mafter").html(`折價後金額：NT$${subtotal - couprice}`);*/
+                    $("#Mtotal").html(`總金額：NT$${subtotal - couprice + fee}`);
                 } else {
                     window.location.href = '@Url.Content("~/Home/Login")';
                 }
