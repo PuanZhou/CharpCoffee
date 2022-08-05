@@ -27,13 +27,15 @@ namespace prjProduct_core.Controllers
         public IActionResult Index() //會員中心
         {
 
-            if (HomeController.loginmem == null)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 return RedirectToAction("Login", "Home");   //如果沒有登入則要求登入
             }
             else
             {
-                var mem = db.Members.FirstOrDefault(m => m.MemberId.Equals(HomeController.loginmem.MemberId));
+                string jsonstring = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER); //拿出session登入字串
+                int memID = JsonSerializer.Deserialize<Member>(jsonstring).MemberId; //字串轉物件
+                var mem = db.Members.FirstOrDefault(m => m.MemberId.Equals(memID));
                 return View(mem);
             }
         }
@@ -41,7 +43,7 @@ namespace prjProduct_core.Controllers
         [HttpPost]
         public IActionResult Index(CEditMemberViewModel cmem)
         {
-            if (HomeController.loginmem == null)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -63,16 +65,16 @@ namespace prjProduct_core.Controllers
                 }
                 db.SaveChanges();
                 mem = db.Members.FirstOrDefault(m => m.MemberId.Equals(cmem.MemberId));
-                HomeController.loginmem = mem; //刷新
-                string json = JsonSerializer.Serialize(HomeController.loginmem);
-                HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, json);
+                //刷新
+                string json = JsonSerializer.Serialize(mem);  //物件轉字串
+                HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, json); //塞新資料到session
                 return View(mem);
             }
         }
 
         public IActionResult ChangePW()
         {
-            if (HomeController.loginmem == null)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -85,13 +87,15 @@ namespace prjProduct_core.Controllers
 
         public IActionResult MyLikePartial()
         {
-            if (HomeController.loginmem == null)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 return RedirectToAction("Login", "Home");
             }
             else
             {
-                var mylike = db.MyLikes.Where(m => m.MemberId == HomeController.loginmem.MemberId).Select(k => new CMyLikeViewModel()
+                string jsonstring = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                int memID = JsonSerializer.Deserialize<Member>(jsonstring).MemberId;
+                var mylike = db.MyLikes.Where(m => m.MemberId == memID).Select(k => new CMyLikeViewModel()
                 {
                     ProductId = k.ProductId,
                     productname = k.Product.ProductName,
@@ -106,14 +110,15 @@ namespace prjProduct_core.Controllers
 
         public IActionResult CouponPartialView() //優惠券
         {
-            if (HomeController.loginmem == null)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                return RedirectToAction("Login", "Home");   //如果沒有登入則要求登入
+                return RedirectToAction("Login", "Home");
             }
             else
             {
-
-                var cou = db.CouponDetails.Where(c => c.MemberId == HomeController.loginmem.MemberId && c.Coupon.CouponDeadline >= DateTime.Now).Select(c => new CCouponDetailViewModel()
+                string jsonstring = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER); //拿出session登入字串
+                int memID = JsonSerializer.Deserialize<Member>(jsonstring).MemberId; //字串轉物件
+                var cou = db.CouponDetails.Where(c => c.MemberId == memID && c.Coupon.CouponDeadline >= DateTime.Now).Select(c => new CCouponDetailViewModel()
                 {
                     couponName = c.Coupon.CouponName,
                     money = c.Coupon.Money,
@@ -128,14 +133,15 @@ namespace prjProduct_core.Controllers
 
         public IActionResult QueryOrderPartialView() //訂單查詢
         {
-            if (HomeController.loginmem == null)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                return RedirectToAction("Login", "Home");   //如果沒有登入則要求登入
+                return RedirectToAction("Login", "Home");
             }
             else
             {
-
-                var ord = db.Orders.Where(o => o.MemberId.Equals(HomeController.loginmem.MemberId))
+                string jsonstring = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER); //拿出session登入字串
+                int memID = JsonSerializer.Deserialize<Member>(jsonstring).MemberId; //字串轉物件
+                var ord = db.Orders.Where(o => o.MemberId.Equals(memID))
                     .Select(o => new COrderViewModel()
                     {
                         TradeNo = o.TradeNo,
@@ -153,7 +159,15 @@ namespace prjProduct_core.Controllers
 
         public IActionResult Notice()
         {
-            var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                string jsonstring = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER); //拿出session登入字串
+                int memID = JsonSerializer.Deserialize<Member>(jsonstring).MemberId; //字串轉物件
+                var noti = db.Notifications.Where(n => n.MemberId == memID).OrderByDescending(n => n.NotifyTime)
                 .Select(n => new CNotificationViewModel()
                 {
                     NotificationId = n.NotificationId,
@@ -162,13 +176,15 @@ namespace prjProduct_core.Controllers
                     TradeNo = n.TradeNo,
                     HasRead = n.HasRead
                 }).ToList();
-            return View(noti);
+                return View(noti);
+            }
+
         }
 
         public IActionResult GetCoupon()
         {
             DateTime now = DateTime.Now;
-            var coupon = db.Coupons.Where(c => c.CouponStartDate <= now && c.CouponDeadline >= now &&c.CouponId!=3).ToList();
+            var coupon = db.Coupons.Where(c => c.CouponStartDate <= now && c.CouponDeadline >= now && c.CouponId != 3).ToList();
             return View(coupon);
         }
 

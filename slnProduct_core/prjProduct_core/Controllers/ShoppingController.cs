@@ -364,7 +364,8 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult Car2()
         {
-            UserId = HomeController.loginmem.MemberId;
+            string jsonName = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);//從Session抓登入字串
+            UserId = JsonSerializer.Deserialize<Member>(jsonName).MemberId; //字串轉物件
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_使用的折價卷))
             {
                 int pay = 0;
@@ -751,7 +752,7 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult RelatedpartialView(int? id)
         {
-            UserId = HomeController.loginmem.MemberId;
+            UserId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
             Random rng = new Random(Guid.NewGuid().GetHashCode());
             List<CShoppingCarDetailsViewModel> list = new List<CShoppingCarDetailsViewModel>();
             var detailid = db.ShoppingCarDetails.OrderByDescending(p => p.ShoppingCarDetialsId).FirstOrDefault().ShoppingCarDetialsId;

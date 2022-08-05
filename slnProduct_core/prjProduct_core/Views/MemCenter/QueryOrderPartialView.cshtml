@@ -185,23 +185,27 @@
         let TradeNo = $(this).parents().get(1).firstElementChild.textContent.trim();
         $.get('@Url.Content("~/MemberFactory/QueryOrdDetail")', { "id": TradeNo},
             function (data) {
-                //生成明細
-                let subtotal = 0;
-                let usecou = "";
-                let couprice = 0;
-                let fee = 0;
-                $.each(data, function (index, values) {
-                    $("#floattb").append(`<tr><td>${values.商品名}</td><td>NT$${values.商品單價}</td><td>${values.商品數量}</td><td>NT$${values.小計}</td>`);
-                    subtotal += values.小計;
-                    usecou = values.使用的優惠券;
-                    couprice = values.優惠券金額;
-                    fee = values.運費;
-                })
-                $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：NT$${couprice}`);
-                $("#delifee").html(`運費：NT$${fee}`);
-                $("#Mbefore").html(`折價前金額：NT$${subtotal+fee}`);
-                $("#Mafter").html(`折價後金額：NT$${subtotal - couprice}`);
-                $("#Mtotal").html(`總金額：NT$${subtotal - couprice}`);
+                if (data != "Login") {
+                    //生成明細
+                    let subtotal = 0;
+                    let usecou = "";
+                    let couprice = 0;
+                    let fee = 0;
+                    $.each(data, function (index, values) {
+                        $("#floattb").append(`<tr><td>${values.商品名}</td><td>NT$${values.商品單價}</td><td>${values.商品數量}</td><td>NT$${values.小計}</td>`);
+                        subtotal += values.小計;
+                        usecou = values.使用的優惠券;
+                        couprice = values.優惠券金額;
+                        fee = values.運費;
+                    })
+                    $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：NT$${couprice}`);
+                    $("#delifee").html(`運費：NT$${fee}`);
+                    $("#Mbefore").html(`折價前金額：NT$${subtotal + fee}`);
+                    $("#Mafter").html(`折價後金額：NT$${subtotal - couprice}`);
+                    $("#Mtotal").html(`總金額：NT$${subtotal - couprice}`);
+                } else {
+                    window.location.href = '@Url.Content("~/Home/Login")';
+                }
             });
     });
 
@@ -251,9 +255,22 @@
                                     allow_dissmiss: true, //是否允許使用者關閉
                                     stackup_spacing: 10 //條間距
                                 });
+                            } else if (data2 == "fall") {
+                                $.bootstrapGrowl("申請失敗，請洽客服人員", {
+                                    ele: "body",
+                                    type: "success",
+                                    offset: { from: "top", amount: 300 },
+                                    align: "center",
+                                    width: "auto",
+                                    delay: 3000,
+                                    allow_dissmiss: true,
+                                    stackup_spacing: 10
+                                });
+                            } else {
+                                window.location.href = '@Url.Content("~/Home/Login")';
                             }
                         });
-                } else {
+                } else if (data == "Non") {
                     $.bootstrapGrowl("申請失敗，請洽客服人員", {
                         ele: "body",
                         type: "success",
@@ -264,6 +281,8 @@
                         allow_dissmiss: true,
                         stackup_spacing: 10
                     });
+                } else {
+                    window.location.href = '@Url.Content("~/Home/Login")';
                 }
 
             }
@@ -274,27 +293,31 @@
     let btnSearch = document.querySelector("#Findord");
     $("#Findord").click(function (eve) {
         eve.preventDefault();
-        $.get('@Url.Content("~/MemberFactory/QueryOrder")', { "oYear": selY.value, "oMonth": selMon.value, "oMonth2": selMon2.value },function (data) {
-            if (data.length == 0) {
-                $.bootstrapGrowl("查無訂單", {
-                    ele: "body",
-                    type: "danger",
-                    offset: { from: "top", amount: 300 },
-                    align: "center",
-                    width: "auto",
-                    delay: 3000,
-                    allow_dissmiss: true,
-                    stackup_spacing: 10
-                });
-            }
-            else {
-                let tbody = document.querySelector("#tbchang");
-                tbody.innerHTML = "";
-                docfrag = document.createDocumentFragment();
-                $.each(data, function (index, values) {
-                    creatEle(values);
-                });
-                tbody.appendChild(docfrag);
+        $.get('@Url.Content("~/MemberFactory/QueryOrder")', { "oYear": selY.value, "oMonth": selMon.value, "oMonth2": selMon2.value }, function (data) {
+            if (data == "Login") {
+                window.location.href = '@Url.Content("~/Home/Login")';
+            } else {
+                if (data.length == 0) {
+                    $.bootstrapGrowl("查無訂單", {
+                        ele: "body",
+                        type: "danger",
+                        offset: { from: "top", amount: 300 },
+                        align: "center",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dissmiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+                else {
+                    let tbody = document.querySelector("#tbchang");
+                    tbody.innerHTML = "";
+                    docfrag = document.createDocumentFragment();
+                    $.each(data, function (index, values) {
+                        creatEle(values);
+                    });
+                    tbody.appendChild(docfrag);
+                }
             }
         })
     });

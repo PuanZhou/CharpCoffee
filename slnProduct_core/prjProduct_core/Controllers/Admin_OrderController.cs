@@ -23,7 +23,7 @@ namespace prjProduct_core.Controllers
     public class Admin_OrderController : Controller
     {
         private readonly CoffeeContext db;
-        private static Admin signIn_User;
+        //private static Admin signIn_User;
         private readonly IConfiguration _configuration;
 
         public Admin_OrderController(CoffeeContext context, IConfiguration configuration)
@@ -36,8 +36,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = System.Text.Json.JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.OrderOk)
+                //signIn_User = System.Text.Json.JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (System.Text.Json.JsonSerializer.Deserialize<Admin>(JsonUser).OrderOk)
                 {
                     IEnumerable<CAdmin_OrderViewModel> datas = null;
                     List<CAdmin_OrderViewModel> list = new List<CAdmin_OrderViewModel>();
