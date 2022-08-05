@@ -22,7 +22,7 @@ namespace prjProduct_core.Controllers
     {
         private readonly IWebHostEnvironment _environment;
         private readonly CoffeeContext _context;
-        private static Admin signIn_User;
+        //private static Admin signIn_User;
 
         public Admin_ProductController(CoffeeContext context, IWebHostEnvironment host)
         {
@@ -35,8 +35,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     IEnumerable<CAdmin_ProductViewModel> datas = null;
                     var list = _context.Products.Include(p => p.Comments).Select(p => new CAdmin_ProductViewModel()
@@ -142,8 +142,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     return View();
                 }
@@ -161,8 +161,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     // 新增產品
                     Product prod = new Product();
@@ -240,8 +240,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     Product p = _context.Products.Find(id);
                     p.TakeDown = true;
@@ -261,8 +261,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     Product p = _context.Products.Find(id);
                     p.TakeDown = false;
@@ -283,8 +283,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     List<CAdmin_ProductViewModel> prod = null;
                     if (_context.Coffees.Any(c => c.ProductId == id))
@@ -362,8 +362,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     // 修改產品
                     Product prod = _context.Products.Find(p.ProductId);

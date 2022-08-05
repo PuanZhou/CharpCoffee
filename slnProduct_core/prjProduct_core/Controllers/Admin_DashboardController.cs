@@ -17,7 +17,7 @@ namespace prjProduct_core.Controllers
 {
     public class Admin_DashboardController : Controller
     {
-        public static Admin signIn_user = null;
+        //public static Admin signIn_user = null;
         private readonly CoffeeContext _context;
         private readonly IConfiguration _configuration;
         public static string btnSignInText = "登入";
@@ -56,7 +56,7 @@ namespace prjProduct_core.Controllers
                     {
                         string JsonUser = JsonSerializer.Serialize(user); //user物件轉json
                         HttpContext.Session.SetString(CDictionary.SK_LOGINED_ADMIN, JsonUser); //json放到session
-                        signIn_user = JsonSerializer.Deserialize<Admin>(JsonUser);
+                        //signIn_user = JsonSerializer.Deserialize<Admin>(JsonUser);
                         btnSignInText = "登出";
                         return RedirectToAction("Index");
                     }
@@ -72,7 +72,7 @@ namespace prjProduct_core.Controllers
             //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             // {
             HttpContext.Session.Remove(CDictionary.SK_LOGINED_ADMIN);
-            signIn_user = null;
+            //signIn_user = null;
             btnSignInText = "登入";
             //}
 
