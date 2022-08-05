@@ -191,7 +191,7 @@ namespace prjProduct_core.Controllers
 
             if (newstateid == 3) // 假如訂單狀態修改為"已送達收穫地址"
             {
-                string name = data.Member.MemberName, // 收件者姓名
+                string name = data.OrderReceiver, // 收件者姓名
                        tradeNo = data.TradeNo; // 訂單編號
 
                 string strResponse = string.Empty;
