@@ -189,6 +189,7 @@ namespace prjProduct_core.Controllers
                 db.SaveChanges();
             }
 
+            #region 發送簡訊
             if (newstateid == 3) // 假如訂單狀態修改為"已送達收穫地址"
             {
                 string name = data.OrderReceiver, // 收件者姓名
@@ -234,16 +235,17 @@ namespace prjProduct_core.Controllers
                     dataStream.Write(byteArray, 0, byteArray.Length);
                 }
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse) // 查詢結果用
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse) // 查詢簡訊發送結果用
                 {
                     using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                     {
                         strResponse = reader.ReadToEnd();
                     }
                 }
-
+                
                 //return Content(strResponse);
             }
+            #endregion
             return RedirectToAction("index");
         }
 

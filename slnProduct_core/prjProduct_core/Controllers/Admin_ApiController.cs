@@ -70,7 +70,7 @@ namespace prjProduct_core.Controllers
             return Json(process);
         }
 
-        public IActionResult IfEmailExist(string email) // 後臺註冊驗證Eamil存在與否
+        public IActionResult IfEmailExist(string email) // 後臺註冊驗證Email存在與否
         {
             var emailExist = _context.Admins.Any(a => a.Email == email);
             return Content(emailExist.ToString(), "text/plain", Encoding.UTF8);
@@ -170,7 +170,7 @@ namespace prjProduct_core.Controllers
         public ActionResult DoResetPwd(CDoResetPwdIn inModel) // 後臺執行重設密碼
         {
             CDoResetPwdOut outModel = new CDoResetPwdOut();
-            Regex r = new Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$");
+            Regex r = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$");
 
             // 檢查是否有輸入密碼
             if (string.IsNullOrEmpty(inModel.NewUserPwd))
@@ -384,7 +384,7 @@ namespace prjProduct_core.Controllers
             return body;
         }
 
-        public IActionResult StockLessThanTen() // 庫存少於不足提醒(少於10)
+        public IActionResult StockLessThanTen() // 庫存不足提醒(少於10)
         {
             var count = _context.Products.Where(p => p.Stock < 10).ToList().Count;
             return Content(count.ToString(), "text/plain", Encoding.UTF8);

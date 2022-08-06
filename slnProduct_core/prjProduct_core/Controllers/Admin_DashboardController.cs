@@ -30,6 +30,10 @@ namespace prjProduct_core.Controllers
 
         public IActionResult Index()
         {
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
+            {
+                btnSignInText = "登入";
+            }
             return View();
         }
 
@@ -38,6 +42,7 @@ namespace prjProduct_core.Controllers
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
+                btnSignInText = "登出";
                 return RedirectToAction("Index", "Admin_Dashboard");
             }
             return PartialView();
@@ -106,7 +111,7 @@ namespace prjProduct_core.Controllers
 
             if (verify == "")
             {
-                ViewData["ErrorMsg"] = "缺少驗證碼";
+                ViewBag.ErrorMsg = "缺少驗證碼";
                 return PartialView();
             }
 
@@ -132,7 +137,7 @@ namespace prjProduct_core.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["ErrorMsg"] = "驗證碼錯誤";
+                ViewBag.ErrorMsg = "驗證碼錯誤";
                 return PartialView();
             }
 
@@ -148,7 +153,7 @@ namespace prjProduct_core.Controllers
             double diff = Convert.ToDouble(TS.TotalMinutes);
             if (diff > 30)
             {
-                ViewData["ErrorMsg"] = "超過驗證碼有效時間，請重寄驗證碼";
+                ViewBag.ErrorMsg = "超過驗證碼有效時間，請重寄驗證碼";
                 return PartialView();
             }
 

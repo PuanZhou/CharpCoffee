@@ -120,7 +120,16 @@
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td class="col-md-1" style="text-align:center">
-                            @Html.DisplayFor(modelItem => item.Stock)
+                            @{
+                                if (item.Stock < 10)
+                                {
+                                    <p style="color:red;border:red solid 1px;">@item.Stock</p>
+                                }
+                                else
+                                {
+                                    <p>@item.Stock</p>
+                                }
+                            }
                         </td>
                         <td class="col-md-1" style="text-align:center">
                             @Html.DisplayFor(modelItem => item.ClickCount)
