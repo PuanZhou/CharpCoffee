@@ -179,7 +179,7 @@ namespace prjProduct_core.Controllers
                 return Json(outModel);
             }
             // 檢查密碼是否符合格式
-            if (!r.IsMatch(inModel.CheckUserPwd))
+            if (!r.IsMatch(inModel.NewUserPwd))
             {
                 outModel.ErrMsg = "密碼格式錯誤";
                 return Json(outModel);
