@@ -1,5 +1,8 @@
 ﻿@using prjProduct_core.Controllers
 @using prjProduct_core.ViewModel
+@using Microsoft.AspNetCore.Http
+@using prjCSCoffee.Models
+@using System.Text.Json
 @inject CoffeeContext db
 <!DOCTYPE html>
 <html lang="en">
@@ -357,6 +360,7 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="/MemCenter/Index">會員中心</a>
                                             <a class="dropdown-item" href="/home/onlineServices">即時客服</a>
+                                            <a class="dropdown-item" href="/MemCenter/GetCoupon">領取優惠券</a>
                                             <a class="dropdown-item" href="/Home/Logout" id="logout" hidden>登出</a>
                                         </div>
                                     </div>
@@ -364,16 +368,21 @@
                                 <!-- Login -->
                                 <div class="login">
                                     @{ string arror = "pointer";
-                                        if (HomeController.MemName != "Login")
-                                        { arror = "default"; }
-                                        <a href="/Home/Login" id="loginID" style="cursor:@arror"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@HomeController.MemName</span></a>}
+                                        string MemName = "Login";
+                                        string jsonmemString = Context.Session.GetString(CDictionary.SK_LOGINED_USER);
+                                        Member mem = null;
+                                        if (jsonmemString!=null)
+                                        {   arror = "default";
+                                            mem = JsonSerializer.Deserialize<Member>(jsonmemString);
+                                            MemName = mem.MemberName; }
+                                        <a href="/Home/Login" id="loginID" style="cursor:@arror"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@MemName</span></a>}
                                 </div>
                                 <!-- 通知 -->
                                 @{
-                                    if (HomeController.loginmem != null)
+                                    if (jsonmemString != null)
                                     {
 
-                                        var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new CNotificationViewModel()
+                                        var noti = db.Notifications.Where(n => n.MemberId == mem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new CNotificationViewModel()
                                         {
                                             TradeNo = n.TradeNo,
                                             NotifyTime = n.NotifyTime,
@@ -427,7 +436,7 @@
                                 <!-- Cart -->
                                 <div class="floatcart">
                                     @{
-                                        if (HomeController.loginmem != null)
+                                        if (jsonmemString != null)
                                         {
                                             <a asp-controller="Shopping" asp-action="ShoppingCar" id="cartbtn"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
 
@@ -522,7 +531,7 @@
         </div>
         <!-- ##### AiBot ##### -->
         <img class="Aibot" src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
-        <main role="main" class="pb-3">
+        <main role="main" class="">
 
             @RenderBody()
         </main>

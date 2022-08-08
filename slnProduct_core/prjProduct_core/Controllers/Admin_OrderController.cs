@@ -23,7 +23,7 @@ namespace prjProduct_core.Controllers
     public class Admin_OrderController : Controller
     {
         private readonly CoffeeContext db;
-        private static Admin signIn_User;
+        //private static Admin signIn_User;
         private readonly IConfiguration _configuration;
 
         public Admin_OrderController(CoffeeContext context, IConfiguration configuration)
@@ -36,8 +36,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = System.Text.Json.JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.OrderOk)
+                //signIn_User = System.Text.Json.JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (System.Text.Json.JsonSerializer.Deserialize<Admin>(JsonUser).OrderOk)
                 {
                     IEnumerable<CAdmin_OrderViewModel> datas = null;
                     List<CAdmin_OrderViewModel> list = new List<CAdmin_OrderViewModel>();
@@ -189,9 +189,10 @@ namespace prjProduct_core.Controllers
                 db.SaveChanges();
             }
 
+            #region 發送簡訊
             if (newstateid == 3) // 假如訂單狀態修改為"已送達收穫地址"
             {
-                string name = data.Member.MemberName, // 收件者姓名
+                string name = data.OrderReceiver, // 收件者姓名
                        tradeNo = data.TradeNo; // 訂單編號
 
                 string strResponse = string.Empty;
@@ -234,16 +235,17 @@ namespace prjProduct_core.Controllers
                     dataStream.Write(byteArray, 0, byteArray.Length);
                 }
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse) // 查詢結果用
+                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse) // 查詢簡訊發送結果用
                 {
                     using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                     {
                         strResponse = reader.ReadToEnd();
                     }
                 }
-
+                
                 //return Content(strResponse);
             }
+            #endregion
             return RedirectToAction("index");
         }
 

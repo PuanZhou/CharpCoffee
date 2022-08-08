@@ -45,6 +45,19 @@ namespace prjProduct_core.Controllers
             {
                 if (id != null)
                 {
+                    //刪除前消除擁有該優惠券的所有會員1.先消除CouponDetail & HeldCoupon
+                    var heldmem = db.HeldCoupons.Where(hm => hm.CouponId == id).ToList();
+                    var havingmem = db.CouponDetails.Where(hcm => hcm.CouponId == id).ToList();//目前持有該券的會員
+                    foreach (var item in heldmem)
+                    {
+                        db.HeldCoupons.Remove(item);
+                    }
+                    foreach (var item in havingmem)
+                    {
+                        db.CouponDetails.Remove(item);
+                    }
+                    db.SaveChanges();
+                    //2.再刪除該優惠券
                     var cou = db.Coupons.FirstOrDefault(c => c.CouponId == id);
                     db.Coupons.Remove(cou);
                     db.SaveChanges();

@@ -18,7 +18,7 @@ namespace prjProduct_core.Controllers
     {
         private readonly IWebHostEnvironment _environment;
         private readonly CoffeeContext _context;
-        private static Admin signIn_User;
+        //private static Admin signIn_User;
         private static int currentMembersOrderDetails;
 
         public Admin_MemberController(CoffeeContext context, IWebHostEnvironment host)
@@ -32,8 +32,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.MemberOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).MemberOk)
                 {
                     List<CAdmin_MemberViewModel> list = new List<CAdmin_MemberViewModel>();
                     var db = _context.Members;
@@ -105,8 +105,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.MemberOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).MemberOk)
                 {
                     Member m = _context.Members.Find(id);
                     m.BlackList = true;
@@ -126,8 +126,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.MemberOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).MemberOk)
                 {
                     Member m = _context.Members.Find(id);
                     m.BlackList = false;
@@ -147,8 +147,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.MemberOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).MemberOk)
                 {
                     CAdmin_MemberDetailsViewModel modelDetails = new CAdmin_MemberDetailsViewModel();
                     CAdmin_MemberViewModel model = new CAdmin_MemberViewModel();

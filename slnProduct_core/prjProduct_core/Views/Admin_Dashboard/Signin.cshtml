@@ -123,6 +123,7 @@
                                 <div>
                                     <input type="button" class="btn btn-gray-800 col-2.5" style="font-weight:bold " id="demo1" value="Demo1" />
                                     <input type="button" class="btn btn-gray-800 col-2.5" style="font-weight:bold" id="demo2" value="超級管理員" />
+                                    <input type="button" class="btn btn-gray-800 col-2.5" style="font-weight:bold" id="demo3" value="超級管理員(已修改)" />
                                 </div>
                             </form>
                             <div class="d-flex justify-content-center align-items-center mt-4">
@@ -220,5 +221,11 @@
     $("#demo1").click(() => {
         $("#email").val("csharpcoffee@gmail.com");
         $("#password").val("Zz123456789");        
+    })
+
+    // demo3 超級管理員(修改密碼後)
+    $("#demo1").click(() => {
+        $("#email").val("forgotpwd87@gmail.com");
+        $("#password").val("Aa123456789");
     })
 </script>
