@@ -7,13 +7,16 @@
     .imgAnime {
         transition: all 0.4s
     }
-    .imgAnime:hover {
-        transform: scale(2);
-    }
+
+        .imgAnime:hover {
+            transform: scale(2);
+        }
+
     .neon-effect {
         color: #fff;
         letter-spacing: 2px;
     }
+
     .neon-effect {
         text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(65, 255, 65, 1), 0 0 20px rgba(65, 65, 255, 1), 0 0 40px rgba(65, 65, 65, 1);
         animation: neon-shine 2s linear infinite;
@@ -23,13 +26,16 @@
         0% {
             opacity: 1;
         }
+
         90% {
             opacity: 0.3;
         }
+
         100% {
             color: #232323;
         }
     }
+
     .Xbox:hover {
         color: red;
         font-weight: bold
@@ -48,7 +54,9 @@
             <div class="col-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="home"><i class="fa fa-home"></i>Home</a></li>
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index" asp-controller="home"><i class="fa fa-home"></i>Home</a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">即時線上客服</li>
                     </ol>
                 </nav>
@@ -66,7 +74,7 @@
     {
         userName = "(客服)";
     }
-    <span class="offset-2">Demo:@(userName)</span>
+    <span class="offset-2 text-danger">Demo:@(userName)</span>
     <br />
     <button id="btnQ1" class="btn offset-2 mr-1">D_Q1</button>
     <button id="btnA1" class="btn mr-1">D_A1</button>
@@ -80,7 +88,9 @@
 <div class="container">
     <div class="row">&nbsp;</div>
     <div class="row">
-        <div class="col-4"><input type="hidden" id="userInput" value="@Model.MemberName" /></div>
+        <div class="col-4">
+            <input type="hidden" id="userInput" value="@Model.MemberName" />
+        </div>
     </div>
     <div class="row flex-column" hidden>
         <div class="col-8 mt-1">
@@ -89,11 +99,12 @@
         </div>
     </div>
     <div class="row flex-column">
-        <div class="col-10 mt-1">
+        <div class="col-10 mt-1 d-flex">
             <span>訊息：</span>
-            <input type="text" id="messageInput" class="w-50" style="font-size:large" />
+            <div contenteditable="true" id="messageInput" class="p-0 border border-dark col-8" style="font-size:x-large"></div>
+            @*<input type="text" id="messageInput" class="w-50" style="font-size:large" />*@
             <input class="btn btn-primary" type="button" id="sendButton" value="發送訊息" />
-            <img id="btnSticker" class="btn p-0 ml-5 mr-3" src="~/dalala/daMini.gif" />
+            <img id="btnSticker" class="btn p-0 ml-5 mr-3" style="height:20px" src="~/dalala/daMini.gif" />
         </div>
     </div>
     <form name="image">
@@ -144,22 +155,26 @@ document.querySelector("#btnSticker").addEventListener("click", function () {
 })
 
 $(".sticker").click(function () {
-    let str = "ihtgs" + $(event.target).attr("src");
-    let user = document.getElementById("userInput").value;
-    let message = str;
-    connection.invoke("SendMessage", user, message, sendTo).catch(function (err) {
-        return console.error(err.toString());
-    });
+    if ($("#messageInput").text() == "") {
+        let str = "ihtgs" + $(event.target).attr("src");
+        let user = document.getElementById("userInput").value;
+        let message = str;
+        connection.invoke("SendMessage", user, message, sendTo).catch(function (err) {
+            return console.error(err.toString());
+        });
+    } else {
+        $("#messageInput").append(`<img class="p-0 sticker" style="width:32px" src="${$(event.target).attr("src")}"/>`)
+    }
     event.preventDefault();
 });
 
 
     //============================================
-document.querySelector("#btnQ1").addEventListener("click",()=>{$("#messageInput").val("我朋友送我的咖啡豆你們有沒有賣啊？")})
-document.querySelector("#btnA1").addEventListener("click",()=>{$("#messageInput").val("您好，請問是怎樣的咖啡豆？")})
-document.querySelector("#btnQ2").addEventListener("click",()=>{$("#messageInput").val("看起來是咖啡色的，聞起來有咖啡味的那種！")})
-document.querySelector("#btnA2").addEventListener("click",()=>{$("#messageInput").val("不好意思，請問有照片嗎？")})
-document.querySelector("#btnA3").addEventListener("click",()=>{$("#messageInput").val("您好，這是「薩爾瓦多蜜處理勇士莊園甜心寶貝」，賣場有！")})
+document.querySelector("#btnQ1").addEventListener("click",()=>{$("#messageInput").text("我朋友送我的咖啡豆你們有沒有賣啊？")})
+document.querySelector("#btnA1").addEventListener("click",()=>{$("#messageInput").text("您好，請問是怎樣的咖啡豆？")})
+document.querySelector("#btnQ2").addEventListener("click",()=>{$("#messageInput").text("看起來是咖啡色的，聞起來有咖啡味的那種")})
+document.querySelector("#btnA2").addEventListener("click",()=>{$("#messageInput").text("不好意思，請問有照片嗎")})
+document.querySelector("#btnA3").addEventListener("click",()=>{$("#messageInput").text("這是「薩爾瓦多蜜處理勇士莊園甜心寶貝」賣場有")})
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 document.getElementById("sendButton").disabled = true;
 
@@ -184,7 +199,7 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
     if (isSticker) {
         stickerName = (body.substr(8, 2));
         frame = $(`#${stickerName}`).attr("class");
-    }
+    };
     if(curUser==server){
         if (head == "ihtgs") {
             if (user == server) {
@@ -219,11 +234,11 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
             if(user==server){
                  $(`#m${sendTo}`).prepend(`<div class="clearfix mt-1">
                     <div class="shadow rounded p-1 pull-right bg-light">
-                        <h6 class="text-white">${hm}</h6><h4 class="text-success">客服：${message}</h4>
+                        <h6>${hm}</h6><h4 class="text-success">客服：${message}</h4>
                     </div>
                  </div>`);
             }
-            else{
+            else
                 if($(`#u${user}`)[0]==null){
                     $("#listUser").append(`<div id="u${user}" class="border border-1" onclick='hideOther("${user}")'>${user} &emsp; <i onclick='hideSelf("${user}")' class="Xbox bi bi-x-square-fill"></i></div>`);
                 $("#divParent").append(`<div id="m${user}" hidden></div>`);
@@ -231,12 +246,11 @@ connection.on("ReceiveMessage", function (user, message, sendTo) {
                 $(`#u${user}`).attr("class","border border-1 neon-effect");
             $(`#m${user}`).prepend(`<div class="clearfix mt-1">
                 <div class="shadow rounded p-1 pull-left bg-primary">
-                    <h6>${hm}</h6><h4 class="text-black">${user}：${message}</h4>
+                    <h6 class="text-white">${hm}</h6><h4 class="text-black">${user}：${message}</h4>
                 </div>
             </div>`);
             }
         }
-    }
     else{
         if (head == "ihtgs") {SendImg();}
         else {
@@ -312,8 +326,9 @@ connection.start().then(function () {
 
 document.getElementById("sendButton").addEventListener("click", function (event) {
     let user = document.getElementById("userInput").value;
-    let message = document.getElementById("messageInput").value;
-    document.getElementById("messageInput").value = "";
+    let message = document.getElementById("messageInput").innerHTML;
+    //console.log(message);
+    document.getElementById("messageInput").innerText = "";
     connection.invoke("SendMessage", user, message, sendTo).catch(function (err) {
         return console.error(err.toString());
     });
@@ -337,7 +352,7 @@ fileUL.addEventListener('change', (evt) => {
 sendImage.addEventListener("click", function (event) {
     let user = document.getElementById("userInput").value;
     let message = "ihtgs" + imgPath;
-    console.log(message);
+    //console.log(message);
     connection.invoke("SendMessage", user, message, sendTo).catch(function (err) {
         return console.error(err.toString());
     });

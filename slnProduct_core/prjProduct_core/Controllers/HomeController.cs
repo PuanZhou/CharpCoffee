@@ -138,6 +138,8 @@ namespace prjProduct_core.Controllers
         public IActionResult _CommentBoard(int productId)
         {
             int mId = 0;
+            //if (loginmem != null)
+            //    mId = loginmem.MemberId;
             if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) != null)
                 mId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
 
