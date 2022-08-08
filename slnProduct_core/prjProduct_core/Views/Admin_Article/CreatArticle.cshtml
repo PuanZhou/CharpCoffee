@@ -13,12 +13,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ArticleName" class="control-label"></label>
-                <input asp-for="ArticleName" class="form-control" />
+                <input asp-for="ArticleName" class="form-control"  required />
                 <span asp-validation-for="ArticleName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ArticleDescription" class="control-label"></label>
-                <textarea id="editor" asp-for="ArticleDescription" class="form-control" rows="15" cols="60"></textarea>
+                <textarea id="editor" asp-for="ArticleDescription" class="form-control" rows="15" cols="60"  required></textarea>
                 <span asp-validation-for="ArticleDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ArticleDate" class="control-label"></label>
-                <input asp-for="ArticleDate" class="form-control" />
+                <input asp-for="ArticleDate" class="form-control"  required/>
                 <span asp-validation-for="ArticleDate" class="text-danger"></span>
             </div>
             <br />
