@@ -26,7 +26,7 @@ namespace prjProduct_core.Controllers
         {
             if (string.IsNullOrEmpty(search))
             {
-                var q = db.Products.Select(p => new CProductViewModel()
+                var q = db.Products.Where(p=>p.TakeDown==false).Select(p => new CProductViewModel()
                 {
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
@@ -209,7 +209,7 @@ namespace prjProduct_core.Controllers
         {
 
 
-            var q = db.Products.Select(p => new CProductViewModel()
+            var q = db.Products.Where(p=>p.TakeDown == false).Select(p => new CProductViewModel()
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -232,7 +232,7 @@ namespace prjProduct_core.Controllers
         public IActionResult partialViewForCatgory(int id)
         {
 
-            var q = db.Products.Where(p => p.CategoryId == id).Select(p => new CProductViewModel()
+            var q = db.Products.Where(p => p.CategoryId == id && p.TakeDown == false).Select(p => new CProductViewModel()
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
@@ -253,7 +253,7 @@ namespace prjProduct_core.Controllers
         public IActionResult partialViewContry(int id)
         {
 
-            var q = db.Coffees.Where(p => p.CountryId == id).Select(p => new CCoffeeViewModel()
+            var q = db.Coffees.Where(p => p.CountryId == id && p.Product.TakeDown == false).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,
@@ -274,7 +274,7 @@ namespace prjProduct_core.Controllers
         public IActionResult partialViewRoast(int id)
         {
 
-            var q = db.Coffees.Where(p => p.RoastingId == id).Select(p => new CCoffeeViewModel()
+            var q = db.Coffees.Where(p => p.RoastingId == id && p.Product.TakeDown == false).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,
@@ -295,7 +295,7 @@ namespace prjProduct_core.Controllers
         public IActionResult partialViewProcess(int id)
         {
 
-            var q = db.Coffees.Where(p => p.ProcessId == id).Select(p => new CCoffeeViewModel()
+            var q = db.Coffees.Where(p => p.ProcessId == id && p.Product.TakeDown == false).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,
@@ -316,7 +316,7 @@ namespace prjProduct_core.Controllers
         public IActionResult partialViewPacking(int id)
         {
 
-            var q = db.Coffees.Where(p => p.PackageId == id).Select(p => new CCoffeeViewModel()
+            var q = db.Coffees.Where(p => p.PackageId == id && p.Product.TakeDown == false).Select(p => new CCoffeeViewModel()
             {
                 ProductId = p.ProductId,
                 CoffeeId = p.CoffeeId,

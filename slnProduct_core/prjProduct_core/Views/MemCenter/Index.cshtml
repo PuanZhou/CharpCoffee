@@ -1,4 +1,5 @@
-﻿@model prjProduct_core.Models.Member
+﻿@inject CoffeeContext pd
+@model prjProduct_core.Models.Member
 
 @{ ViewData["Title"] = "Index"; }
 @section Style{
@@ -15,7 +16,7 @@
 <!-- ##### Breadcrumb Area Start ##### -->
 <div class="breadcrumb-area">
     <!-- Top Breadcrumb Area -->
-    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(img/bg-img/24.jpg);">
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(../img/Home-img/02.jpg);">
         <h2>會員中心</h2>
     </div>
 
@@ -120,7 +121,151 @@
     </div>
 </section>
 <!-- ##### Portfolio Area End ##### -->
+<!-- ##### Footer Area Start ##### -->
+<footer class="footer-area bg-img mt-50" style="background-image: url(../img/bg-img/3.jpg);">
+    <!-- Main Footer Area -->
+    <div class="main-footer-area">
+        <div class="container">
+            <div class="row">
 
+                <!-- 法定名稱 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="footer-logo mb-30">
+                            <a href="/"><img src="/img/Home-img/CLogo.png" alt="" style="width:13em;height:6em"></a>
+                        </div>
+                        <p>財團法人西夏普文教基金會</p>
+                        <div class="social-info">
+                            @*<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>*@
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 網站導覽 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>網站導覽</h5>
+                        </div>
+                        <nav class="widget-nav">
+                            <ul>
+                                <li><a href="/Shop/view">商品一覽</a></li>
+                                <li><a href="/CAboutMe/faceToMe">關於我們</a></li>
+                                <li><a href="/CFrog/faceToFrog">雨林聯盟</a></li>
+                                <li><a href="/CArticle/faceToArticle">咖啡好文</a></li>
+                                <li><a href="/Constellation/faceToConstellation">星座咖啡</a></li>
+                                <li><a href="/MemCenter/Index">會員中心</a></li>
+                                <li><a href="/Shopping/ShoppingCarEmpty">前往結帳</a></li>
+                                <li><a href="/home/onlineServices">即時客服</a></li>
+                                <li><a href="https://forms.gle/GuFsMzqkbW2AdNWz9" target="_blank">填寫問券</a></li>
+                                <li><a href="#" onclick="window.open('/AIbot.html', '線上客服', 'width=450,height=550')">智能客服</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- 經典咖啡推薦 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>經典咖啡推薦</h5>
+                        </div>
+
+                        <!-- Single Best Seller Products -->
+                        @{
+                            Random rd = new Random();
+                            var footpd1 = pd.Products.AsEnumerable().Where(p => p.CategoryId == 1).OrderBy(f => rd.Next()).Take(10);
+                            var footpd2 = footpd1.OrderBy(f => rd.Next()).Take(2).ToList();
+
+                            foreach (var item in footpd2)
+                            {
+                                <div class="single-best-seller-product d-flex align-items-center">
+                                    <div class="product-thumbnail">
+                                        <a href="/Shop/detail/@item.ProductId"><img src="/images/@item.MainPhotoPath" alt=""></a>
+                                    </div>
+                                    <div class="product-info">
+                                        <a href="/Shop/detail/@item.ProductId">@item.ProductName</a>
+                                        <p>NT$@Convert.ToInt32(item.Price)</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                        @*<div class="single-best-seller-product d-flex align-items-center">
+                                <div class="product-thumbnail">
+                                    <a href="/Shop/detail/41"><img src="/images/393e691c-c9f4-4f7b-9321-142467f5894c.jpg" alt=""></a>
+                                </div>
+                                <div class="product-info">
+                                    <a href="/Shop/detail/41">西夏普 夏日驕陽配方</a>
+                                    <p>NT$180</p>
+                                </div>
+                            </div>*@
+
+                    </div>
+                </div>
+
+                <!-- 聯絡我們-->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>聯絡我們</h5>
+                        </div>
+
+                        <div class="contact-information">
+                            <p><span>電話:</span> 02-2222-2222</p>
+                            <p><span>地址:</span> 台北市大安區復興南路一段390號2樓</p>
+                            <p><span>電子郵件:</span> cscoffee@msit141.com.tw</p>
+                            <p><span>即時客服聯絡時間:</span> 09:30~18:30</p>
+                            @*<p><span>Happy hours:</span> Sat: 2 PM to 4 PM</p>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Bottom Area -->
+    <div class="footer-bottom-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="border-line"></div>
+                </div>
+                <!-- Copywrite Text -->
+                <div class="col-12 col-md-6">
+                    <div class="copywrite-text">
+                        <p>
+                            &copy; <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            © MSIT141 西夏普咖啡 ©&copy;
+                            <script>document.write(new Date().getFullYear());</script><i class="fa fa-heart-o" aria-hidden="true"></i><a href="#" target="_blank"></a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                </div>
+                <!-- 底部聯結 -->
+                <div class="col-12 col-md-6">
+                    <div class="footer-nav">
+                        <nav>
+                            <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/CAboutMe/faceToMe">About</a></li>
+                                <li><a href="/Shop/view">Shop</a></li>
+                                <li><a href="/CArticle/faceToArticle">Blog</a></li>
+                                <li><a href="/MemCenter/Index">MemberCenter</a></li>
+                                <li><a href="/home/onlineServices">Customer Service</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
 
 

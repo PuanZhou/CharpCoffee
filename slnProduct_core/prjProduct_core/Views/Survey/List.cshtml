@@ -1,5 +1,4 @@
-﻿@model IEnumerable<prjProduct_core.ViewModel.CSurveyViewModel>
-
+﻿@model List<IGrouping<string, prjProduct_core.ViewModel.CSurveyViewModel>>
 @{
     ViewData["Title"] = "問卷優惠派發";
     Layout = "~/Views/Shared/_Layout1.cshtml";
@@ -7,7 +6,7 @@
 
 
 
-<h1>問卷優惠派發</h1>
+<h1 class="h1">問卷優惠派發</h1>
 
 <table class="table">
     <thead>
@@ -35,19 +34,19 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TradeNo) <span class="TradeNo" hidden="hidden">@item.TradeNo+</span>
+                    @Html.DisplayFor(modelItem => item.FirstOrDefault().TradeNo) <span class="TradeNo" hidden="hidden">@item.FirstOrDefault().TradeNo+</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderDate)
+                    @Html.DisplayFor(modelItem => item.FirstOrDefault().OrderDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MemberName)
+                    @Html.DisplayFor(modelItem => item.FirstOrDefault().MemberName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SurveyDate)
+                    @Html.DisplayFor(modelItem => item.FirstOrDefault().SurveyDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SurveyName)
+                    @Html.DisplayFor(modelItem => item.FirstOrDefault().SurveyName)
                 </td>
             </tr>
         }
@@ -67,13 +66,16 @@
 @section Scripts
 {
     <script>
+        let coupon = document.querySelector("#coupon");
+        coupon.classList.add("active");
+
         $('#sent').click(function () {
             let str = $(".TradeNo").text();
             $.get('@Url.Content("~/Survey/SentCoupon")', {"TradeNo":str},
                 function (data) {
                     if (data === "success") {
                         alert("已成功派發優惠券給會員");
-                        window.location.href = '@Url.Content("~/Admin_Dashboard/Index")';
+                        window.location.href = '@Url.Content("~/Admin_Coupon/CouponList")';
                     }
                     else if (data === "error") {
                         alert("優惠券派發期間出現錯誤");
@@ -81,7 +83,6 @@
                     else {
                         alert("目前無新的問卷");
                     }
-
                 }
             )
         });
@@ -92,7 +93,7 @@
                         $("#load-survey").load('@Url.Content("~/Survey/partialViewLoadSurvey")');
                     }
                     else {
-                        alert("沒有訂單資料");
+                        alert("沒有問卷資料");
                     }
                 }
             )

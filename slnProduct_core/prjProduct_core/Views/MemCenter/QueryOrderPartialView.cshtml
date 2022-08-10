@@ -3,6 +3,12 @@
     td, th {
         text-align: center;
     }
+
+    #Mdetail p {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 0.85em;
+    }
 </style>
 
 <form class="form-inline">
@@ -82,7 +88,7 @@
 </table>
 <!-- ##### 浮動視窗 ##### -->
 <div class="modal fade bd-example-modal-lg" id="boxCenter" tabindex="-1" role="dialog" aria-labelledby="boxCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="boxCenterTitle">訂單詳細</h5>
@@ -100,10 +106,13 @@
                     </thead>
                     <tbody id="floattb"></tbody>
                 </table>
-                <span id="usecou"></span><br />
-                <span id="Mbefore"></span><br />
-                <span id="Mafter"></span><br />
-                <span id="Mtotal"></span>
+                <div class="text-right" id="Mdetail">
+                    <p id="usecou"></p>
+                    <p id="delifee"></p>
+                    <p id="Mbefore"></p>
+                    <p id="Mafter"></p>
+                    <p id="Mtotal"></p>
+                </div>
                 <!-- ##### 詳細內容 ##### -->
             </div>
             <div class="modal-footer">
@@ -169,30 +178,38 @@
     })
 
 
-    //動態繫結 查看明細
+    //==================動態繫結 查看明細=============================================
     docfrag = document.createDocumentFragment();
     $("tbody").on("click", ".detail", function () {
         $("#floattb").html("");
         let TradeNo = $(this).parents().get(1).firstElementChild.textContent.trim();
         $.get('@Url.Content("~/MemberFactory/QueryOrdDetail")', { "id": TradeNo},
             function (data) {
-                //生成明細
-                let subtotal = 0;
-                let usecou = "";
-                let couprice = 0;
-                $.each(data, function (index, values) {
-                    $("#floattb").append(`<tr><td>${values.商品名}</td><td>${values.商品單價}</td><td>${values.商品數量}</td><td>${values.小計}</td>`);
-                    subtotal += values.小計;
-                    usecou = values.使用的優惠券;
-                    couprice = values.優惠券金額;
-                })
-                $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：${couprice}`);
-                $("#Mbefore").html(`折價前金額：${subtotal}`);
-                $("#Mafter").html(`折價後金額：${subtotal - couprice}`);
-                $("#Mtotal").html(`總金額：${subtotal - couprice}`);
+                if (data != "Login") {
+                    //生成明細
+                    let subtotal = 0;
+                    let usecou = "";
+                    let couprice = 0;
+                    let fee = 0;
+                    $.each(data, function (index, values) {
+                        $("#floattb").append(`<tr><td>${values.商品名}</td><td>NT$${values.商品單價}</td><td>${values.商品數量}</td><td>NT$${values.小計}</td>`);
+                        subtotal += values.小計;
+                        usecou = values.使用的優惠券;
+                        couprice = values.優惠券金額;
+                        fee = values.運費;
+                    })
+                    $("#usecou").html(`使用的優惠券：${usecou}  &  優惠券金額：NT$${couprice}`);
+                    $("#delifee").html(`運費：NT$${fee}`);
+                    $("#Mbefore").html(`折價前金額：NT$${subtotal + fee}`);
+                    /*$("#Mafter").html(`折價後金額：NT$${subtotal - couprice}`);*/
+                    $("#Mtotal").html(`總金額：NT$${subtotal - couprice + fee}`);
+                } else {
+                    window.location.href = '@Url.Content("~/Home/Login")';
+                }
             });
     });
 
+    //============取消訂單=====================================
     let TradeNoID = null; //取消訂單用
     let state = null;
     //動態繫結 詢問取消訂單
@@ -217,7 +234,7 @@
 
     })
 
-    //確定取消訂單
+    //=========================確定取消訂單================================
     $("#goCancel").click(function () {
         $.get('@Url.Content("~/MemberFactory/OrdCancel")', { "id": TradeNoID },
             function (data) {
@@ -238,9 +255,22 @@
                                     allow_dissmiss: true, //是否允許使用者關閉
                                     stackup_spacing: 10 //條間距
                                 });
+                            } else if (data2 == "fall") {
+                                $.bootstrapGrowl("申請失敗，請洽客服人員", {
+                                    ele: "body",
+                                    type: "success",
+                                    offset: { from: "top", amount: 300 },
+                                    align: "center",
+                                    width: "auto",
+                                    delay: 3000,
+                                    allow_dissmiss: true,
+                                    stackup_spacing: 10
+                                });
+                            } else {
+                                window.location.href = '@Url.Content("~/Home/Login")';
                             }
                         });
-                } else {
+                } else if (data == "Non") {
                     $.bootstrapGrowl("申請失敗，請洽客服人員", {
                         ele: "body",
                         type: "success",
@@ -251,6 +281,8 @@
                         allow_dissmiss: true,
                         stackup_spacing: 10
                     });
+                } else {
+                    window.location.href = '@Url.Content("~/Home/Login")';
                 }
 
             }
@@ -261,27 +293,31 @@
     let btnSearch = document.querySelector("#Findord");
     $("#Findord").click(function (eve) {
         eve.preventDefault();
-        $.get('@Url.Content("~/MemberFactory/QueryOrder")', { "oYear": selY.value, "oMonth": selMon.value, "oMonth2": selMon2.value },function (data) {
-            if (data.length == 0) {
-                $.bootstrapGrowl("查無訂單", {
-                    ele: "body",
-                    type: "danger",
-                    offset: { from: "top", amount: 300 },
-                    align: "center",
-                    width: "auto",
-                    delay: 3000,
-                    allow_dissmiss: true,
-                    stackup_spacing: 10
-                });
-            }
-            else {
-                let tbody = document.querySelector("#tbchang");
-                tbody.innerHTML = "";
-                docfrag = document.createDocumentFragment();
-                $.each(data, function (index, values) {
-                    creatEle(values);
-                });
-                tbody.appendChild(docfrag);
+        $.get('@Url.Content("~/MemberFactory/QueryOrder")', { "oYear": selY.value, "oMonth": selMon.value, "oMonth2": selMon2.value }, function (data) {
+            if (data == "Login") {
+                window.location.href = '@Url.Content("~/Home/Login")';
+            } else {
+                if (data.length == 0) {
+                    $.bootstrapGrowl("查無訂單", {
+                        ele: "body",
+                        type: "danger",
+                        offset: { from: "top", amount: 300 },
+                        align: "center",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dissmiss: true,
+                        stackup_spacing: 10
+                    });
+                }
+                else {
+                    let tbody = document.querySelector("#tbchang");
+                    tbody.innerHTML = "";
+                    docfrag = document.createDocumentFragment();
+                    $.each(data, function (index, values) {
+                        creatEle(values);
+                    });
+                    tbody.appendChild(docfrag);
+                }
             }
         })
     });

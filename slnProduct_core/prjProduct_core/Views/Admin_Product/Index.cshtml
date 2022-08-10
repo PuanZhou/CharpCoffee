@@ -41,7 +41,7 @@
 </a>
 <br />
 <br />
-@{ if (Model.ToList().Count!=0)
+@{ if (Model.ToList().Count != 0)
     {
         <label>共 @Model.ToList().Count 筆</label>
     }
@@ -120,7 +120,16 @@
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td class="col-md-1" style="text-align:center">
-                            @Html.DisplayFor(modelItem => item.Stock)
+                            @{
+                                if (item.Stock < 10)
+                                {
+                                    <p style="color:red;border:red solid 1px;">@item.Stock</p>
+                                }
+                                else
+                                {
+                                    <p>@item.Stock</p>
+                                }
+                            }
                         </td>
                         <td class="col-md-1" style="text-align:center">
                             @Html.DisplayFor(modelItem => item.ClickCount)
@@ -144,18 +153,19 @@
                         <td class="col-md-1" style="text-align:center">
                             @Html.ActionLink("編輯", "Edit", "Admin_Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-primary" })
                             <br />
-                            <br />
                             @{ if (item.TakeDown == false)
                                 {
-                                    <button type="button" class="btn btn-sm btn-secondary takedown" id="btnTakeDown" value="@item.ProductId">下架</button>
+                                    <button type="button" class="btn btn-sm btn-secondary takedown mt-2" id="btnTakeDown" value="@item.ProductId">下架</button>
                                 }
                                 //@Html.ActionLink("下架", "TakeDown", "Admin_Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-secondary", onclick = "return confirm('確認要下架此產品嗎?')" })
                                 else
                                 {
-                                    <button type="button" class="btn btn-sm btn-success launch key" id="btnLaunch" value="@item.ProductId">上架</button>
+                                    <button type="button" class="btn btn-sm btn-success launch key mt-2" id="btnLaunch" value="@item.ProductId">上架</button>
                                 }
                                 //@Html.ActionLink("上架", "Launch", "Admin_Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-success key", onclick = "return confirm('確認要上架此產品嗎?')" })
                             }
+                            <br />
+                            <button type="button" class="btn btn-sm btn-danger delete mt-2" id="btnDelete" value="@item.ProductId"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
                     </tr>
                 }
@@ -290,6 +300,35 @@
                             }
                             else {
                                 alert("下架失敗");
+                            }
+                        });
+                }
+                else {
+                    return false;
+                };
+            });
+        });
+
+        // 單筆刪除
+        $(".delete").each(function () {
+            $(this).click(function () {
+                var id = $(this).attr("value");
+
+                let yes = confirm("確定要刪除此產品嗎?");
+                if (yes) {
+                    $.ajax({
+                        type: "POST",
+                        url: "Admin_Api/Delete",
+                        data: { id: id }
+                    })
+                        .done(function (data) {
+                            var obj = data;
+                            if (obj.errMsg) {
+                                alert(obj.errMsg);
+                                return;
+                            }                            
+                            if (obj.resultMsg) {
+                                window.location.reload();
                             }
                         });
                 }

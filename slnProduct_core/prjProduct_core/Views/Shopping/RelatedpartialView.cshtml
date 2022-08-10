@@ -1,6 +1,4 @@
-﻿@*@model IEnumerable<prjProduct_core.ViewModel.CRelatedViewModel>*@
-
-@model IEnumerable<prjCSCoffee.ViewModel.CShoppingCarDetailsViewModel>
+﻿@model IEnumerable<prjCSCoffee.ViewModel.CShoppingCarDetailsViewModel>
 <style>
     .product-img img{
         height:350px;
@@ -33,10 +31,6 @@
                         {
                             <a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductsId"> <img src="~/images/@item.ProPhotoPath"></a>
                         }
-                        @*<a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductsId"><img src="~/img/Home-img/03.jpg" alt=""></a>*@
-                        @*<a asp-controller="shop" asp-action="detail" asp-route-id="@item.ProductsId"><img class="pdpicbox" src="~/images/@item.ProPhotoPath"></a>*@
-
-
 
                         <div class="product-meta">
                             <a style="cursor:pointer; margin:0 auto;" class="add-to-cart-btn" id="addtocart">Add to cart</a>
@@ -44,8 +38,6 @@
                             <input type="hidden" value="@item.ProductsId" id="proid" />
                             <input type="hidden" value="@item.ProName" id="proname" />
                             <input type="hidden" value="@item.Price" id="proprice" />
-                            @*<input type="hidden" value="@item.ProPhotoPath" id="proPhotoPath" />*@
-
                         </div>
                     </div>
                     <!-- Product Info -->
@@ -101,9 +93,9 @@
                     {
                         ShoppingCarDetialsId = ShoppingCarDetialsId + 1;
                         $("#detailcart").load('@Url.Content("~/shopping/PartialViewCart")');
-                    }
-                    計算購物明細();
-
+                    }                   
+                   
+                    sleep();
                 }
                 else {
                         window.location.href = '@Url.Content("~/Home/Login")';
@@ -111,6 +103,12 @@
             }
         );
     })
+
+    function sleep() {
+        setTimeout(() => {
+            計算購物明細();
+        }, 100);
+    }
 
     async function CountCart() {
         let countCart = document.querySelector("#countCart");

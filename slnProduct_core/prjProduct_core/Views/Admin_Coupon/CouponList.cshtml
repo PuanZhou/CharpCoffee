@@ -1,0 +1,126 @@
+﻿@model IEnumerable<prjProduct_core.ViewModel.CCouponViewModel>
+
+@{
+    ViewData["Title"] = "CouponList";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+@section Styles{ 
+<style>
+    #goSur{
+        margin-right:2rem;
+    }
+    #coupsel{
+        width:10rem;
+        display:inline;
+    }
+</style>
+}
+
+<h1 class="h1" style="margin-top:0.5em;">優惠券列表</h1>
+<p>
+    <a asp-action="Create" class="btn btn-secondary"><i class="fa-solid fa-plus me-2"></i>新增優惠券</a>
+    <a asp-controller="Survey" asp-action="List" class="btn btn-success"><i class="fa-solid fa-paper-plane me-2"></i>問卷優惠券派發</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序號
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CouponName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Money)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Condition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CouponStartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CouponDeadline)
+            </th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+@{ int count = 0;
+    foreach (var item in Model)
+    {
+        count++;
+        <tr>
+            <td>
+                @count
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CouponName)
+            </td>
+            <td>
+                NT$@item.Money.ToString("0")
+            </td>
+            <td>
+                NT$@item.Condition.ToString("0")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CouponStartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CouponDeadline)
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger delecou" data-bs-toggle="modal" data-bs-target="#deleteCheck">刪除<span hidden>@item.CouponId</span></button>
+            </td>
+        </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<div class="modal fade" id="deleteCheck" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title">刪除優惠券</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-weight:600;">確定要刪除嗎？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="godelete">刪除</button>
+                <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{ 
+    <script>
+        let coupon = document.querySelector("#coupon");
+        coupon.classList.add("active");
+//============按下刪除鍵====================
+    let couponID = null;
+    $(".delecou").click(function (e) {
+        couponID = this.firstElementChild.innerHTML;
+        console.log(couponID)
+    });
+    //==============按下確認鍵=====================
+    $("#godelete").click(() => {
+        $.get('@Url.Content("~/Admin_Coupon/DeleteCoupon")', { "id": couponID },
+            function (data) {
+                if (data == "OK") {
+                    alert("刪除成功");
+                    window.location.href = "/Admin_Coupon/CouponList"
+                } else if (data == "Err") {
+                    alert("刪除失敗，請洽開發人員");
+                } else {
+                    window.location.href = '@Url.Content("~/Admin_Dashboard/Error403")';
+                }
+            })
+    });
+
+    </script>
+
+}

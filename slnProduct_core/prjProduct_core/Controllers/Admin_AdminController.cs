@@ -12,7 +12,7 @@ namespace prjProduct_core.Controllers
 {
     public class Admin_AdminController : Controller
     {
-        private static Admin signIn_User;
+        //private static Admin signIn_User;
         private readonly CoffeeContext db;
 
         public Admin_AdminController(CoffeeContext context)
@@ -24,18 +24,18 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.AdminOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).AdminOk)
                 {
                     var q = db.Admins;
                     return View(q);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
         public IActionResult Create()
         {
@@ -54,18 +54,18 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.AdminOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).AdminOk)
                 {
                     var q = db.Admins.FirstOrDefault(a => a.AdminId == id);
                     return View(q);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpPost]
@@ -74,8 +74,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.AdminOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).AdminOk)
                 {
                     var q = db.Admins.FirstOrDefault(p => p.AdminId == a.AdminId);
                     if (q == null)
@@ -95,11 +95,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("List");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
     }

@@ -22,7 +22,7 @@ namespace prjProduct_core.Controllers
     {
         private readonly IWebHostEnvironment _environment;
         private readonly CoffeeContext _context;
-        private static Admin signIn_User;
+        //private static Admin signIn_User;
 
         public Admin_ProductController(CoffeeContext context, IWebHostEnvironment host)
         {
@@ -35,8 +35,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     IEnumerable<CAdmin_ProductViewModel> datas = null;
                     var list = _context.Products.Include(p => p.Comments).Select(p => new CAdmin_ProductViewModel()
@@ -129,11 +129,11 @@ namespace prjProduct_core.Controllers
                     return View(datas);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpGet]
@@ -142,17 +142,17 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     return View();
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpPost]
@@ -161,8 +161,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     // 新增產品
                     Product prod = new Product();
@@ -178,7 +178,8 @@ namespace prjProduct_core.Controllers
                     if (p.photo != null)
                     {
                         string pName = Guid.NewGuid().ToString() + ".jpg";
-                        p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                        using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create))
+                            p.photo.CopyTo(fs);
                         prod.MainPhotoPath = pName;
                     }
 
@@ -192,10 +193,11 @@ namespace prjProduct_core.Controllers
                         {
                             // 新建圖片檔案在wwwroot/Images
                             string spName = Guid.NewGuid().ToString() + ".jpg";
-                            subphoto.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create));
+                            using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create))
+                                subphoto.CopyTo(fs);                            
                             // 更新副圖片資料表
                             Photo newphoto = new Photo();
-                            newphoto.ProductId = _context.Products.Last().ProductId;
+                            newphoto.ProductId = _context.Products.OrderBy(p=>p.ProductId).Last().ProductId;
                             newphoto.ImagePath = spName;
                             _context.Photos.Add(newphoto);
                             _context.SaveChanges();
@@ -226,11 +228,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult TakeDown(int id)
@@ -238,8 +240,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     Product p = _context.Products.Find(id);
                     p.TakeDown = true;
@@ -247,11 +249,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         public IActionResult Launch(int id)
@@ -259,8 +261,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     Product p = _context.Products.Find(id);
                     p.TakeDown = false;
@@ -268,11 +270,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpGet]
@@ -281,8 +283,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     List<CAdmin_ProductViewModel> prod = null;
                     if (_context.Coffees.Any(c => c.ProductId == id))
@@ -347,11 +349,11 @@ namespace prjProduct_core.Controllers
                     return View(prod[0]);
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
 
         [HttpPost]
@@ -360,8 +362,8 @@ namespace prjProduct_core.Controllers
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_ADMIN);
-                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
-                if (signIn_User.ProductOk)
+                //signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (JsonSerializer.Deserialize<Admin>(JsonUser).ProductOk)
                 {
                     // 修改產品
                     Product prod = _context.Products.Find(p.ProductId);
@@ -372,7 +374,8 @@ namespace prjProduct_core.Controllers
                         {
                             // 新建圖片檔案在wwwroot/Images
                             string pName = Guid.NewGuid().ToString() + ".jpg";
-                            p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                            using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create))
+                                p.photo.CopyTo(fs);
                             // 更新資料庫圖片檔名
                             prod.MainPhotoPath = pName;
                         }
@@ -391,7 +394,8 @@ namespace prjProduct_core.Controllers
 
                                 // 新建圖片檔案在wwwroot/Images
                                 string spName = Guid.NewGuid().ToString() + ".jpg";
-                                subphoto.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create));
+                                using (FileStream fs = new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create))
+                                    subphoto.CopyTo(fs);
                                 // 更新副圖片資料表
                                 Photo newphoto = new Photo();
                                 newphoto.ProductId = p.ProductId;
@@ -459,11 +463,11 @@ namespace prjProduct_core.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return RedirectToAction("Index", "Admin_Dashboard");
+                return RedirectToAction("Error403", "Admin_Dashboard");
             }
 
             Admin_DashboardController.btnSignInText = "登入";
-            return RedirectToAction("Index", "Admin_Dashboard");
+            return RedirectToAction("Error403", "Admin_Dashboard");
         }
     }
 }

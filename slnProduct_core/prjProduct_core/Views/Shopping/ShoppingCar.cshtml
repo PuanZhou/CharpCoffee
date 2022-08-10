@@ -1,4 +1,5 @@
-﻿@model IEnumerable<prjCSCoffee.Models.CShoppingCartItem>
+﻿@inject CoffeeContext pd
+@model IEnumerable<prjCSCoffee.Models.CShoppingCartItem>
 
 @{
     ViewData["Title"] = "ShoppingCar";
@@ -13,22 +14,26 @@
 @section Style
 {
     <style>
-        .picbox{
-            height:60px;
+        .picbox {
+            height: 60px;
         }
+
         .size span {
             font-size: 20px;
         }
+
         .alert p {
             margin: 0;
             font-size: 20px;
             line-height: 50px;
             text-align: center;
         }
-        .alert img{
-           padding-bottom:8px;
-           padding-right:8px;
+
+        .alert img {
+            padding-bottom: 8px;
+            padding-right: 8px;
         }
+
         .drop {
             position: fixed;
             bottom: 10px;
@@ -37,14 +42,15 @@
             width: 50px;
             height: 50px;
         }
-        .drop img{
-            height:45px;
-        }
-        .drop:hover img{
-           /*border:solid 2px brown;*/
-             height:55px;
-        }       
-              
+
+            .drop img {
+                height: 45px;
+            }
+
+            .drop:hover img {
+                /*border:solid 2px brown;*/
+                height: 55px;
+            }
     </style>
 }
 
@@ -61,7 +67,6 @@
             <div class="col-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        @*<li class="breadcrumb-item"><a asp-action="index" asp-controller="Home"></a><a href="#"><i class="fa fa-home"></i> Home</a></li>*@
                         <li class="breadcrumb-item"><a asp-action="index" asp-controller="Home"><i class="fa fa-home"></i>Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Cart</li>
                     </ol>
@@ -84,7 +89,7 @@
                         <div class="progress-bar" role="progressbar" style="width: 34%; font-size: 15px; background-color: #BEBEBE " aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">最後確認</div>
                     </div>
 
-                    <div class="drop" id="dropZone" ondrop="drop(event)" ondragover="drag(event)" >
+                    <div class="drop" id="dropZone" ondrop="drop(event)" ondragover="drag(event)">
                         <img src="~/img/Icon/trash-can.png" />
                     </div>
 
@@ -103,7 +108,9 @@
                                 <th class="col-md-1.8" style="text-align:center">
                                     @Html.DisplayNameFor(model => model.小計)
                                 </th>
-                                <th class="col-md-2" style="text-align:center"></th>
+                                <th class="col-md-2" style="text-align:center">
+                                    <img src="~/img/Icon/close.png" id="btndelall" />
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="detailcart">
@@ -129,19 +136,19 @@
                                             }
 
                                             @{
-                                            if (price != item.product.Price)
-                                            {
-                                                <input type="hidden" value="@item.productId" name="productId" id="productId" />
-                                                @*@item.productId*@
-                                                @item.product.ProductName
-                                                <p id="salepro" style="color:#FF7575;">&lt;促銷商品&gt;</p>
-                                            }
-                                            else
-                                            {
-                                                <input type="hidden" value="@item.productId" name="productId" id="productId" />
-                                                @*@item.productId*@
-                                                @item.product.ProductName
-                                            }
+                                                if (price != item.product.Price)
+                                                {
+                                                    <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                                                    @*@item.productId*@
+                                                    @item.product.ProductName
+                                                    <p id="salepro" style="color:#FF7575;">&lt;促銷商品&gt;</p>
+                                                }
+                                                else
+                                                {
+                                                    <input type="hidden" value="@item.productId" name="productId" id="productId" />
+                                                    @*@item.productId*@
+                                                    @item.product.ProductName
+                                                }
                                             }
                                         </td>
                                         <td class="col-md-1.2" style="text-align:center">
@@ -178,7 +185,7 @@
                             }
                         </tbody>
                     </table>
-                    
+
                 </div>
             </div>
         </div>
@@ -188,7 +195,7 @@
         </div>
 
 
-        
+
 
         <!-- ##### 刪除產品 ##### -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -200,6 +207,21 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
                         <button type="button" class="btn btn-primary" id="deletepro">是</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ##### 刪除所有產品 ##### -->
+        <div class="modal fade" id="delallModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">確定要清空購物車?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+                        <button type="button" class="btn btn-primary" id="delallyes">是</button>
                     </div>
                 </div>
             </div>
@@ -257,10 +279,157 @@
 <div class="related-products-area"></div>
 
 
+<!-- ##### Footer Area Start ##### -->
+<footer class="footer-area bg-img mt-50" style="background-image: url(../img/bg-img/3.jpg);">
+    <!-- Main Footer Area -->
+    <div class="main-footer-area">
+        <div class="container">
+            <div class="row">
+
+                <!-- 法定名稱 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="footer-logo mb-30">
+                            <a href="/"><img src="/img/Home-img/CLogo.png" alt="" style="width:13em;height:6em"></a>
+                        </div>
+                        <p>財團法人西夏普文教基金會</p>
+                        <div class="social-info">
+                            @*<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>*@
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 網站導覽 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>網站導覽</h5>
+                        </div>
+                        <nav class="widget-nav">
+                            <ul>
+                                <li><a href="/Shop/view">商品一覽</a></li>
+                                <li><a href="/CAboutMe/faceToMe">關於我們</a></li>
+                                <li><a href="/CFrog/faceToFrog">雨林聯盟</a></li>
+                                <li><a href="/CArticle/faceToArticle">咖啡好文</a></li>
+                                <li><a href="/Constellation/faceToConstellation">星座咖啡</a></li>
+                                <li><a href="/MemCenter/Index">會員中心</a></li>
+                                <li><a href="/Shopping/ShoppingCarEmpty">前往結帳</a></li>
+                                <li><a href="/home/onlineServices">即時客服</a></li>
+                                <li><a href="https://forms.gle/GuFsMzqkbW2AdNWz9" target="_blank">填寫問券</a></li>
+                                <li><a href="#" onclick="window.open('/AIbot.html', '線上客服', 'width=450,height=550')">智能客服</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- 經典咖啡推薦 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>經典咖啡推薦</h5>
+                        </div>
+
+                        <!-- Single Best Seller Products -->
+                        @{
+                            Random rd = new Random();
+                            var footpd1 = pd.Products.AsEnumerable().Where(p => p.CategoryId == 1).OrderBy(f => rd.Next()).Take(10);
+                            var footpd2 = footpd1.OrderBy(f => rd.Next()).Take(2).ToList();
+
+                            foreach (var item in footpd2)
+                            {
+                                <div class="single-best-seller-product d-flex align-items-center">
+                                    <div class="product-thumbnail">
+                                        <a href="/Shop/detail/@item.ProductId"><img src="/images/@item.MainPhotoPath" alt=""></a>
+                                    </div>
+                                    <div class="product-info">
+                                        <a href="/Shop/detail/@item.ProductId">@item.ProductName</a>
+                                        <p>NT$@Convert.ToInt32(item.Price)</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                        @*<div class="single-best-seller-product d-flex align-items-center">
+                                <div class="product-thumbnail">
+                                    <a href="/Shop/detail/41"><img src="/images/393e691c-c9f4-4f7b-9321-142467f5894c.jpg" alt=""></a>
+                                </div>
+                                <div class="product-info">
+                                    <a href="/Shop/detail/41">西夏普 夏日驕陽配方</a>
+                                    <p>NT$180</p>
+                                </div>
+                            </div>*@
+
+                    </div>
+                </div>
+
+                <!-- 聯絡我們-->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>聯絡我們</h5>
+                        </div>
+
+                        <div class="contact-information">
+                            <p><span>電話:</span> 02-2222-2222</p>
+                            <p><span>地址:</span> 台北市大安區復興南路一段390號2樓</p>
+                            <p><span>電子郵件:</span> cscoffee@msit141.com.tw</p>
+                            <p><span>即時客服聯絡時間:</span> 09:30~18:30</p>
+                            @*<p><span>Happy hours:</span> Sat: 2 PM to 4 PM</p>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Bottom Area -->
+    <div class="footer-bottom-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="border-line"></div>
+                </div>
+                <!-- Copywrite Text -->
+                <div class="col-12 col-md-6">
+                    <div class="copywrite-text">
+                        <p>
+                            &copy; <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            © MSIT141 西夏普咖啡 ©&copy;
+                            <script>document.write(new Date().getFullYear());</script><i class="fa fa-heart-o" aria-hidden="true"></i><a href="#" target="_blank"></a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                </div>
+                <!-- 底部聯結 -->
+                <div class="col-12 col-md-6">
+                    <div class="footer-nav">
+                        <nav>
+                            <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/CAboutMe/faceToMe">About</a></li>
+                                <li><a href="/Shop/view">Shop</a></li>
+                                <li><a href="/CArticle/faceToArticle">Blog</a></li>
+                                <li><a href="/MemCenter/Index">MemberCenter</a></li>
+                                <li><a href="/home/onlineServices">Customer Service</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
 
 @section Scripts
-{ 
+{
     <script>
+
         $("#detailcart").load('@Url.Content("~/shopping/PartialViewCart")');
 
         //購物車數量計算(layout上的圖示)==========================
@@ -283,7 +452,6 @@
             proid = $(this).parent().find("#productId").val();
             deltr = $(this).closest("tr");
             proprice = $(this).parent().prev().prev().find("#txtprice").text().trim().substring(3);
-            console.log(proprice)
         }
 
         async function CDelete(id,proprice) {   //給刪除鍵ㄉ
@@ -344,6 +512,22 @@
             $("#exampleModalCenter").modal("show");
         }
 
+        //刪除所有購物車=======================================================
+        $("#btndelall").click(function () {
+            $("#delallModalCenter").modal("show");
+        })
+
+        $("#delallyes").click(function () {
+            $('#delallModalCenter').modal('hide');
+            CDelAll();
+            window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
+        });
+
+         async function CDelAll() {
+            const response = await fetch("@Url.Content("~/shopping/DeleteAll")");
+            CountCart();
+        }
+
         //修改購物車數量=======================================================
         $("tbody").on("click", "#plus", PLUS);
         function PLUS() {
@@ -351,7 +535,6 @@
             let qty = parseInt($(this).parent().find(".qty-text").val()) + 1;
             let stock = $(this).parent().find("#stock").val();
             let proprice = $(this).parent().parent().next().find("#txtprice").text().trim().substring(3);
-            //console.log(proprice)
             if (qty > stock) {
                 qty -= 1;
                 $.bootstrapGrowl("已達可訂購最高數量", {

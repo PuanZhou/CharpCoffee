@@ -101,6 +101,7 @@
     $(".add-to-cart-btn").click(function () {
         let proid = $(this).parent().find("#proid").val();
         let proprice = parseInt($(this).parent().find("#proprice").val());
+        let addImg = $(this).parent().parent().find(".pdpicbox");
         $.get('@Url.Content("~/shopping/AddtoCart")', { "id": proid, "quantity": 1, "price" : proprice },
             function (data) {
                 if (data === "add") {
@@ -113,6 +114,25 @@
                         delay: 3000,
                         allow_dismiss: true,
                         stackup_spacing: 10
+                    });
+                    var cloneImg = addImg.clone();
+                    cloneImg.css({
+                        "width": "250px",
+                        "height": "250px",
+                        "position": "absolute",
+                        "left": addImg.offset().left,
+                        "top": addImg.offset().top,
+                        "z-index": "9990",
+                        "opacity": "0.8"
+                    });
+
+                    cloneImg.appendTo($("body")).animate({
+                        "width": "50px",
+                        "height": "50px",
+                        "left": $("#cart").offset().left,
+                        "top": $("#cart").offset().top,
+                    }, 500, function () {
+                        $(this).remove();
                     });
                     CountCart();
                 }
@@ -130,4 +150,41 @@
         countCart.innerHTML = result;
         $("#cart-count").html(`${result}`);
     }
+
+    //============加入收藏=============================================
+    $(".wishlist-btn").click(function () {
+         let likeid = event.currentTarget.textContent;
+        $(".bootstrap-growl").remove();
+        $.get('@Url.Content("~/MemberFactory/AddtoMyLike")', { "id": likeid },
+            function (data) {
+                if (data == "had") {
+                    $.bootstrapGrowl("商品已在收藏當中", {
+                        ele: "body",
+                        type: "danger",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10,
+                    });
+                }
+                else if (data == "join") {
+                    $.bootstrapGrowl("已加入收藏", {
+                        ele: "body",
+                        type: "success",
+                        offset: { from: "bottom", amount: 50 },
+                        align: "right",
+                        width: "auto",
+                        delay: 3000,
+                        allow_dismiss: true,
+                        stackup_spacing: 10,
+                    });
+                }
+                else {
+                    window.location.href = '@Url.Content("~/MemberFactory/AddtoMyLike")';
+                }
+            });
+    })
+
 </script>

@@ -3,36 +3,45 @@
     top: 3.5rem;
     right: 0;
     background-color: #F2F4F5;
-    width:20rem;
-    border:1px solid rgb(128 128 128);
-    border-radius:5px;
-    height:auto;
-    box-shadow:5px 5px 30px rgba(0,0,0,0.5), -5px -5px 30px rgba(0,0,0,0.5) ;
-    display:none;
+    width: 20rem;
+    border: 1px solid rgb(128 128 128);
+    border-radius: 5px;
+    height: auto;
+    box-shadow: 5px 5px 30px rgba(0,0,0,0.5), -5px -5px 30px rgba(0,0,0,0.5);
+    display: none;
 }
 
-.notifications.active .notification_dd{
-    display:block;
+.notifications.active .notification_dd {
+    display: block;
+}
+
+#readDot {
+    position: absolute;
+    background-color: red;
+    border: 1px solid red;
+    border-radius: 50%;
+    height: 5px;
+    width: 5px;
 }
 
 .notification_dd:before { /*三角對話箭頭*/
     content: "";
     position: absolute;
     top: -1.35rem;
-    right: 5rem;
-    border: 10px solid;
+    right: 7rem;
+    border: 8px solid;
     border-color: transparent transparent #F2F4F5 transparent;
 }
 
 .notification_dd li {
     border-bottom: 1px solid #B5B5B5;
-    padding:0.6rem 1rem;
-    display:flex;
-    align-items:center;
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
 }
 
 
-/*.notification_dd li .notify_icon {
+    /*.notification_dd li .notify_icon {
     display: flex;
 }
 
@@ -44,47 +53,47 @@
 }
 */
 
-.notification_dd li .notify_data{
-    margin:0 0.9rem;
-    width:12rem;/*訊息的寬度*/
-}
+    .notification_dd li .notify_data {
+        margin: 0 0.9rem;
+        width: 12rem; /*訊息的寬度*/
+    }
 
-.notification_dd li .notify_data .title{
-    color:black;
-    font-weight:600;
-    font-size:0.85rem;
-}
+        .notification_dd li .notify_data .title {
+            color: black;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
 
-.notification_dd li .notify_data .sub_title{
-    font-weight:300;
-    font-size:0.67rem;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;/*如果超出就省略號效果*/
-    margin-top:0.3rem;
-}
+        .notification_dd li .notify_data .sub_title {
+            font-weight: 300;
+            font-size: 0.67rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /*如果超出就省略號效果*/
+            margin-top: 0.3rem;
+        }
 
-.notification_dd li .notify_status p { /*狀態*/
-    font-size: 0.7rem;
-    margin-top:1.25em;
-}
+    .notification_dd li .notify_status p { /*狀態*/
+        font-size: 0.7rem;
+        margin-top: 1.25em;
+    }
 
-.notification_dd li.showAll{
-    padding:1.2rem;
-    display:flex;
-    justify-content:center;
-}
+    .notification_dd li.showAll {
+        padding: 1.2rem;
+        display: flex;
+        justify-content: center;
+    }
 
-.notification_dd li:last-child{
-    border-bottom: 0;
-}
+    .notification_dd li:last-child {
+        border-bottom: 0;
+    }
 
-.notification_dd li.showAll p{
-    font-weight:700;
-    color:#73BF00;
-    cursor:pointer;
-}
-.notification_dd li.showAll p:hover{
-    text-decoration:underline;
-}
+    .notification_dd li.showAll p {
+        font-weight: 700;
+        color: #73BF00;
+        cursor: pointer;
+    }
 
+        .notification_dd li.showAll p:hover {
+            text-decoration: underline;
+        }

@@ -65,12 +65,23 @@
                 border: 1px red solid;
                 color: white;
             }
+
+        .active6 { /*已完成訂單*/
+            background-color: #E2C2DE;
+            border: 1px #E2C2DE solid;
+        }
+
+            .active6:hover {
+                background-color: #B766AD;
+                border: 1px #B766AD solid;
+                color: white;
+            }
     </style>
 }
 
 <h1 class="h1" style="margin-top: 0.5em; font-weight: bold">訂單列表</h1>
 <!-- Search form -->
-<form class="navbar-search form-inline col-md-4"    id="navbar-search-main">
+<form class="navbar-search form-inline col-md-4" id="navbar-search-main">
     <div class="input-group input-group-merge search-bar">
         <span class="input-group-text" id="topbar-addon">
             <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -94,20 +105,23 @@
     <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="2">
     <label class="btn btn-outline-primary" for="btnradio2">已出貨</label>
 
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="3" >
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="3">
     <label class="btn btn-outline-primary" for="btnradio3">已送達收貨地址</label>
 
     <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" value="4">
     <label class="btn btn-outline-primary" for="btnradio4">已取消</label>
 
     <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="5">
-    <label class="btn btn-outline-primary" for="btnradio5">審核中</label>  
+    <label class="btn btn-outline-primary" for="btnradio5">審核中</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off" value="6">
+    <label class="btn btn-outline-primary" for="btnradio6">已完成訂單</label>
 </div>
 
 <br />
 <br />
 
-<div class="card card-body border-0 shadow table-wrapper table-responsive" id="content" >
+<div class="card card-body border-0 shadow table-wrapper table-responsive" id="content">
     <table class="table-hover">
         <thead>
             <tr>
@@ -219,11 +233,13 @@
                                 @item.OrderState.OrderState1
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=1})" onclick="return confirm('確認要修改訂單狀態?')">已收到訂單</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=2})" onclick="return confirm('確認要修改訂單狀態?')">已出貨</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=3})" onclick="return confirm('確認要修改訂單狀態?')">已送達收貨地址</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=4})" onclick="return confirm('確認要修改訂單狀態?')">已取消</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, stateid=5})" onclick="return confirm('確認要修改訂單狀態?')">審核中</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=1})" onclick="return confirm('確認要修改訂單狀態?')">已收到訂單</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=2})" onclick="return confirm('確認要修改訂單狀態?')">已出貨</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=3})" onclick="return confirm('確認要修改訂單狀態?')">已送達收貨地址</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=4})" onclick="return confirm('確認要修改訂單狀態?')">已取消</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=5})" onclick="return confirm('確認要修改訂單狀態?')">審核中</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Editstate","Admin_Order", new { orderid = item.OrderId, oldstateid=item.OrderStateId, newstateid=6})" onclick="return confirm('確認要修改訂單狀態?')">已完成訂單</a></li>
+
                             </ul>
                         </div>
 
@@ -268,23 +284,23 @@
                     let 運費 = 0;
                     let 總金額 = 0;
                     $.each(data, function (index, value) {
-                        let content = `<tr><td>${value.d產品名}</td><td>${value.d單價}</td><td>${value.d數量}</td><td>${value.d小計}</td>`
+                        let content = `<tr><td>${value.d產品名}</td><td>NT$${value.d單價}</td><td>${value.d數量}</td><td>NT$${value.d小計}</td>`
                         $("#detailbody").append(content);
                         小計 += value.d小計;
                         折價卷金額 = value.d優惠卷金額;
                         運費 = value.d運費;
                     })
                     總金額 = 小計 - 折價卷金額 + 運費;
-                    $("#labsubtotal").html(`商品小計 : $NT${小計}`);
+                    $("#labsubtotal").html(`商品小計 : NT$${小計}`);
                     if (折價卷金額!=0) {
-                        $("#labcoupon").html(`優惠折扣 : -$NT${折價卷金額}`);
+                        $("#labcoupon").html(`優惠折扣 : -NT$${折價卷金額}`);
                     }
                     else $("#labcoupon").html("");
-                    $("#labfee").html(`運費 : $NT${運費}`);
-                    $("#labtotal").html(`訂單總金額 : $NT${總金額}`).css({ "font-size": 20, "color": "#F75000" });
+                    $("#labfee").html(`運費 : NT$${運費}`);
+                    $("#labtotal").html(`訂單總金額 : NT$${總金額}`).css({ "font-size": 20, "color": "#F75000" });
                 })
         })
-             
+
 
         //訂單狀況======================================
         $("button[id='dropdownMenuButton1']").each(function () {
@@ -293,6 +309,7 @@
             else if ($(this).parent().find("#stateid").val() == 3) $(this).addClass("active3");
             else if ($(this).parent().find("#stateid").val() == 4) $(this).addClass("active4");
             else if ($(this).parent().find("#stateid").val() == 5) $(this).addClass("active5");
+            else if ($(this).parent().find("#stateid").val() == 6) $(this).addClass("active6");
         })
 
     </script>

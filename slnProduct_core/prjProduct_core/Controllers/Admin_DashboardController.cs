@@ -17,7 +17,7 @@ namespace prjProduct_core.Controllers
 {
     public class Admin_DashboardController : Controller
     {
-        public static Admin signIn_user = null;
+        //public static Admin signIn_user = null;
         private readonly CoffeeContext _context;
         private readonly IConfiguration _configuration;
         public static string btnSignInText = "登入";
@@ -30,6 +30,10 @@ namespace prjProduct_core.Controllers
 
         public IActionResult Index()
         {
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
+            {
+                btnSignInText = "登入";
+            }
             return View();
         }
 
@@ -38,6 +42,7 @@ namespace prjProduct_core.Controllers
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
             {
+                btnSignInText = "登出";
                 return RedirectToAction("Index", "Admin_Dashboard");
             }
             return PartialView();
@@ -56,7 +61,7 @@ namespace prjProduct_core.Controllers
                     {
                         string JsonUser = JsonSerializer.Serialize(user); //user物件轉json
                         HttpContext.Session.SetString(CDictionary.SK_LOGINED_ADMIN, JsonUser); //json放到session
-                        signIn_user = JsonSerializer.Deserialize<Admin>(JsonUser);
+                        //signIn_user = JsonSerializer.Deserialize<Admin>(JsonUser);
                         btnSignInText = "登出";
                         return RedirectToAction("Index");
                     }
@@ -72,7 +77,7 @@ namespace prjProduct_core.Controllers
             //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             // {
             HttpContext.Session.Remove(CDictionary.SK_LOGINED_ADMIN);
-            signIn_user = null;
+            //signIn_user = null;
             btnSignInText = "登入";
             //}
 
@@ -106,7 +111,7 @@ namespace prjProduct_core.Controllers
 
             if (verify == "")
             {
-                ViewData["ErrorMsg"] = "缺少驗證碼";
+                ViewBag.ErrorMsg = "缺少驗證碼";
                 return PartialView();
             }
 
@@ -132,7 +137,7 @@ namespace prjProduct_core.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["ErrorMsg"] = "驗證碼錯誤";
+                ViewBag.ErrorMsg = "驗證碼錯誤";
                 return PartialView();
             }
 
@@ -148,13 +153,18 @@ namespace prjProduct_core.Controllers
             double diff = Convert.ToDouble(TS.TotalMinutes);
             if (diff > 30)
             {
-                ViewData["ErrorMsg"] = "超過驗證碼有效時間，請重寄驗證碼";
+                ViewBag.ErrorMsg = "超過驗證碼有效時間，請重寄驗證碼";
                 return PartialView();
             }
 
             // 驗證碼檢查成功，加入 Session
             HttpContext.Session.SetString(CDictionary.SK_ResetPassword_AdminId, UserID);
 
+            return PartialView();
+        }
+
+        public IActionResult Error403()
+        {
             return PartialView();
         }
 

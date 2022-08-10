@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Security.Cryptography;//
+using System.Security.Cryptography;
 
 
 namespace prjProduct_core.Controllers
@@ -23,8 +23,8 @@ namespace prjProduct_core.Controllers
         private readonly ILogger<HomeController> _logger;
         CoffeeContext db = null;
 
-        public static Member loginmem = null;  //登入中的會員
-        public static string MemName = "Login";
+        //public static Member loginmem = null;  //登入中的會員
+        //public static string MemName = "Login";
 
         public HomeController(ILogger<HomeController> logger , CoffeeContext _db)
         {
@@ -73,8 +73,8 @@ namespace prjProduct_core.Controllers
                 {
                     string jsonUser = JsonSerializer.Serialize(mem);  //將物件轉字串
                     HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, jsonUser); //放入到session紀錄登入資訊
-                    loginmem = JsonSerializer.Deserialize<Member>(jsonUser);
-                    MemName = $"{loginmem.MemberName}您好";
+                    //loginmem = JsonSerializer.Deserialize<Member>(jsonUser);
+                    //MemName = $"{loginmem.MemberName}您好";
                     return Content("OK", "text/plain", Encoding.UTF8);
                 }
             }
@@ -86,8 +86,8 @@ namespace prjProduct_core.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Remove(CDictionary.SK_LOGINED_USER);
-            loginmem = null;
-            MemName = "Login";
+            //loginmem = null;
+            //MemName = "Login";
             return RedirectToAction("Index"); 
         }
 
@@ -109,7 +109,7 @@ namespace prjProduct_core.Controllers
                     MemberAddress = newmem.MemberAddress,
                     MemberPhone = newmem.MemberPhone,
                     MemberPassword = newmem.PWHasH(newmem.MemberPassword),
-                    MemberBirthDay = newmem.MemberBirthDay,
+                    MemberBirthDay = Convert.ToDateTime(newmem.MemberBirthDay),
                     ShoppingCarId = newmem.ShoppingCarId,
                     Newspaper = newmem.Newspaper
                 };
@@ -118,11 +118,6 @@ namespace prjProduct_core.Controllers
                 ShoppingCar sc = new ShoppingCar() { MemberId = newmem.ShoppingCarId };
                 db.ShoppingCars.Add(sc);
                 db.SaveChanges();
-                //發送周年慶優惠券
-                CouponDetail cd = new CouponDetail() { MemberId=newmem.ShoppingCarId, CouponId=1 };
-                db.CouponDetails.Add(cd);
-                db.SaveChanges();
-
                 return RedirectToAction("Login");
             }
             return View();
@@ -137,6 +132,12 @@ namespace prjProduct_core.Controllers
         //===============留言板PV===============
         public IActionResult _CommentBoard(int productId)
         {
+            int mId = 0;
+            //if (loginmem != null)
+            //    mId = loginmem.MemberId;
+            if (HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER) != null)
+                mId = JsonSerializer.Deserialize<Member>(HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER)).MemberId;
+
             var data = db.Comments.Where(x => x.ProductId == productId)
                 .OrderByDescending(x => x.CommentId)
                 .Select(x => new CCommentsViewModel()
@@ -150,6 +151,11 @@ namespace prjProduct_core.Controllers
                     OrderId = x.OrderId,
                     MemberName = x.Member.MemberName
                 }).ToList();
+            foreach (var c in data)
+            {
+                c.tc = db.Awesomes.Where(x => x.CommentId == c.CommentId).Count();
+                c.hasT = db.Awesomes.Any(x => x.MemberId == mId && x.CommentId == c.CommentId);
+            }
             return PartialView(data);
         }
 

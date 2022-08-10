@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category.CategoriesName" class="control-label">類別</label>
-                <select asp-for="CategoryId" class="form-control" id="select1"></select>
+                <select asp-for="CategoryId" class="form-control animate__animated" id="select1"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -145,14 +145,14 @@
     <div style="display:flex">
         <div style="width:2em"></div>
         <div class="col-4"></div>
-        <div style="width: 5em; position: relative;">
-            <br />
-            <br />
+        <div style="width: 5em; position: relative;"> 
             <div class="form-group" style="position: absolute; bottom: 0px; right: 0px;">
-                <input type="submit" value="確認" class="btn btn-primary" />
-            </div>
+                <input type="submit" value="確認" class="btn btn-gray-800 col-2.5" />
+            </div>           
         </div>
-        <div class="col-4"></div>
+        <div class="col-4 ms-2">
+            <input type="button" class="btn btn-gray-800 col-2.5" style="font-weight:bold " id="demo1" value="Demo1" />
+        </div>
     </div>
 </form>
 @section Styles{
@@ -230,19 +230,78 @@
     // ===================== 將資料載入select元素 =====================
     // =========================== 預覽圖 ============================
         // 主產品預覽圖
-    $("#customFile").change(function () {
-        readURL(this);
-    });
+        document.querySelector("#customFile").addEventListener("change", function () {
+            var reader = new FileReader();
+            reader.onload = function () {
+                arrayBuffer = this.result;
+                var arrayBufferView = new Uint8Array(arrayBuffer);
+                var blob = new Blob([arrayBufferView], { type: "image/jpg" }); // Blob: 大型二進位物件
+                var urlCreator = window.URL || window.webkitURL; // 為了不同的瀏覽器相容器
+                var url = urlCreator.createObjectURL(blob);
+                $("#imgPrev").attr("src", url);
+                analyzeImage();
+            };
 
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (event) {
-                    $("#imgPrev").attr("src", event.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
+            reader.readAsArrayBuffer(this.files[0]);
+        }, false);
+        // 圖片智慧辨識
+        function analyzeImage() {
+            var params = {
+                "visualFeatures": "Categories,Description",
+                "language": "en",
+                "model-version": "latest",
+            };
+
+            $.ajax({
+                url: "https://csharpcoffeevision.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params),
+                beforeSend: function (xhrObj) {
+                    xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "1f288f25831f4d67a9bd7871b6698e27");
+                },
+                type: "POST",
+                processData: false,
+                data: arrayBuffer
+            })
+                .done(function (data) {
+                    //alert(JSON.stringify(data));
+                    let strings = JSON.stringify(data);
+
+                    if (strings.includes("coffee maker") || strings.includes("metal")) {
+                        $("#select1")[0].selectedIndex = 1;
+                        $("#select1").css("backgroundColor", "#f6ebaf");
+                        $("#select1")[0].classList.add("animate__flash");
+                        setTimeout(function () {
+                            $("#select1").css("backgroundColor", "white");
+                            $("#select1")[0].classList.remove("animate__flash");
+                        }, 1000);
+                    }
+                    else if (strings.includes("coffee beans") || strings.includes("coffee")) {
+                        $("#select1")[0].selectedIndex = 0;
+                        $("#select1").css("backgroundColor", "#f6ebaf");
+                        $("#select1")[0].classList.add("animate__flash");
+                        setTimeout(function () {
+                            $("#select1").css("backgroundColor", "white");
+                            $("#select1")[0].classList.remove("animate__flash");
+                        }, 1000);
+                    }
+                })
+                .fail(function (err) {
+                    alert(err.responseText);
+                });
         }
+    //$("#customFile").change(function () {
+    //    readURL(this);
+    //});
+
+    //    function readURL(input) {
+    //        if (input.files && input.files[0]) {
+    //            var reader = new FileReader();
+    //            reader.onload = function (event) {
+    //                $("#imgPrev").attr("src", event.target.result);
+    //            };
+    //            reader.readAsDataURL(input.files[0]);
+    //        }
+    //    }
         // 副產品預覽圖
         $("#customFile1").change(function () {
             readSubUrl(this);
@@ -269,5 +328,19 @@
             }
         }
     // =========================== 預覽圖 ============================
+
+    // demo1
+        $("#demo1").click(() => {
+            $("#ProductName").val("CsharpCoffee");
+            $("#select1").val(1);
+            $("#select2").val(15);
+            $("#Price").val("500");
+            $("#Description").val("輕柔玫瑰花香、黑櫻桃、香瓜的調性，帶著微微奶油與哈密瓜甜感");
+            $("#Stock").val("100");
+            $("#select3").val(3);
+            $("#select4").val(4);
+            $("#select5").val(2);
+            $("#RainForest").prop("checked", true);
+        })
     </script>
 }

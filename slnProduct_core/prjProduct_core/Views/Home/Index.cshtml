@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<prjProduct_core.ViewModel.CProductViewModel>
+@inject CoffeeContext db
 <!-- ##### Hero Area Start ##### -->
 <section class="hero-area" style="z-index:9999">
     <div class="hero-post-slides owl-carousel">
@@ -16,7 +17,7 @@
                             <p>一起響應地球環境永續、雨林生態維護等理念，幫助咖啡農場工人擁有健全的工作環境及工資，為改善咖啡生產地的醫療、居住環境盡一份心力。</p>
                             <div class="welcome-btn-group">
                                 <a asp-controller="Shop" asp-action="view" class="btn alazea-btn mr-30">Go Shop</a>
-                                <a href="#" class="btn alazea-btn active">CONTACT US</a>
+                                <a href="/CAboutMe/faceToMe#contactus" class="btn alazea-btn active">CONTACT US</a>
                             </div>
                         </div>
                     </div>
@@ -37,7 +38,7 @@
                             <p>以義式高壓萃取的雨林聯盟認證咖啡，享受清香芳醇的口感與香氣，還能在生活中的微小時刻，積蓄保護生態的能量，在蛙鳴中落實森林永續的理念。</p>
                             <div class="welcome-btn-group">
                                 <a asp-controller="Shop" asp-action="view" class="btn alazea-btn mr-30">Go Shop</a>
-                                <a href="#" class="btn alazea-btn active">CONTACT US</a>
+                                <a href="/CAboutMe/faceToMe#contactus" class="btn alazea-btn active">CONTACT US</a>
                             </div>
                         </div>
                     </div>
@@ -138,23 +139,23 @@
                                     <a href="#">Hot</a>
                                 </div>
                             }
-                        <div class="product-meta d-flex">
-                            @if (pd.CategoryId == 1)
-                            {
-                                <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
-                                <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
-                                <input type="hidden" value="@pd.ProductId" id="proid" />
-                                <input type="hidden" value="@((Convert.ToInt32( pd.Price)*0.8).ToString("0"))" id="proprice" />
-                                <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
-                            }
-                            else
-                            {
-                                <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
-                                <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
-                                <input type="hidden" value="@pd.ProductId" id="proid" />
-                                <input type="hidden" value="@((Convert.ToInt32( pd.Price)*0.8).ToString("0"))" id="proprice" />
-                            }
-                        </div>
+                            <div class="product-meta d-flex">
+                                @if (pd.CategoryId == 1)
+                                {
+                                    <a href="javascript:void(0);" class="wishlist-btn"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
+                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                    <input type="hidden" value="@((Convert.ToInt32( pd.Price)*0.8).ToString("0"))" id="proprice" />
+                                    <a href="javascript:void(0);" class="compare-btn"><i class="arrow_left-right_alt"></i><span hidden id="comid">@pd.ProductId</span></a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0);" class="wishlist-btn" style="margin-left:25px;"><i class="icon_heart_alt"><span hidden id="likeid">@pd.ProductId</span></i></a>
+                                    <a style="cursor:pointer" class="add-to-cart-btn" id="addtocart">Add to cart</a>
+                                    <input type="hidden" value="@pd.ProductId" id="proid" />
+                                    <input type="hidden" value="@((Convert.ToInt32( pd.Price)*0.8).ToString("0"))" id="proprice" />
+                                }
+                            </div>
                         </div>
                         <!-- Product Info -->
                         <div class="product-info mt-15 text-center">
@@ -448,12 +449,157 @@
     </div>
 </section>
 <!-- ##### Testimonial Area End ##### -->
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+    </div>*@
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-</div>
+<!-- ##### Footer Area Start ##### -->
+<footer class="footer-area bg-img mt-50" style="background-image: url(../img/bg-img/3.jpg);">
+    <!-- Main Footer Area -->
+    <div class="main-footer-area">
+        <div class="container">
+            <div class="row">
 
-@section Scripts{ 
+                <!-- 法定名稱 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="footer-logo mb-30">
+                            <a href="/"><img src="/img/Home-img/CLogo.png" alt="" style="width:13em;height:6em"></a>
+                        </div>
+                        <p>財團法人西夏普文教基金會</p>
+                        <div class="social-info">
+                            @*<a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>*@
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 網站導覽 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>網站導覽</h5>
+                        </div>
+                        <nav class="widget-nav">
+                            <ul>
+                                <li><a href="/Shop/view">商品一覽</a></li>
+                                <li><a href="/CAboutMe/faceToMe">關於我們</a></li>
+                                <li><a href="/CFrog/faceToFrog">雨林聯盟</a></li>
+                                <li><a href="/CArticle/faceToArticle">咖啡好文</a></li>
+                                <li><a href="/Constellation/faceToConstellation">星座咖啡</a></li>
+                                <li><a href="/MemCenter/Index">會員中心</a></li>
+                                <li><a href="/Shopping/ShoppingCarEmpty">前往結帳</a></li>
+                                <li><a href="/home/onlineServices">即時客服</a></li>
+                                <li><a href="https://forms.gle/GuFsMzqkbW2AdNWz9" target="_blank">填寫問券</a></li>
+                                <li><a href="#" onclick="window.open('/AIbot.html', '線上客服', 'width=450,height=550')">智能客服</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- 經典咖啡推薦 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>經典咖啡推薦</h5>
+                        </div>
+
+                        <!-- Single Best Seller Products -->
+                        @{
+                            Random rd = new Random();
+                            var footpd1 = db.Products.AsEnumerable().Where(p => p.CategoryId == 1).OrderBy(f => rd.Next()).Take(10);
+                            var footpd2 = footpd1.OrderBy(f => rd.Next()).Take(2).ToList();
+
+                            foreach (var item in footpd2)
+                            {
+                                <div class="single-best-seller-product d-flex align-items-center">
+                                    <div class="product-thumbnail">
+                                        <a href="/Shop/detail/@item.ProductId"><img src="/images/@item.MainPhotoPath" alt=""></a>
+                                    </div>
+                                    <div class="product-info">
+                                        <a href="/Shop/detail/@item.ProductId">@item.ProductName</a>
+                                        <p>NT$@Convert.ToInt32(item.Price)</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                        @*<div class="single-best-seller-product d-flex align-items-center">
+                                <div class="product-thumbnail">
+                                    <a href="/Shop/detail/41"><img src="/images/393e691c-c9f4-4f7b-9321-142467f5894c.jpg" alt=""></a>
+                                </div>
+                                <div class="product-info">
+                                    <a href="/Shop/detail/41">西夏普 夏日驕陽配方</a>
+                                    <p>NT$180</p>
+                                </div>
+                            </div>*@
+
+                    </div>
+                </div>
+
+                <!-- 聯絡我們-->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-footer-widget">
+                        <div class="widget-title">
+                            <h5>聯絡我們</h5>
+                        </div>
+
+                        <div class="contact-information">
+                            <p><span>電話:</span> 02-2222-2222</p>
+                            <p><span>地址:</span> 台北市大安區復興南路一段390號2樓</p>
+                            <p><span>電子郵件:</span> cscoffee@msit141.com.tw</p>
+                            <p><span>即時客服聯絡時間:</span> 09:30~18:30</p>
+                            @*<p><span>Happy hours:</span> Sat: 2 PM to 4 PM</p>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Bottom Area -->
+    <div class="footer-bottom-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="border-line"></div>
+                </div>
+                <!-- Copywrite Text -->
+                <div class="col-12 col-md-6">
+                    <div class="copywrite-text">
+                        <p>
+                            &copy; <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            © MSIT141 西夏普咖啡 ©&copy;
+                            <script>document.write(new Date().getFullYear());</script><i class="fa fa-heart-o" aria-hidden="true"></i><a href="#" target="_blank"></a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                </div>
+                <!-- 底部聯結 -->
+                <div class="col-12 col-md-6">
+                    <div class="footer-nav">
+                        <nav>
+                            <ul>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/CAboutMe/faceToMe">About</a></li>
+                                <li><a href="/Shop/view">Shop</a></li>
+                                <li><a href="/CArticle/faceToArticle">Blog</a></li>
+                                <li><a href="/MemCenter/Index">MemberCenter</a></li>
+                                <li><a href="/home/onlineServices">Customer Service</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+@section Scripts{
     <script>
                //============================加入收藏==============================
     $(".wishlist-btn").click(async function (event) {
@@ -496,6 +642,7 @@
     $(".add-to-cart-btn").click(function () {
         let proid = $(this).parent().find("#proid").val();
         let proprice = $(this).parent().find("#proprice").val();
+        let addImg = $(this).parent().parent().find(".pdpicbox");
         $.get('@Url.Content("~/shopping/SaleAddtoCart")', { "id": proid, "quantity": 1, "price": proprice },
             function (data) {
                 if (data === "add") {
@@ -508,6 +655,25 @@
                         delay: 3000,
                         allow_dismiss: true,
                         stackup_spacing: 10
+                    });
+                    var cloneImg = addImg.clone();
+                    cloneImg.css({
+                        "width": "250px",
+                        "height": "250px",
+                        "position": "absolute",
+                        "left": addImg.offset().left,
+                        "top": addImg.offset().top,
+                        "z-index": "9990",
+                        "opacity": "0.8"
+                    });
+
+                    cloneImg.appendTo($("body")).animate({
+                        "width": "50px",
+                        "height": "50px",
+                        "left": $("#cart").offset().left,
+                        "top": $("#cart").offset().top,
+                    }, 500, function () {
+                        $(this).remove();
                     });
                     CountCart();
                 }

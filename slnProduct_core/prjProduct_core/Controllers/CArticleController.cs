@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 using prjProduct_core.Controllers;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace prjCSCoffee.Controllers
 {
@@ -38,6 +40,11 @@ namespace prjCSCoffee.Controllers
             else
             {
                 datas = db.Articles.Where(t => t.ArticleName.Contains(vModel.txtKeyword));
+                if (datas.Count() == 0)
+                {
+                    datas = from c in db.Articles
+                            select c;
+                }
             }
             return View(datas.ToPagedList(currentPage,pageSize));
         }
@@ -132,7 +139,7 @@ namespace prjCSCoffee.Controllers
         //新增回覆
         public IActionResult AddArticleComment(ArticleComment ac)
         {
-            if (HomeController.loginmem == null)
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 return Content("login", "text/plain", System.Text.Encoding.UTF8);
             }
@@ -143,9 +150,11 @@ namespace prjCSCoffee.Controllers
 
         public IActionResult CheckArticleCommentMemberId()
         {
-            if (HomeController.loginmem != null)
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                return Content($"{HomeController.loginmem.MemberId}", "text/plain", System.Text.Encoding.UTF8);
+                string jsonstring = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                int memID = JsonSerializer.Deserialize<Member>(jsonstring).MemberId;
+                return Content($"{memID}", "text/plain", System.Text.Encoding.UTF8);
             }
             return Content("NoMember", "text/plain", System.Text.Encoding.UTF8);
         }
@@ -175,6 +184,14 @@ namespace prjCSCoffee.Controllers
             }
 
         }
+
+        //自動提詞
+        public IActionResult GetKeyWords(string kw)
+        {
+            var result = db.Products.Select(k => k.ProductName).Where(w => w.Contains(kw)).Take(10);
+            return Json(result);
+        }
+
 
 
     }

@@ -29,6 +29,7 @@ namespace prjProduct_core.Models
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Coupon> Coupons { get; set; }
         public virtual DbSet<CouponDetail> CouponDetails { get; set; }
+        public virtual DbSet<HeldCoupon> HeldCoupons { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MyLike> MyLikes { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
@@ -318,6 +319,29 @@ namespace prjProduct_core.Models
                     .HasConstraintName("FK_CouponDetail_Members");
             });
 
+            modelBuilder.Entity<HeldCoupon>(entity =>
+            {
+                entity.ToTable("HeldCoupon");
+
+                entity.Property(e => e.HeldCouponId).HasColumnName("HeldCouponID");
+
+                entity.Property(e => e.CouponId).HasColumnName("CouponID");
+
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.HeldCoupons)
+                    .HasForeignKey(d => d.CouponId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_HeldCoupon_Coupon");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.HeldCoupons)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_HeldCoupon_Members");
+            });
+
             modelBuilder.Entity<Member>(entity =>
             {
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
@@ -461,6 +485,8 @@ namespace prjProduct_core.Models
                 entity.Property(e => e.OrderDetailsId).HasColumnName("OrderDetailsID");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.Price).HasColumnType("money");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 

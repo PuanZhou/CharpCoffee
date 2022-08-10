@@ -1,5 +1,9 @@
 ﻿@using prjProduct_core.Controllers
 @using prjProduct_core.ViewModel
+@using Microsoft.AspNetCore.Http
+@using prjCSCoffee.Models
+@using System.Text.Json
+@inject CoffeeContext db
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <!-- Title -->
-    <title>CSCoffee &amp; Landscaping HTML Template</title>
+    <title>CSCoffee</title>
 
     <!-- Favicon -->
     <link rel="icon" href="/img/Home-img/coffee.png">
@@ -21,6 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link href="~/css/PagedList.css" rel="stylesheet" />
     <link href="~/css/Notice.css" rel="stylesheet" />
+    <link href="~/css/Cart.css" rel="stylesheet" />
     @await RenderSectionAsync("Style", required: false)
     <style>
         .pdpicbox {
@@ -313,9 +318,9 @@
         .fa-bell {
             color: #73BF00;
         }
-        
-        #navbarPhone{
-            margin-right:30px;
+
+        #navbarPhone {
+            margin-right: 30px;
         }
     </style>
 </head>
@@ -340,7 +345,7 @@
                             <!-- Top Header Content -->
                             <div class="top-header-meta">
                                 @*<a href="#" data-toggle="tooltip" data-placement="bottom" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: infodeercreative@gmail.com</span></a>
-        <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
+                                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="+1 234 122 122"><i class="fa fa-phone" aria-hidden="true"></i> <span>Call Us: +1 234 122 122</span></a>*@
                                 <a href="#" title="infodeercreative@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: cscoffee@msit141.com.tw</span></a>
                                 <a href="#" title="+1 234 122 122" id="navbarPhone"><i class="fa fa-phone" aria-hidden="true"></i> <span>Tel: 02-2222-2222</span></a>
                                 <a asp-controller="Admin_Dashboard" asp-action="Signin" title="Content Management System"><i class="fa-solid fa-cube"></i> <span>管理員後台系統</span></a>
@@ -354,8 +359,8 @@
                                         <button class="btn btn-secondary dropdown-toggle mr-30" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">會員專區</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="/MemCenter/Index">會員中心</a>
-                                            @*<a class="dropdown-item" href="#">會員ox</a>*@
                                             <a class="dropdown-item" href="/home/onlineServices">即時客服</a>
+                                            <a class="dropdown-item" href="/MemCenter/GetCoupon">領取優惠券</a>
                                             <a class="dropdown-item" href="/Home/Logout" id="logout" hidden>登出</a>
                                         </div>
                                     </div>
@@ -363,44 +368,64 @@
                                 <!-- Login -->
                                 <div class="login">
                                     @{ string arror = "pointer";
-                                        if (HomeController.MemName != "Login")
-                                        { arror = "default"; }
-                                        <a href="/Home/Login" id="loginID" style="cursor:@arror"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@HomeController.MemName</span></a>}
+                                        string MemName = "Login";
+                                        string jsonmemString = Context.Session.GetString(CDictionary.SK_LOGINED_USER);
+                                        Member mem = null;
+                                        if (jsonmemString!=null)
+                                        {   arror = "default";
+                                            mem = JsonSerializer.Deserialize<Member>(jsonmemString);
+                                            MemName = mem.MemberName; }
+                                        <a href="/Home/Login" id="loginID" style="cursor:@arror"><i class="fa fa-user" aria-hidden="true"></i> <span id="memname">@MemName</span></a>}
                                 </div>
                                 <!-- 通知 -->
                                 @{
-                                    if (HomeController.loginmem != null)
+                                    if (jsonmemString != null)
                                     {
-                                        CoffeeContext db = new CoffeeContext();
-                                        var noti = db.Notifications.Where(n => n.MemberId == HomeController.loginmem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new CNotificationViewModel()
+
+                                        var noti = db.Notifications.Where(n => n.MemberId == mem.MemberId).OrderByDescending(n => n.NotifyTime).Select(n => new CNotificationViewModel()
                                         {
                                             TradeNo = n.TradeNo,
-                                            NotifyTime=n.NotifyTime,
-                                            statement = n.OrderState.OrderState1
+                                            NotifyTime = n.NotifyTime,
+                                            statement = n.OrderState.OrderState1,
+                                            HasRead = n.HasRead
 
                                         }).Take(5).ToList();
 
                                         <div class="notifications">
-                                            <a href="#" id="notify" hidden><i class="fa-solid fa-bell"></i></a>
+                                            @if (noti.Any(n => n.HasRead == false))
+                                            {
+                                                <a href="#" id="notify" hidden><i class="fa-solid fa-bell"><span id="readDot"></span></i></a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" id="notify" hidden><i class="fa-solid fa-bell"></i></a>
+                                            }
                                             <div class="notification_dd">
                                                 <ul class="notification_ul">
-                                                    
-                                                    @{foreach (var item in noti)
+                                                    @if (noti.Count != 0)
+                                                    {
+                                                        foreach (var item in noti)
                                                         {
-                                                    <li>
-                                                        <div class="notify_data">
-                                                            <div class="title">@item.TradeNo 的訂單通知</div>
-                                                            <div class="sub_title">您的商品目前：@item.statement</div>
-                                                        </div>
-                                                        <div class="notify_status">
-                                                            <p class="timebefore">@item.NotifyTime</p>
-                                                        </div>
-                                                    </li>
+                                                            <li class="n_@item.HasRead">
+                                                                <div class="notify_data">
+                                                                    <div class="title">@item.TradeNo 的訂單通知</div>
+                                                                    <div class="sub_title">您的商品目前：@item.statement</div>
+                                                                </div>
+                                                                <div class="notify_status">
+                                                                    <p class="timebefore">@item.NotifyTime</p>
+                                                                </div>
+                                                            </li>
                                                         }
+                                                        <li class="showAll">
+                                                            <a href="/MemCenter/Notice"><p class="link">顯示全部</p></a>
+                                                        </li>
                                                     }
-                                                    <li class="showAll">
-                                                        <a href="/MemCenter/Notice"><p class="link">顯示全部</p></a>
-                                                    </li>
+                                                    else
+                                                    {
+                                                        <li class="showAll">
+                                                            <a href="/MemCenter/Notice"><p class="link">目前沒有任何通知喔！</p></a>
+                                                        </li>
+                                                    }
                                                 </ul>
                                             </div>
                                         </div>
@@ -409,9 +434,23 @@
                                 }
 
                                 <!-- Cart -->
-                                <div class="cart">
-                                    <a asp-controller="Shopping" asp-action="ShoppingCar"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
+                                <div class="floatcart">
+                                    @{
+                                        if (jsonmemString != null)
+                                        {
+                                            <a asp-controller="Shopping" asp-action="ShoppingCar" id="cartbtn"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
+
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Shopping" asp-action="ShoppingCar"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(<span id="countCart" style="color:#F1948A"></span>)</span></span></a>
+
+                                        }
+                                    }
+                                    <div class="floatcartin"></div>
+
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -486,23 +525,20 @@
 
     <div>
         <!-- ##### Right-Banner ##### -->
-        <div class="btn-group-vertical right-banner wow fadeInDown" role="group" aria-label="Basic example">
+        <div class="btn-group-vertical right-banner animate__animated animate__fadeInDown" role="group" aria-label="Basic example">
             <button id="compare" type="button" class="btn btn-light" title="前往比較頁面"><img src="~/img/Icon/compare-icon.png" /> <span class="badge badge-light" id="compare-count"></span></button>
             <button id="cart" type="button" class="btn btn-light" title="購物車"><img src="~/img/Icon/carts.png" /> <span class="badge badge-light" id="cart-count"></span></button>
         </div>
         <!-- ##### AiBot ##### -->
         <img class="Aibot" src="~/img/Icon/bot-ico.png" title="Ai客服小咖" onclick="window.open('@Url.Content("~/AIbot.html")', '線上客服', 'width=450,height=550')" />
-        <main role="main" class="pb-3">
+        <main role="main" class="">
 
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; MSIT141 西夏普咖啡 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
+
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>*@
@@ -521,7 +557,7 @@
     <script>new WOW().init();</script>
     <script type="text/javascript" src="~/js/jquery.simplePagination.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-<script>
+    <script>
         //====================語音控制==========================
 
         var recognition = new window.webkitSpeechRecognition;
@@ -614,6 +650,10 @@
     $("#notify").click(function () {
         $(this).parent().toggleClass("active");
     });
+    $(document).ready(() => {
+        $(".n_True").css("background-color", "transparent");
+        $(".n_False").css("background-color", "rgba(115,191,0,0.1)");
+    });
     //=============多少時間前的通知=====================
     let notiTimes = $(".timebefore");//yyyy/MM/dd HH:mm:ss
     let timeArr = [];
@@ -653,9 +693,61 @@
     //=================前往購物車====================
     $("#cart").click(function () {
         $('.bootstrap-growl').remove();
-            window.location.href = '@Url.Content("~/shopping/shoppingcar")';
+            window.location.href = '@Url.Content("~/Shopping/ShoppingCar")';
     });
 
-</script>
+    //=================懸浮購物車====================
+
+    $("#cartbtn").mouseenter(function () {
+        console.log("1load")
+        Cload();
+        $(this).parent().addClass("active");
+    });
+
+    $(".floatcartin").on("mouseleave", "#cartdivin", function () {
+        console.log("leave")
+        $(this).parent().parent().removeClass("active");
+        $(this).remove();
+    })
+
+    async function Cload() {
+        $(".floatcartin").load('@Url.Content("~/shopping/FloatPartialViewCart")')
+    }
+
+    $(".floatcartin").on("click", "#box_btndel", function () {
+        let detailid = $(this).parent().find("#box_detailid").val();
+        CDEL(detailid);
+        $(this).parent().parent().parent().remove();
+        if (window.location.pathname == "/Shopping/ShoppingCar") {
+            $("tbody").find(`#${detailid}`).remove();
+             if ($("tbody>tr").length == 0) {
+                window.location.href = '@Url.Content("~/shopping/ShoppingCarEmpty")';
+            }
+            計算購物明細();
+            proid = 0;
+            deltr = null;
+            proprice = 0;
+            detailid = 0;
+        }
+
+        if ($(".floatcartin li").length == 2) {
+            $(".floatcart_dd").remove();
+            $(".floatcartin").append(`<div class="floatcart_dd" id="cartdivin">
+            <ul class="floatcart_ul" style="padding: 2.5rem;">
+                <li class="box_lab">
+                    <h5 style="width:350px; opacity:0.8;">購物車內目前沒有商品</h5>
+                </li>
+            </ul>
+        </div>`);
+        }
+
+    })
+
+    async function CDEL(id) {
+        const response = await fetch("@Url.Content("~/shopping/Deletedrop")" + `?id=${id}`);
+        CountCart();
+    }
+
+    </script>
 </body>
 </html>

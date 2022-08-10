@@ -211,7 +211,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="DeleteConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@*<div class="modal fade" id="DeleteConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -227,7 +227,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 @section Styles{
     <style>
         .mainImg {
@@ -267,10 +267,10 @@
             };
 
             $.ajax({
-                url: "https://msit141-03-vision.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params),
+                url: "https://csharpcoffeevision.cognitiveservices.azure.com/vision/v3.2/analyze?" + $.param(params),
                 beforeSend: function (xhrObj) {
                     xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
-                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "c3b95ede298c455e80f20aa99e972245");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "1f288f25831f4d67a9bd7871b6698e27");
                 },
                 type: "POST",
                 processData: false,
@@ -337,7 +337,7 @@
                             $("#imgPrev1").attr("src", event.target.result);
                             return;
                         }
-                        // 若第1張圖為原本地2張遞補的圖，繼續點擊上傳的話則只改變第2張圖(右)
+                        // 若第1張圖為原本第2張遞補的圖，繼續點擊上傳的話則只改變第2張圖(右)
                         if ($("#imgPrev0").attr("src") == imgsrc1) {
                             $("#imgPrev1").attr("src", event.target.result);
                             return;

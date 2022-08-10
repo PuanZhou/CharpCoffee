@@ -9,6 +9,7 @@ using prjProduct_core.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -39,43 +40,43 @@ namespace prjProduct_core.Controllers
             return View();
         }
 
-        public IActionResult Category()
+        public IActionResult Category() // 新增產品View中的"類別"下拉選單
         {
             var category = _context.Categories;
             return Json(category);
         }
 
-        public IActionResult Country()
+        public IActionResult Country() // 新增產品View中的"國家"下拉選單
         {
             var country = _context.Countries;
             return Json(country);
         }
 
-        public IActionResult Roasting()
+        public IActionResult Roasting() // 新增產品View中的"烘培法"下拉選單
         {
             var roasting = _context.Roastings;
             return Json(roasting);
         }
 
-        public IActionResult Package()
+        public IActionResult Package() // 新增產品View中的"包裝法"下拉選單
         {
             var package = _context.Packages;
             return Json(package);
         }
 
-        public IActionResult Process()
+        public IActionResult Process() // 新增產品View中的"處理法"下拉選單
         {
             var process = _context.Processes;
             return Json(process);
         }
 
-        public IActionResult IfEmailExist(string email)
+        public IActionResult IfEmailExist(string email) // 後臺註冊驗證Email存在與否
         {
             var emailExist = _context.Admins.Any(a => a.Email == email);
             return Content(emailExist.ToString(), "text/plain", Encoding.UTF8);
         }
 
-        public IActionResult GetCaptcha()
+        public IActionResult GetCaptcha() // 後臺登入驗證碼
         {
             randomCode = CCaptcha.CreateRandomCode(5).ToLower();
             byte[] captcha = CCaptcha.CreatImage(randomCode);
@@ -83,7 +84,7 @@ namespace prjProduct_core.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public IActionResult SendMailToken(CForgotPasswordViewModel inModel)
+        public IActionResult SendMailToken(CForgotPasswordViewModel inModel) // 後臺忘記密碼寄信功能
         {
             CSendMailTokenOut outModel = new CSendMailTokenOut();
 
@@ -165,11 +166,11 @@ namespace prjProduct_core.Controllers
             return Json(outModel);
         }
 
-        [ValidateAntiForgeryToken]
-        public ActionResult DoResetPwd(CDoResetPwdIn inModel)
+        [ValidateAntiForgeryToken] // 防止CSRF攻擊
+        public ActionResult DoResetPwd(CDoResetPwdIn inModel) // 後臺執行重設密碼
         {
             CDoResetPwdOut outModel = new CDoResetPwdOut();
-            Regex r = new Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$");
+            Regex r = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$");
 
             // 檢查是否有輸入密碼
             if (string.IsNullOrEmpty(inModel.NewUserPwd))
@@ -177,23 +178,26 @@ namespace prjProduct_core.Controllers
                 outModel.ErrMsg = "請輸入新密碼";
                 return Json(outModel);
             }
-            if (!r.IsMatch(inModel.CheckUserPwd))
+            // 檢查密碼是否符合格式
+            if (!r.IsMatch(inModel.NewUserPwd))
             {
                 outModel.ErrMsg = "密碼格式錯誤";
                 return Json(outModel);
             }
+            // 檢查是否有輸入確認新密碼
             if (string.IsNullOrEmpty(inModel.CheckUserPwd))
             {
                 outModel.ErrMsg = "請輸入確認新密碼";
                 return Json(outModel);
             }
+            // 檢查新密碼與確認新密碼是否相同
             if (inModel.NewUserPwd != inModel.CheckUserPwd)
             {
                 outModel.ErrMsg = "新密碼與確認新密碼不相同";
                 return Json(outModel);
             }
 
-            // 檢查帳號 Session 是否存在
+            // 檢查帳號 Session 是否存在(從Dashboard/ResetPassword 中所設置)
             if (!HttpContext.Session.Keys.Contains(CDictionary.SK_ResetPassword_AdminId) ||
                 HttpContext.Session.GetString(CDictionary.SK_ResetPassword_AdminId) == "")
             {
@@ -212,7 +216,7 @@ namespace prjProduct_core.Controllers
             return Json(outModel);
         }
 
-        public async Task<IActionResult> DeleteSubPhoto(string url)
+        public async Task<IActionResult> DeleteSubPhoto(string url) // 刪除產品副圖片
         {
             // 刪除資料庫內圖片
             string imageName = url.Split("/Images/")[1];
@@ -231,7 +235,7 @@ namespace prjProduct_core.Controllers
             return NoContent();
         }
 
-        public JsonResult BatchTakeDown(string ids)
+        public JsonResult BatchTakeDown(string ids) // 批量產品下架
         {
             ids = ids.Substring(0, ids.Length - 1);
             string[] idlist = ids.Split(",");
@@ -245,7 +249,7 @@ namespace prjProduct_core.Controllers
             return Json(new { state = "200" });
         }
 
-        public JsonResult BatchLaunch(string ids)
+        public JsonResult BatchLaunch(string ids) // 批量產品上架
         {
             ids = ids.Substring(0, ids.Length - 1);
             string[] idlist = ids.Split(",");
@@ -259,7 +263,7 @@ namespace prjProduct_core.Controllers
             return Json(new { state = "200" });
         }
 
-        public JsonResult TakeDown(string id)
+        public JsonResult TakeDown(string id) // 單筆產品下架
         {
             Product p = _context.Products.Find(Convert.ToInt32(id));
             p.TakeDown = true;
@@ -267,7 +271,7 @@ namespace prjProduct_core.Controllers
             return Json(new { state = "200" });
         }
 
-        public JsonResult Launch(string id)
+        public JsonResult Launch(string id) // 單筆產品上架
         {
             Product p = _context.Products.Find(Convert.ToInt32(id));
             p.TakeDown = false;
@@ -275,17 +279,83 @@ namespace prjProduct_core.Controllers
             return Json(new { state = "200" });
         }
 
-        public IActionResult SendNewspaper(string newsimg)
+        public JsonResult Delete(string id) // 刪除產品
+        {
+            CDeleteProdOut outModel = new CDeleteProdOut();
+            Coffee product = _context.Coffees.FirstOrDefault(p => p.ProductId == Convert.ToInt32(id));
+            if(product != null) // 若此產品是咖啡類別
+            {
+                try
+                {
+                    List<Photo> subPhotos = _context.Photos.Where(p => p.ProductId == Convert.ToInt32(id)).ToList();
+                    if (subPhotos.Count > 0) // 先檢查此產品有沒有副圖片
+                    {
+                        foreach(Photo photo in subPhotos) // 有的話先刪除(避免外部索引干擾無法刪除產品)
+                        {
+                            System.IO.File.Delete(_environment.WebRootPath + "/Images/" + photo.ImagePath); // 刪除Images中副圖片
+                            _context.Photos.Remove(photo);
+                        }
+                    } 
+
+                    _context.Coffees.Remove(product); // 再從咖啡資料表中刪除此產品
+                    _context.SaveChanges();
+                    Product p = _context.Products.Find(Convert.ToInt32(id));
+                    System.IO.File.Delete(_environment.WebRootPath + "/Images/" + p.MainPhotoPath); // 刪除Images中主圖片
+                    _context.Products.Remove(p); // 最後再從產品資料表刪除此產品
+                    outModel.ResultMsg = _context.SaveChanges().ToString();
+                    return Json(outModel);
+                }
+                catch (Exception ex)
+                {
+                    outModel.ErrMsg = ex.Message;
+                    return Json(outModel);
+                }
+            }
+            else // 若產品不是咖啡類別
+            {
+                try
+                {
+                    List<Photo> subPhotos = _context.Photos.Where(p => p.ProductId == Convert.ToInt32(id)).ToList();
+                    if (subPhotos.Count > 0) // 先檢查此產品有沒有副圖片
+                    {
+                        foreach (Photo photo in subPhotos) // 有的話先刪除(避免外部索引干擾無法刪除產品)
+                        {
+                            System.IO.File.Delete(_environment.WebRootPath + "/Images/" + photo.ImagePath); // 刪除Images中副圖片
+                            _context.Photos.Remove(photo);
+                        }
+                    }
+
+                    _context.SaveChanges();
+                    Product p = _context.Products.Find(Convert.ToInt32(id));
+                    System.IO.File.Delete(_environment.WebRootPath + "/Images/" + p.MainPhotoPath); // 刪除Images中主圖片
+                    _context.Products.Remove(p); // 最後再從產品資料表刪除此產品
+                    outModel.ResultMsg = _context.SaveChanges().ToString();
+                    return Json(outModel);
+                }
+                catch (Exception ex)
+                {
+                    outModel.ErrMsg = ex.Message;
+                    return Json(outModel);
+                }
+            }            
+        }
+
+        public IActionResult SendNewspaper(IFormFile newsimgphoto)
         {
             try
             {
                 MailMessage mmsg = new MailMessage();
                 string gmailFrom = "msit141csharpcoffee@gmail.com";
                 string gmailPW = "xryubogltaftuanp";
+                if (newsimgphoto != null)
+                {
+                    mmsg.Body = CreatBody();
+                }
                 mmsg.From = new MailAddress(gmailFrom);
+                mmsg.To.Add(new MailAddress("chiakiultra@gmail.com"));
                 mmsg.To.Add(new MailAddress("forgotpwd87@gmail.com"));
                 mmsg.Subject = "[C#Coffee]電子報";
-                mmsg.Body = $@"<a href='https://images.plurk.com/4tRwJN3fuGEkmwgwrwTSMs.png'>點此看電子報</a>";
+
                 mmsg.IsBodyHtml = true;
                 mmsg.BodyEncoding = Encoding.UTF8;
                 mmsg.SubjectEncoding = Encoding.UTF8;
@@ -304,7 +374,17 @@ namespace prjProduct_core.Controllers
 
         }
 
-        public IActionResult StockLessThanTen()
+        public string CreatBody()
+        {
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(_environment.WebRootPath + @"\newspa.html"))
+            {
+                body = reader.ReadToEnd();
+            }
+            return body;
+        }
+
+        public IActionResult StockLessThanTen() // 庫存不足提醒(少於10)
         {
             var count = _context.Products.Where(p => p.Stock < 10).ToList().Count;
             return Content(count.ToString(), "text/plain", Encoding.UTF8);
